@@ -126,7 +126,7 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestNamespaceUpsertWithOptionalParams(t *testing.T) {
+func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 	t.Skip("skipped: tests are disabled for the time being")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -139,23 +139,25 @@ func TestNamespaceUpsertWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Namespaces.Upsert(
+	_, err := client.Namespaces.Write(
 		context.TODO(),
 		"namespace",
-		turbopuffer.NamespaceUpsertParams{
-			Documents: turbopuffer.NamespaceUpsertParamsDocumentsUpsertColumnar{
-				DocumentColumnsParam: turbopuffer.DocumentColumnsParam{
-					Attributes: map[string][]map[string]any{
-						"foo": {{
-							"foo": "bar",
-						}},
-					},
-					IDs: []turbopuffer.IDUnionParam{{
+		turbopuffer.NamespaceWriteParams{
+			Operation: turbopuffer.NamespaceWriteParamsOperationWriteDocuments{
+				DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+				PatchColumns: turbopuffer.DocumentColumnsParam{
+					ID: []turbopuffer.IDUnionParam{{
 						OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 					}},
-					Vectors: [][]float64{{0}},
 				},
-				DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+				PatchRows: []turbopuffer.DocumentRowParam{{
+					ID: turbopuffer.IDUnionParam{
+						OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					},
+					Vector: turbopuffer.DocumentRowVectorUnionParam{
+						OfDocumentRowVectorArray: []float64{0},
+					},
+				}},
 				Schema: map[string][]turbopuffer.AttributeSchemaParam{
 					"foo": {{
 						Filterable: turbopuffer.Bool(true),
@@ -165,6 +167,19 @@ func TestNamespaceUpsertWithOptionalParams(t *testing.T) {
 						Type: turbopuffer.AttributeSchemaTypeString,
 					}},
 				},
+				UpsertColumns: turbopuffer.DocumentColumnsParam{
+					ID: []turbopuffer.IDUnionParam{{
+						OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					}},
+				},
+				UpsertRows: []turbopuffer.DocumentRowParam{{
+					ID: turbopuffer.IDUnionParam{
+						OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+					},
+					Vector: turbopuffer.DocumentRowVectorUnionParam{
+						OfDocumentRowVectorArray: []float64{0},
+					},
+				}},
 			},
 		},
 	)

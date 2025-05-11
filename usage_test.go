@@ -24,15 +24,10 @@ func TestUsage(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	response, err := client.Namespaces.Upsert(
+	response, err := client.Namespaces.Write(
 		context.TODO(),
 		"products",
-		turbopuffer.NamespaceUpsertParams{
-			Documents: turbopuffer.NamespaceUpsertParamsDocumentsUpsertColumnar{
-				DocumentColumnsParam: turbopuffer.DocumentColumnsParam{},
-				DistanceMetric:       turbopuffer.DistanceMetricCosineDistance,
-			},
-		},
+		turbopuffer.NamespaceWriteParams{},
 	)
 	if err != nil {
 		t.Fatalf("err should be nil: %s", err.Error())

@@ -18,13 +18,10 @@ func ValueOf[T Constant[T]]() T {
 	return t.Default()
 }
 
-type Ok string // Always "ok"
 type Ok string // Always "OK"
 
-func (c Ok) Default() Ok { return "ok" }
 func (c Ok) Default() Ok { return "OK" }
 
-func (c Ok) MarshalJSON() ([]byte, error) { return marshalString(c) }
 func (c Ok) MarshalJSON() ([]byte, error) { return marshalString(c) }
 
 type constant[T any] interface {

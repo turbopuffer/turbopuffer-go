@@ -69,7 +69,7 @@ func (r *NamespaceService) DeleteAll(ctx context.Context, namespace string, opts
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v1/namespaces/%s", namespace)
+	path := fmt.Sprintf("v2/namespaces/%s", namespace)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, &res, opts...)
 	return
 }
@@ -99,13 +99,13 @@ func (r *NamespaceService) Query(ctx context.Context, namespace string, body Nam
 }
 
 // Create, update, or delete documents.
-func (r *NamespaceService) Upsert(ctx context.Context, namespace string, body NamespaceUpsertParams, opts ...option.RequestOption) (res *NamespaceUpsertResponse, err error) {
+func (r *NamespaceService) Write(ctx context.Context, namespace string, body NamespaceWriteParams, opts ...option.RequestOption) (res *NamespaceWriteResponse, err error) {
 	opts = append(r.Options[:], opts...)
 	if namespace == "" {
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v1/namespaces/%s", namespace)
+	path := fmt.Sprintf("v2/namespaces/%s", namespace)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return
 }
@@ -288,14 +288,11 @@ const (
 	DistanceMetricEuclideanSquared DistanceMetric = "euclidean_squared"
 )
 
-// A list of documents in columnar format.
+// A list of documents in columnar format. The keys are the column names.
 type DocumentColumnsParam struct {
-	// The attributes attached to each of the documents.
-	Attributes map[string][]map[string]any `json:"attributes,omitzero"`
 	// The IDs of the documents.
-	IDs []IDUnionParam `json:"ids,omitzero" format:"uuid"`
-	// Vectors describing each of the documents.
-	Vectors [][]float64 `json:"vectors,omitzero"`
+	ID          []IDUnionParam              `json:"id,omitzero" format:"uuid"`
+	ExtraFields map[string][]map[string]any `json:"-,extras"`
 	paramObj
 }
 
@@ -311,15 +308,13 @@ func (r DocumentColumnsParam) MarshalJSON() (data []byte, err error) {
 type DocumentRow struct {
 	// An identifier for a document.
 	ID IDUnion `json:"id" format:"uuid"`
-	// The attributes attached to the document.
-	Attributes map[string]any `json:"attributes"`
 	// A vector describing the document.
-	Vector []float64 `json:"vector,nullable"`
+	Vector      DocumentRowVectorUnion `json:"vector,nullable"`
+	ExtraFields map[string]any         `json:",extras"`
 	// Metadata for the response, check the presence of optional fields with the
 	// [resp.Field.IsPresent] method.
 	JSON struct {
 		ID          resp.Field
-		Attributes  resp.Field
 		Vector      resp.Field
 		ExtraFields map[string]resp.Field
 		raw         string
@@ -341,14 +336,49 @@ func (r DocumentRow) ToParam() DocumentRowParam {
 	return param.OverrideObj[DocumentRowParam](r.RawJSON())
 }
 
+// DocumentRowVectorUnion contains all possible properties and values from
+// [[]float64], [string].
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+//
+// If the underlying value is not a json object, one of the following properties
+// will be valid: OfDocumentRowVectorArray OfString]
+type DocumentRowVectorUnion struct {
+	// This field will be present if the value is a [[]float64] instead of an object.
+	OfDocumentRowVectorArray []float64 `json:",inline"`
+	// This field will be present if the value is a [string] instead of an object.
+	OfString string `json:",inline"`
+	JSON     struct {
+		OfDocumentRowVectorArray resp.Field
+		OfString                 resp.Field
+		raw                      string
+	} `json:"-"`
+}
+
+func (u DocumentRowVectorUnion) AsDocumentRowVectorArray() (v []float64) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u DocumentRowVectorUnion) AsString() (v string) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u DocumentRowVectorUnion) RawJSON() string { return u.JSON.raw }
+
+func (r *DocumentRowVectorUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // A single document, in a row-based format.
 type DocumentRowParam struct {
 	// A vector describing the document.
-	Vector []float64 `json:"vector,omitzero"`
+	Vector DocumentRowVectorUnionParam `json:"vector,omitzero"`
 	// An identifier for a document.
-	ID IDUnionParam `json:"id,omitzero" format:"uuid"`
-	// The attributes attached to the document.
-	Attributes map[string]any `json:"attributes,omitzero"`
+	ID          IDUnionParam   `json:"id,omitzero" format:"uuid"`
+	ExtraFields map[string]any `json:"-,extras"`
 	paramObj
 }
 
@@ -358,6 +388,31 @@ func (f DocumentRowParam) IsPresent() bool { return !param.IsOmitted(f) && !f.Is
 func (r DocumentRowParam) MarshalJSON() (data []byte, err error) {
 	type shadow DocumentRowParam
 	return param.MarshalObject(r, (*shadow)(&r))
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type DocumentRowVectorUnionParam struct {
+	OfDocumentRowVectorArray []float64         `json:",omitzero,inline"`
+	OfString                 param.Opt[string] `json:",omitzero,inline"`
+	paramUnion
+}
+
+// IsPresent returns true if the field's value is not omitted and not the JSON
+// "null". To check if this field is omitted, use [param.IsOmitted].
+func (u DocumentRowVectorUnionParam) IsPresent() bool { return !param.IsOmitted(u) && !u.IsNull() }
+func (u DocumentRowVectorUnionParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[DocumentRowVectorUnionParam](u.OfDocumentRowVectorArray, u.OfString)
+}
+
+func (u *DocumentRowVectorUnionParam) asAny() any {
+	if !param.IsOmitted(u.OfDocumentRowVectorArray) {
+		return &u.OfDocumentRowVectorArray
+	} else if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	}
+	return nil
 }
 
 // A single document, in a row-based format.
@@ -588,7 +643,7 @@ func (r *NamespaceDeleteAllResponse) UnmarshalJSON(data []byte) error {
 type NamespaceGetSchemaResponse map[string][]AttributeSchema
 
 // The response to a successful upsert request.
-type NamespaceUpsertResponse struct {
+type NamespaceWriteResponse struct {
 	// The status of the request.
 	Status constant.Ok `json:"status,required"`
 	// Metadata for the response, check the presence of optional fields with the
@@ -601,8 +656,8 @@ type NamespaceUpsertResponse struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r NamespaceUpsertResponse) RawJSON() string { return r.JSON.raw }
-func (r *NamespaceUpsertResponse) UnmarshalJSON(data []byte) error {
+func (r NamespaceWriteResponse) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceWriteResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -714,77 +769,64 @@ func (u *NamespaceQueryParamsIncludeAttributesUnion) asAny() any {
 	return nil
 }
 
-type NamespaceUpsertParams struct {
-	// Upsert documents in columnar format.
-	Documents NamespaceUpsertParamsDocumentsUnion
+type NamespaceWriteParams struct {
+	// Write documents.
+	Operation NamespaceWriteParamsOperationUnion
 	paramObj
 }
 
 // IsPresent returns true if the field's value is not omitted and not the JSON
 // "null". To check if this field is omitted, use [param.IsOmitted].
-func (f NamespaceUpsertParams) IsPresent() bool { return !param.IsOmitted(f) && !f.IsNull() }
+func (f NamespaceWriteParams) IsPresent() bool { return !param.IsOmitted(f) && !f.IsNull() }
 
-func (r NamespaceUpsertParams) MarshalJSON() (data []byte, err error) {
-	return json.Marshal(r.Documents)
+func (r NamespaceWriteParams) MarshalJSON() (data []byte, err error) {
+	return json.Marshal(r.Operation)
 }
 
-// Upsert documents in columnar format.
+// Write documents.
 //
-// Satisfied by [NamespaceUpsertParamsDocumentsUpsertColumnar],
-// [NamespaceUpsertParamsDocumentsUpsertRowBased],
-// [NamespaceUpsertParamsDocumentsCopyFromNamespace] and
-// [NamespaceUpsertParamsDocumentsDeleteByFilter]
-type NamespaceUpsertParamsDocumentsUnion interface {
-	implNamespaceUpsertParamsDocumentsUnion()
+// Satisfied by [NamespaceWriteParamsOperationWriteDocuments],
+// [NamespaceWriteParamsOperationCopyFromNamespace] and
+// [NamespaceWriteParamsOperationDeleteByFilter]
+type NamespaceWriteParamsOperationUnion interface {
+	implNamespaceWriteParamsOperationUnion()
 }
 
-func (NamespaceUpsertParamsDocumentsUpsertColumnar) implNamespaceUpsertParamsDocumentsUnion()    {}
-func (NamespaceUpsertParamsDocumentsUpsertRowBased) implNamespaceUpsertParamsDocumentsUnion()    {}
-func (NamespaceUpsertParamsDocumentsCopyFromNamespace) implNamespaceUpsertParamsDocumentsUnion() {}
-func (NamespaceUpsertParamsDocumentsDeleteByFilter) implNamespaceUpsertParamsDocumentsUnion()    {}
+func (NamespaceWriteParamsOperationWriteDocuments) implNamespaceWriteParamsOperationUnion()    {}
+func (NamespaceWriteParamsOperationCopyFromNamespace) implNamespaceWriteParamsOperationUnion() {}
+func (NamespaceWriteParamsOperationDeleteByFilter) implNamespaceWriteParamsOperationUnion()    {}
 
-// Upsert documents in columnar format.
-type NamespaceUpsertParamsDocumentsUpsertColumnar struct {
-	// A function used to calculate vector similarity.
-	DistanceMetric DistanceMetric `json:"distance_metric,omitzero,required"`
-	// The schema of the attributes attached to the documents.
-	Schema map[string][]AttributeSchemaParam `json:"schema,omitzero"`
-	DocumentColumnsParam
-}
-
-func (r NamespaceUpsertParamsDocumentsUpsertColumnar) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceUpsertParamsDocumentsUpsertColumnar
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-
-// Upsert documents in row-based format.
-//
-// The properties DistanceMetric, Upserts are required.
-type NamespaceUpsertParamsDocumentsUpsertRowBased struct {
+// Write documents.
+type NamespaceWriteParamsOperationWriteDocuments struct {
 	// A function used to calculate vector similarity.
 	//
 	// Any of "cosine_distance", "euclidean_squared".
-	DistanceMetric DistanceMetric     `json:"distance_metric,omitzero,required"`
-	Upserts        []DocumentRowParam `json:"upserts,omitzero,required"`
+	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
+	// A list of documents in columnar format. The keys are the column names.
+	PatchColumns DocumentColumnsParam `json:"patch_columns,omitzero"`
+	PatchRows    []DocumentRowParam   `json:"patch_rows,omitzero"`
 	// The schema of the attributes attached to the documents.
 	Schema map[string][]AttributeSchemaParam `json:"schema,omitzero"`
+	// A list of documents in columnar format. The keys are the column names.
+	UpsertColumns DocumentColumnsParam `json:"upsert_columns,omitzero"`
+	UpsertRows    []DocumentRowParam   `json:"upsert_rows,omitzero"`
 	paramObj
 }
 
 // IsPresent returns true if the field's value is not omitted and not the JSON
 // "null". To check if this field is omitted, use [param.IsOmitted].
-func (f NamespaceUpsertParamsDocumentsUpsertRowBased) IsPresent() bool {
+func (f NamespaceWriteParamsOperationWriteDocuments) IsPresent() bool {
 	return !param.IsOmitted(f) && !f.IsNull()
 }
-func (r NamespaceUpsertParamsDocumentsUpsertRowBased) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceUpsertParamsDocumentsUpsertRowBased
+func (r NamespaceWriteParamsOperationWriteDocuments) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceWriteParamsOperationWriteDocuments
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 
 // Copy documents from another namespace.
 //
 // The property CopyFromNamespace is required.
-type NamespaceUpsertParamsDocumentsCopyFromNamespace struct {
+type NamespaceWriteParamsOperationCopyFromNamespace struct {
 	// The namespace to copy documents from.
 	CopyFromNamespace string `json:"copy_from_namespace,required"`
 	paramObj
@@ -792,18 +834,18 @@ type NamespaceUpsertParamsDocumentsCopyFromNamespace struct {
 
 // IsPresent returns true if the field's value is not omitted and not the JSON
 // "null". To check if this field is omitted, use [param.IsOmitted].
-func (f NamespaceUpsertParamsDocumentsCopyFromNamespace) IsPresent() bool {
+func (f NamespaceWriteParamsOperationCopyFromNamespace) IsPresent() bool {
 	return !param.IsOmitted(f) && !f.IsNull()
 }
-func (r NamespaceUpsertParamsDocumentsCopyFromNamespace) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceUpsertParamsDocumentsCopyFromNamespace
+func (r NamespaceWriteParamsOperationCopyFromNamespace) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceWriteParamsOperationCopyFromNamespace
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 
 // Delete documents by filter.
 //
 // The property DeleteByFilter is required.
-type NamespaceUpsertParamsDocumentsDeleteByFilter struct {
+type NamespaceWriteParamsOperationDeleteByFilter struct {
 	// The filter specifying which documents to delete.
 	DeleteByFilter any `json:"delete_by_filter,omitzero,required"`
 	paramObj
@@ -811,10 +853,10 @@ type NamespaceUpsertParamsDocumentsDeleteByFilter struct {
 
 // IsPresent returns true if the field's value is not omitted and not the JSON
 // "null". To check if this field is omitted, use [param.IsOmitted].
-func (f NamespaceUpsertParamsDocumentsDeleteByFilter) IsPresent() bool {
+func (f NamespaceWriteParamsOperationDeleteByFilter) IsPresent() bool {
 	return !param.IsOmitted(f) && !f.IsNull()
 }
-func (r NamespaceUpsertParamsDocumentsDeleteByFilter) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceUpsertParamsDocumentsDeleteByFilter
+func (r NamespaceWriteParamsOperationDeleteByFilter) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceWriteParamsOperationDeleteByFilter
 	return param.MarshalObject(r, (*shadow)(&r))
 }
