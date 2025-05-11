@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"time"
 
-	shimjson "github.com/stainless-sdks/turbopuffer-go/internal/encoding/json"
+	shimjson "github.com/turbopuffer/turbopuffer-go/internal/encoding/json"
 
 	"github.com/tidwall/sjson"
 )

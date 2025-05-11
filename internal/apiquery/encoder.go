@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/stainless-sdks/turbopuffer-go/packages/param"
+	"github.com/turbopuffer/turbopuffer-go/packages/param"
 )
 
 var encoders sync.Map // map[reflect.Type]encoderFunc

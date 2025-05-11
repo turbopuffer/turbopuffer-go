@@ -2,7 +2,7 @@ package apijson
 
 import (
 	"errors"
-	"github.com/stainless-sdks/turbopuffer-go/packages/param"
+	"github.com/turbopuffer/turbopuffer-go/packages/param"
 	"reflect"
 
 	"github.com/tidwall/gjson"
