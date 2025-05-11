@@ -44,15 +44,10 @@ func main() {
 	client := turbopuffer.NewClient(
 		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("TURBOPUFFER_API_KEY")
 	)
-	response, err := client.Namespaces.Upsert(
+	response, err := client.Namespaces.Write(
 		context.TODO(),
 		"products",
-		turbopuffer.NamespaceUpsertParams{
-			Documents: turbopuffer.NamespaceUpsertParamsDocumentsUpsertColumnar{
-				DocumentColumnsParam: turbopuffer.DocumentColumnsParam{},
-				DistanceMetric:       turbopuffer.DistanceMetricCosineDistance,
-			},
-		},
+		turbopuffer.NamespaceWriteParams{},
 	)
 	if err != nil {
 		panic(err.Error())
