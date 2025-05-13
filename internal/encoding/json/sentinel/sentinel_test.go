@@ -1,7 +1,7 @@
 package sentinel_test
 
 import (
-	"github.com/turbopuffer/turbopuffer-go/internal/encoding/json/sentinel"
+	"github.com/stainless-sdks/turbopuffer-go/internal/encoding/json/sentinel"
 	"reflect"
 	"slices"
 	"testing"

@@ -3,8 +3,8 @@
 package turbopuffer
 
 import (
-	"github.com/turbopuffer/turbopuffer-go/internal/apierror"
-	"github.com/turbopuffer/turbopuffer-go/packages/param"
+	"github.com/stainless-sdks/turbopuffer-go/internal/apierror"
+	"github.com/stainless-sdks/turbopuffer-go/packages/param"
 )
 
 // aliased to make [param.APIUnion] private when embedding

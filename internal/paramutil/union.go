@@ -2,7 +2,7 @@ package paramutil
 
 import (
 	"fmt"
-	"github.com/turbopuffer/turbopuffer-go/packages/param"
+	"github.com/stainless-sdks/turbopuffer-go/packages/param"
 	"reflect"
 )
 

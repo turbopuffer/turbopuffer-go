@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
-	"github.com/turbopuffer/turbopuffer-go/option"
+	"github.com/stainless-sdks/turbopuffer-go/internal/requestconfig"
+	"github.com/stainless-sdks/turbopuffer-go/option"
 )
 
 // Client creates a struct with services and top level methods that help with

@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"net/http/httputil"
 
-	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
-	"github.com/turbopuffer/turbopuffer-go/packages/resp"
+	"github.com/stainless-sdks/turbopuffer-go/internal/apijson"
+	"github.com/stainless-sdks/turbopuffer-go/packages/resp"
 )
 
 // Error represents an error that originates from the API, i.e. when a request is
