@@ -1,6 +1,6 @@
 # Turbopuffer Go API Library
 
-<a href="https://pkg.go.dev/github.com/stainless-sdks/turbopuffer-go"><img src="https://pkg.go.dev/badge/github.com/stainless-sdks/turbopuffer-go.svg" alt="Go Reference"></a>
+<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go"><img src="https://pkg.go.dev/badge/github.com/turbopuffer/turbopuffer-go.svg" alt="Go Reference"></a>
 
 The Turbopuffer Go library provides convenient access to the [Turbopuffer REST API](https://turbopuffer.com/docs)
 from applications written in Go.
@@ -9,17 +9,25 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## Installation
 
+<!-- x-release-please-start-version -->
+
 ```go
 import (
-	"github.com/stainless-sdks/turbopuffer-go" // imported as turbopuffer
+	"github.com/turbopuffer/turbopuffer-go" // imported as turbopuffer
 )
 ```
 
+<!-- x-release-please-end -->
+
 Or to pin the version:
 
+<!-- x-release-please-start-version -->
+
 ```sh
-go get -u 'github.com/stainless-sdks/turbopuffer-go@v0.0.1-alpha.0'
+go get -u 'github.com/turbopuffer/turbopuffer-go@v0.0.1-alpha.0'
 ```
+
+<!-- x-release-please-end -->
 
 ## Requirements
 
@@ -36,8 +44,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/stainless-sdks/turbopuffer-go"
-	"github.com/stainless-sdks/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go"
+	"github.com/turbopuffer/turbopuffer-go/option"
 )
 
 func main() {
@@ -248,7 +256,7 @@ client.Namespaces.Query(context.TODO(), ...,
 )
 ```
 
-See the [full list of request options](https://pkg.go.dev/github.com/stainless-sdks/turbopuffer-go/option).
+See the [full list of request options](https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/option).
 
 ### Pagination
 
@@ -490,7 +498,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/turbopuffer-go/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/turbopuffer/turbopuffer-go/issues) with questions, bugs, or suggestions.
 
 ## Contributing
 

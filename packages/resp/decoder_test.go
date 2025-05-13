@@ -3,8 +3,8 @@ package resp_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stainless-sdks/turbopuffer-go/internal/apijson"
-	"github.com/stainless-sdks/turbopuffer-go/packages/resp"
+	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
+	"github.com/turbopuffer/turbopuffer-go/packages/resp"
 	"reflect"
 	"testing"
 )
