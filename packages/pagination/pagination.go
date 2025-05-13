@@ -5,11 +5,11 @@ package pagination
 import (
 	"net/http"
 
-	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
-	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
-	"github.com/turbopuffer/turbopuffer-go/option"
-	"github.com/turbopuffer/turbopuffer-go/packages/param"
-	"github.com/turbopuffer/turbopuffer-go/packages/resp"
+	"github.com/stainless-sdks/turbopuffer-go/internal/apijson"
+	"github.com/stainless-sdks/turbopuffer-go/internal/requestconfig"
+	"github.com/stainless-sdks/turbopuffer-go/option"
+	"github.com/stainless-sdks/turbopuffer-go/packages/param"
+	"github.com/stainless-sdks/turbopuffer-go/packages/resp"
 )
 
 // aliased to make [param.APIUnion] private when embedding

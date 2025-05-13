@@ -7,9 +7,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/turbopuffer/turbopuffer-go"
-	"github.com/turbopuffer/turbopuffer-go/internal/testutil"
-	"github.com/turbopuffer/turbopuffer-go/option"
+	"github.com/stainless-sdks/turbopuffer-go"
+	"github.com/stainless-sdks/turbopuffer-go/internal/testutil"
+	"github.com/stainless-sdks/turbopuffer-go/option"
 )
 
 func TestUsage(t *testing.T) {

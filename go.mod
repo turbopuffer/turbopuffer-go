@@ -1,4 +1,4 @@
-module github.com/turbopuffer/turbopuffer-go
+module github.com/stainless-sdks/turbopuffer-go
 
 go 1.21
 

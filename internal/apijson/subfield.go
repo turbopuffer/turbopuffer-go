@@ -1,7 +1,7 @@
 package apijson
 
 import (
-	"github.com/turbopuffer/turbopuffer-go/packages/resp"
+	"github.com/stainless-sdks/turbopuffer-go/packages/resp"
 	"reflect"
 )
 

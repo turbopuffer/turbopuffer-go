@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/turbopuffer/turbopuffer-go/packages/param"
+	"github.com/stainless-sdks/turbopuffer-go/packages/param"
 )
 
 type Struct struct {
