@@ -143,7 +143,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"namespace",
 		turbopuffer.NamespaceWriteParams{
-			Operation: turbopuffer.NamespaceWriteParamsOperationWriteDocuments{
+			OfWriteDocuments: &turbopuffer.NamespaceWriteParamsOperationWriteDocuments{
 				DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
 				PatchColumns: turbopuffer.DocumentColumnsParam{
 					ID: []turbopuffer.IDUnionParam{{
@@ -155,7 +155,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 						OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 					},
 					Vector: turbopuffer.DocumentRowVectorUnionParam{
-						OfDocumentRowVectorArray: []float64{0},
+						OfFloatArray: []float64{0},
 					},
 				}},
 				Schema: map[string][]turbopuffer.AttributeSchemaParam{
@@ -177,7 +177,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 						OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 					},
 					Vector: turbopuffer.DocumentRowVectorUnionParam{
-						OfDocumentRowVectorArray: []float64{0},
+						OfFloatArray: []float64{0},
 					},
 				}},
 			},
