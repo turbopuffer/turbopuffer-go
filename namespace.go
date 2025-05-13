@@ -10,14 +10,14 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/stainless-sdks/turbopuffer-go/internal/apijson"
-	"github.com/stainless-sdks/turbopuffer-go/internal/apiquery"
-	"github.com/stainless-sdks/turbopuffer-go/internal/requestconfig"
-	"github.com/stainless-sdks/turbopuffer-go/option"
-	"github.com/stainless-sdks/turbopuffer-go/packages/pagination"
-	"github.com/stainless-sdks/turbopuffer-go/packages/param"
-	"github.com/stainless-sdks/turbopuffer-go/packages/resp"
-	"github.com/stainless-sdks/turbopuffer-go/shared/constant"
+	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
+	"github.com/turbopuffer/turbopuffer-go/internal/apiquery"
+	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
+	"github.com/turbopuffer/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go/packages/pagination"
+	"github.com/turbopuffer/turbopuffer-go/packages/param"
+	"github.com/turbopuffer/turbopuffer-go/packages/resp"
+	"github.com/turbopuffer/turbopuffer-go/shared/constant"
 )
 
 // NamespaceService contains methods and other services that help with interacting
