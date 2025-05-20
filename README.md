@@ -286,8 +286,8 @@ iter := client.ListNamespacesAutoPaging(context.TODO(), turbopuffer.ListNamespac
 })
 // Automatically fetches more pages as needed.
 for iter.Next() {
-	listNamespacesResponse := iter.Current()
-	fmt.Printf("%+v\n", listNamespacesResponse)
+	namespaceSummary := iter.Current()
+	fmt.Printf("%+v\n", namespaceSummary)
 }
 if err := iter.Err(); err != nil {
 	panic(err.Error())
@@ -302,7 +302,7 @@ page, err := client.ListNamespaces(context.TODO(), turbopuffer.ListNamespacesPar
 	Prefix: turbopuffer.String("products"),
 })
 for page != nil {
-	for _, client := range page.data {
+	for _, client := range page.Namespaces {
 		fmt.Printf("%+v\n", client)
 	}
 	page, err = page.GetNextPage()
