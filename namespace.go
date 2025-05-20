@@ -8,13 +8,10 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"net/url"
 
 	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
-	"github.com/turbopuffer/turbopuffer-go/internal/apiquery"
 	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
 	"github.com/turbopuffer/turbopuffer-go/option"
-	"github.com/turbopuffer/turbopuffer-go/packages/pagination"
 	"github.com/turbopuffer/turbopuffer-go/packages/param"
 	"github.com/turbopuffer/turbopuffer-go/packages/respjson"
 	"github.com/turbopuffer/turbopuffer-go/shared/constant"
@@ -39,74 +36,88 @@ func NewNamespaceService(opts ...option.RequestOption) (r NamespaceService) {
 	return
 }
 
-// List namespaces.
-func (r *NamespaceService) List(ctx context.Context, query NamespaceListParams, opts ...option.RequestOption) (res *pagination.ListNamespaces[NamespaceSummary], err error) {
-	var raw *http.Response
-	opts = append(r.Options[:], opts...)
-	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
-	path := "v1/namespaces"
-	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
-	if err != nil {
-		return nil, err
-	}
-	err = cfg.Execute()
-	if err != nil {
-		return nil, err
-	}
-	res.SetPageConfig(cfg, raw)
-	return res, nil
-}
-
-// List namespaces.
-func (r *NamespaceService) ListAutoPaging(ctx context.Context, query NamespaceListParams, opts ...option.RequestOption) *pagination.ListNamespacesAutoPager[NamespaceSummary] {
-	return pagination.NewListNamespacesAutoPager(r.List(ctx, query, opts...))
-}
-
 // Delete namespace.
-func (r *NamespaceService) DeleteAll(ctx context.Context, namespace string, opts ...option.RequestOption) (res *NamespaceDeleteAllResponse, err error) {
+func (r *NamespaceService) DeleteAll(ctx context.Context, body NamespaceDeleteAllParams, opts ...option.RequestOption) (res *NamespaceDeleteAllResponse, err error) {
 	opts = append(r.Options[:], opts...)
-	if namespace == "" {
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&body.Namespace, precfg.DefaultNamespace)
+	if body.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v2/namespaces/%s", namespace)
+	path := fmt.Sprintf("v2/namespaces/%s", body.Namespace.Value)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, &res, opts...)
 	return
 }
 
 // Get namespace schema.
-func (r *NamespaceService) GetSchema(ctx context.Context, namespace string, opts ...option.RequestOption) (res *NamespaceGetSchemaResponse, err error) {
+func (r *NamespaceService) GetSchema(ctx context.Context, query NamespaceGetSchemaParams, opts ...option.RequestOption) (res *NamespaceGetSchemaResponse, err error) {
 	opts = append(r.Options[:], opts...)
-	if namespace == "" {
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&query.Namespace, precfg.DefaultNamespace)
+	if query.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v1/namespaces/%s/schema", namespace)
+	path := fmt.Sprintf("v1/namespaces/%s/schema", query.Namespace.Value)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
 }
 
-// Query, filter, full-text search and vector search documents.
-func (r *NamespaceService) Query(ctx context.Context, namespace string, body NamespaceQueryParams, opts ...option.RequestOption) (res *[]DocumentRowWithScore, err error) {
+// Send multiple queries at once.
+func (r *NamespaceService) MultiQuery(ctx context.Context, params NamespaceMultiQueryParams, opts ...option.RequestOption) (res *NamespaceMultiQueryResponse, err error) {
 	opts = append(r.Options[:], opts...)
-	if namespace == "" {
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
+	if params.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v1/namespaces/%s/query", namespace)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	path := fmt.Sprintf("v2/namespaces/%s/query?overload=multi", params.Namespace.Value)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	return
+}
+
+// Query, filter, full-text search and vector search documents.
+func (r *NamespaceService) Query(ctx context.Context, params NamespaceQueryParams, opts ...option.RequestOption) (res *NamespaceQueryResponse, err error) {
+	opts = append(r.Options[:], opts...)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
+	if params.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return
+	}
+	path := fmt.Sprintf("v2/namespaces/%s/query", params.Namespace.Value)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return
 }
 
 // Create, update, or delete documents.
-func (r *NamespaceService) Write(ctx context.Context, namespace string, body NamespaceWriteParams, opts ...option.RequestOption) (res *NamespaceWriteResponse, err error) {
+func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParams, opts ...option.RequestOption) (res *NamespaceWriteResponse, err error) {
 	opts = append(r.Options[:], opts...)
-	if namespace == "" {
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
+	if params.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v2/namespaces/%s", namespace)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	path := fmt.Sprintf("v2/namespaces/%s", params.Namespace.Value)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return
 }
 
@@ -120,7 +131,8 @@ type AttributeSchema struct {
 	FullTextSearch AttributeSchemaFullTextSearchUnion `json:"full_text_search"`
 	// The data type of the attribute.
 	//
-	// Any of "string", "uint", "uuid", "bool", "[]string", "[]uint", "[]uuid".
+	// Any of "string", "uint", "uuid", "bool", "datetime", "[]string", "[]uint",
+	// "[]uuid", "[]datetime".
 	Type AttributeSchemaType `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -220,13 +232,15 @@ const (
 type AttributeSchemaType string
 
 const (
-	AttributeSchemaTypeString      AttributeSchemaType = "string"
-	AttributeSchemaTypeUint        AttributeSchemaType = "uint"
-	AttributeSchemaTypeUuid        AttributeSchemaType = "uuid"
-	AttributeSchemaTypeBool        AttributeSchemaType = "bool"
-	AttributeSchemaTypeStringArray AttributeSchemaType = "[]string"
-	AttributeSchemaTypeUintArray   AttributeSchemaType = "[]uint"
-	AttributeSchemaTypeUuidArray   AttributeSchemaType = "[]uuid"
+	AttributeSchemaTypeString        AttributeSchemaType = "string"
+	AttributeSchemaTypeUint          AttributeSchemaType = "uint"
+	AttributeSchemaTypeUuid          AttributeSchemaType = "uuid"
+	AttributeSchemaTypeBool          AttributeSchemaType = "bool"
+	AttributeSchemaTypeDatetime      AttributeSchemaType = "datetime"
+	AttributeSchemaTypeStringArray   AttributeSchemaType = "[]string"
+	AttributeSchemaTypeUintArray     AttributeSchemaType = "[]uint"
+	AttributeSchemaTypeUuidArray     AttributeSchemaType = "[]uuid"
+	AttributeSchemaTypeDatetimeArray AttributeSchemaType = "[]datetime"
 )
 
 // The schema for an attribute attached to a document.
@@ -239,7 +253,8 @@ type AttributeSchemaParam struct {
 	FullTextSearch AttributeSchemaFullTextSearchUnionParam `json:"full_text_search,omitzero"`
 	// The data type of the attribute.
 	//
-	// Any of "string", "uint", "uuid", "bool", "[]string", "[]uint", "[]uuid".
+	// Any of "string", "uint", "uuid", "bool", "datetime", "[]string", "[]uint",
+	// "[]uuid", "[]datetime".
 	Type AttributeSchemaType `json:"type,omitzero"`
 	paramObj
 }
@@ -288,8 +303,8 @@ const (
 // A list of documents in columnar format. The keys are the column names.
 type DocumentColumnsParam struct {
 	// The IDs of the documents.
-	ID          []IDUnionParam              `json:"id,omitzero" format:"uuid"`
-	ExtraFields map[string][]map[string]any `json:"-"`
+	ID          []IDUnionParam   `json:"id,omitzero" format:"uuid"`
+	ExtraFields map[string][]any `json:"-"`
 	paramObj
 }
 
@@ -409,27 +424,6 @@ func (u *DocumentRowVectorUnionParam) asAny() any {
 		return &u.OfString.Value
 	}
 	return nil
-}
-
-// A single document, in a row-based format.
-type DocumentRowWithScore struct {
-	// For vector search, the distance between the query vector and the document
-	// vector. For BM25 full-text search, the score of the document. Not present for
-	// other types of queries.
-	Dist float64 `json:"dist"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Dist        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-	DocumentRow
-}
-
-// Returns the unmodified JSON received from the API
-func (r DocumentRowWithScore) RawJSON() string { return r.JSON.raw }
-func (r *DocumentRowWithScore) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
 }
 
 // Detailed configuration options for BM25 full-text search.
@@ -596,24 +590,6 @@ func (u *IDUnionParam) asAny() any {
 	return nil
 }
 
-// A summary of a namespace.
-type NamespaceSummary struct {
-	// The namespace ID.
-	ID string `json:"id,required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID          respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r NamespaceSummary) RawJSON() string { return r.JSON.raw }
-func (r *NamespaceSummary) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
 // The response to a successful namespace deletion request.
 type NamespaceDeleteAllResponse struct {
 	// The status of the request.
@@ -632,7 +608,61 @@ func (r *NamespaceDeleteAllResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type NamespaceGetSchemaResponse map[string][]AttributeSchema
+type NamespaceGetSchemaResponse map[string]AttributeSchema
+
+type NamespaceMultiQueryResponse struct {
+	Results []NamespaceMultiQueryResponseResult `json:"results,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Results     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceMultiQueryResponse) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceMultiQueryResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The result of a query.
+type NamespaceMultiQueryResponseResult struct {
+	Aggregations []map[string]any `json:"aggregations"`
+	Rows         []DocumentRow    `json:"rows"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Aggregations respjson.Field
+		Rows         respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceMultiQueryResponseResult) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceMultiQueryResponseResult) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The result of a query.
+type NamespaceQueryResponse struct {
+	Aggregations []map[string]any `json:"aggregations"`
+	Rows         []DocumentRow    `json:"rows"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Aggregations respjson.Field
+		Rows         respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceQueryResponse) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceQueryResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 // The response to a successful upsert request.
 type NamespaceWriteResponse struct {
@@ -652,28 +682,119 @@ func (r *NamespaceWriteResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type NamespaceListParams struct {
-	// Retrieve the next page of results.
-	Cursor param.Opt[string] `query:"cursor,omitzero" json:"-"`
-	// Limit the number of results per page.
-	PageSize param.Opt[int64] `query:"page_size,omitzero" json:"-"`
-	// Retrieve only the namespaces that match the prefix.
-	Prefix param.Opt[string] `query:"prefix,omitzero" json:"-"`
+type NamespaceDeleteAllParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
 	paramObj
 }
 
-// URLQuery serializes [NamespaceListParams]'s query parameters as `url.Values`.
-func (r NamespaceListParams) URLQuery() (v url.Values, err error) {
-	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
-		ArrayFormat:  apiquery.ArrayQueryFormatComma,
-		NestedFormat: apiquery.NestedQueryFormatBrackets,
-	})
+type NamespaceGetSchemaParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	paramObj
 }
 
+type NamespaceMultiQueryParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	// The consistency level for a query.
+	Consistency NamespaceMultiQueryParamsConsistency `json:"consistency,omitzero"`
+	Queries     []NamespaceMultiQueryParamsQuery     `json:"queries,omitzero"`
+	// The encoding to use for vectors in the response.
+	//
+	// Any of "float", "base64".
+	VectorEncoding NamespaceMultiQueryParamsVectorEncoding `json:"vector_encoding,omitzero"`
+	paramObj
+}
+
+func (r NamespaceMultiQueryParams) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceMultiQueryParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceMultiQueryParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The consistency level for a query.
+type NamespaceMultiQueryParamsConsistency struct {
+	// The query's consistency level.
+	//
+	// Any of "strong", "eventual".
+	Level NamespaceMultiQueryParamsConsistencyLevel `json:"level,omitzero"`
+	paramObj
+}
+
+func (r NamespaceMultiQueryParamsConsistency) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceMultiQueryParamsConsistency
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceMultiQueryParamsConsistency) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The query's consistency level.
+type NamespaceMultiQueryParamsConsistencyLevel string
+
+const (
+	NamespaceMultiQueryParamsConsistencyLevelStrong   NamespaceMultiQueryParamsConsistencyLevel = "strong"
+	NamespaceMultiQueryParamsConsistencyLevelEventual NamespaceMultiQueryParamsConsistencyLevel = "eventual"
+)
+
+// Query, filter, full-text search and vector search documents.
+type NamespaceMultiQueryParamsQuery struct {
+	// The number of results to return.
+	TopK param.Opt[int64] `json:"top_k,omitzero"`
+	// A function used to calculate vector similarity.
+	//
+	// Any of "cosine_distance", "euclidean_squared".
+	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
+	Filters        any            `json:"filters,omitzero"`
+	// Whether to include attributes in the response.
+	IncludeAttributes NamespaceMultiQueryParamsQueryIncludeAttributesUnion `json:"include_attributes,omitzero"`
+	RankBy            any                                                  `json:"rank_by,omitzero"`
+	paramObj
+}
+
+func (r NamespaceMultiQueryParamsQuery) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceMultiQueryParamsQuery
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceMultiQueryParamsQuery) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type NamespaceMultiQueryParamsQueryIncludeAttributesUnion struct {
+	OfBool        param.Opt[bool] `json:",omitzero,inline"`
+	OfStringArray []string        `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u NamespaceMultiQueryParamsQueryIncludeAttributesUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[NamespaceMultiQueryParamsQueryIncludeAttributesUnion](u.OfBool, u.OfStringArray)
+}
+func (u *NamespaceMultiQueryParamsQueryIncludeAttributesUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *NamespaceMultiQueryParamsQueryIncludeAttributesUnion) asAny() any {
+	if !param.IsOmitted(u.OfBool) {
+		return &u.OfBool.Value
+	} else if !param.IsOmitted(u.OfStringArray) {
+		return &u.OfStringArray
+	}
+	return nil
+}
+
+// The encoding to use for vectors in the response.
+type NamespaceMultiQueryParamsVectorEncoding string
+
+const (
+	NamespaceMultiQueryParamsVectorEncodingFloat  NamespaceMultiQueryParamsVectorEncoding = "float"
+	NamespaceMultiQueryParamsVectorEncodingBase64 NamespaceMultiQueryParamsVectorEncoding = "base64"
+)
+
 type NamespaceQueryParams struct {
-	// Whether to return vectors for the search results. Vectors are large and slow to
-	// deserialize on the client, so use this option only if you need them.
-	IncludeVectors param.Opt[bool] `json:"include_vectors,omitzero"`
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
 	// The number of results to return.
 	TopK param.Opt[int64] `json:"top_k,omitzero"`
 	// The consistency level for a query.
@@ -682,16 +803,14 @@ type NamespaceQueryParams struct {
 	//
 	// Any of "cosine_distance", "euclidean_squared".
 	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
-	// Exact filters for attributes to refine search results for. Think of it as a SQL
-	// WHERE clause.
-	Filters any `json:"filters,omitzero"`
+	Filters        any            `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes NamespaceQueryParamsIncludeAttributesUnion `json:"include_attributes,omitzero"`
-	// The attribute to rank the results by. Cannot be specified with `vector`.
-	RankBy any `json:"rank_by,omitzero"`
-	// A vector to search for. It must have the same number of dimensions as the
-	// vectors in the namespace. Cannot be specified with `rank_by`.
-	Vector []float64 `json:"vector,omitzero"`
+	RankBy            any                                        `json:"rank_by,omitzero"`
+	// The encoding to use for vectors in the response.
+	//
+	// Any of "float", "base64".
+	VectorEncoding NamespaceQueryParamsVectorEncoding `json:"vector_encoding,omitzero"`
 	paramObj
 }
 
@@ -753,34 +872,21 @@ func (u *NamespaceQueryParamsIncludeAttributesUnion) asAny() any {
 	return nil
 }
 
+// The encoding to use for vectors in the response.
+type NamespaceQueryParamsVectorEncoding string
+
+const (
+	NamespaceQueryParamsVectorEncodingFloat  NamespaceQueryParamsVectorEncoding = "float"
+	NamespaceQueryParamsVectorEncodingBase64 NamespaceQueryParamsVectorEncoding = "base64"
+)
+
 type NamespaceWriteParams struct {
-
-	//
-	// Request body variants
-	//
-
-	// This field is a request body variant, only one variant field can be set. Write
-	// documents.
-	OfWriteDocuments *NamespaceWriteParamsOperationWriteDocuments `json:",inline"`
-	// This field is a request body variant, only one variant field can be set. Copy
-	// documents from another namespace.
-	OfCopyFromNamespace *NamespaceWriteParamsOperationCopyFromNamespace `json:",inline"`
-	// This field is a request body variant, only one variant field can be set. Delete
-	// documents by filter.
-	OfDeleteByFilter *NamespaceWriteParamsOperationDeleteByFilter `json:",inline"`
-
-	paramObj
-}
-
-func (u NamespaceWriteParams) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[NamespaceWriteParams](u.OfWriteDocuments, u.OfCopyFromNamespace, u.OfDeleteByFilter)
-}
-func (r *NamespaceWriteParams) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// Write documents.
-type NamespaceWriteParamsOperationWriteDocuments struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	// The namespace to copy documents from.
+	CopyFromNamespace param.Opt[string] `json:"copy_from_namespace,omitzero"`
+	// The filter specifying which documents to delete.
+	DeleteByFilter any            `json:"delete_by_filter,omitzero"`
+	Deletes        []IDUnionParam `json:"deletes,omitzero" format:"uuid"`
 	// A function used to calculate vector similarity.
 	//
 	// Any of "cosine_distance", "euclidean_squared".
@@ -789,51 +895,17 @@ type NamespaceWriteParamsOperationWriteDocuments struct {
 	PatchColumns DocumentColumnsParam `json:"patch_columns,omitzero"`
 	PatchRows    []DocumentRowParam   `json:"patch_rows,omitzero"`
 	// The schema of the attributes attached to the documents.
-	Schema map[string][]AttributeSchemaParam `json:"schema,omitzero"`
+	Schema map[string]AttributeSchemaParam `json:"schema,omitzero"`
 	// A list of documents in columnar format. The keys are the column names.
 	UpsertColumns DocumentColumnsParam `json:"upsert_columns,omitzero"`
 	UpsertRows    []DocumentRowParam   `json:"upsert_rows,omitzero"`
 	paramObj
 }
 
-func (r NamespaceWriteParamsOperationWriteDocuments) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceWriteParamsOperationWriteDocuments
+func (r NamespaceWriteParams) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceWriteParams
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *NamespaceWriteParamsOperationWriteDocuments) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// Copy documents from another namespace.
-//
-// The property CopyFromNamespace is required.
-type NamespaceWriteParamsOperationCopyFromNamespace struct {
-	// The namespace to copy documents from.
-	CopyFromNamespace string `json:"copy_from_namespace,required"`
-	paramObj
-}
-
-func (r NamespaceWriteParamsOperationCopyFromNamespace) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceWriteParamsOperationCopyFromNamespace
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *NamespaceWriteParamsOperationCopyFromNamespace) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// Delete documents by filter.
-//
-// The property DeleteByFilter is required.
-type NamespaceWriteParamsOperationDeleteByFilter struct {
-	// The filter specifying which documents to delete.
-	DeleteByFilter any `json:"delete_by_filter,omitzero,required"`
-	paramObj
-}
-
-func (r NamespaceWriteParamsOperationDeleteByFilter) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceWriteParamsOperationDeleteByFilter
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *NamespaceWriteParamsOperationDeleteByFilter) UnmarshalJSON(data []byte) error {
+func (r *NamespaceWriteParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }

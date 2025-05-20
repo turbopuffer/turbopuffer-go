@@ -24,13 +24,13 @@ func TestAutoPagination(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	iter := client.Namespaces.ListAutoPaging(context.TODO(), turbopuffer.NamespaceListParams{
+	iter := client.ListNamespacesAutoPaging(context.TODO(), turbopuffer.ListNamespacesParams{
 		Prefix: turbopuffer.String("products"),
 	})
 	// Prism mock isn't going to give us real pagination
 	for i := 0; i < 3 && iter.Next(); i++ {
-		namespace := iter.Current()
-		t.Logf("%+v\n", namespace.ID)
+		client := iter.Current()
+		t.Logf("%+v\n", client.ID)
 	}
 	if err := iter.Err(); err != nil {
 		t.Fatalf("err should be nil: %s", err.Error())
