@@ -37,6 +37,31 @@ func TestNamespaceDeleteAll(t *testing.T) {
 	}
 }
 
+func TestNamespaceExportWithOptionalParams(t *testing.T) {
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := turbopuffer.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Namespaces.Export(context.TODO(), turbopuffer.NamespaceExportParams{
+		Namespace: turbopuffer.String("namespace"),
+		Cursor:    turbopuffer.String("cursor"),
+	})
+	if err != nil {
+		var apierr *turbopuffer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
 func TestNamespaceGetSchema(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -80,7 +105,9 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 		},
 		Queries: []turbopuffer.NamespaceMultiQueryParamsQuery{{
 			DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
-			Filters:        map[string]interface{}{},
+			Filters: turbopuffer.NamespaceMultiQueryParamsQueryFiltersUnion{
+				OfAnyArray: []any{map[string]interface{}{}},
+			},
 			IncludeAttributes: turbopuffer.NamespaceMultiQueryParamsQueryIncludeAttributesUnion{
 				OfBool: turbopuffer.Bool(true),
 			},
@@ -118,7 +145,9 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 			Level: turbopuffer.NamespaceQueryParamsConsistencyLevelStrong,
 		},
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
-		Filters:        map[string]interface{}{},
+		Filters: turbopuffer.NamespaceQueryParamsFiltersUnion{
+			OfAnyArray: []any{map[string]interface{}{}},
+		},
 		IncludeAttributes: turbopuffer.NamespaceQueryParamsIncludeAttributesUnion{
 			OfBool: turbopuffer.Bool(true),
 		},
@@ -127,6 +156,39 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		},
 		TopK:           turbopuffer.Int(0),
 		VectorEncoding: turbopuffer.NamespaceQueryParamsVectorEncodingFloat,
+	})
+	if err != nil {
+		var apierr *turbopuffer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := turbopuffer.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Namespaces.UpdateSchema(context.TODO(), turbopuffer.NamespaceUpdateSchemaParams{
+		Namespace: turbopuffer.String("namespace"),
+		Body: map[string]turbopuffer.AttributeSchemaParam{
+			"foo": {
+				Filterable: turbopuffer.Bool(true),
+				FullTextSearch: turbopuffer.AttributeSchemaFullTextSearchUnionParam{
+					OfBool: turbopuffer.Bool(true),
+				},
+				Type: turbopuffer.AttributeSchemaTypeString,
+			},
+		},
 	})
 	if err != nil {
 		var apierr *turbopuffer.Error
