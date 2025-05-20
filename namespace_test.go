@@ -84,8 +84,10 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 			IncludeAttributes: turbopuffer.NamespaceMultiQueryParamsQueryIncludeAttributesUnion{
 				OfBool: turbopuffer.Bool(true),
 			},
-			RankBy: map[string]interface{}{},
-			TopK:   turbopuffer.Int(0),
+			RankBy: turbopuffer.NamespaceMultiQueryParamsQueryRankByUnion{
+				OfAnyArray: []any{map[string]interface{}{}},
+			},
+			TopK: turbopuffer.Int(0),
 		}},
 		VectorEncoding: turbopuffer.NamespaceMultiQueryParamsVectorEncodingFloat,
 	})
@@ -120,7 +122,9 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		IncludeAttributes: turbopuffer.NamespaceQueryParamsIncludeAttributesUnion{
 			OfBool: turbopuffer.Bool(true),
 		},
-		RankBy:         map[string]interface{}{},
+		RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
+			OfAnyArray: []any{map[string]interface{}{}},
+		},
 		TopK:           turbopuffer.Int(0),
 		VectorEncoding: turbopuffer.NamespaceQueryParamsVectorEncodingFloat,
 	})

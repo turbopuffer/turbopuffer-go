@@ -748,7 +748,7 @@ type NamespaceMultiQueryParamsQuery struct {
 	Filters        any            `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes NamespaceMultiQueryParamsQueryIncludeAttributesUnion `json:"include_attributes,omitzero"`
-	RankBy            any                                                  `json:"rank_by,omitzero"`
+	RankBy            NamespaceMultiQueryParamsQueryRankByUnion            `json:"rank_by,omitzero"`
 	paramObj
 }
 
@@ -785,6 +785,50 @@ func (u *NamespaceMultiQueryParamsQueryIncludeAttributesUnion) asAny() any {
 	return nil
 }
 
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type NamespaceMultiQueryParamsQueryRankByUnion struct {
+	OfAnyArray                                       []any `json:",omitzero,inline"`
+	OfNamespaceMultiQuerysQueryRankByArray           []any `json:",omitzero,inline"`
+	OfVariant2                                       []any `json:",omitzero,inline"`
+	OfVariant3                                       []any `json:",omitzero,inline"`
+	OfNamespaceMultiQuerysQueryRankByRankByAttribute []any `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u NamespaceMultiQueryParamsQueryRankByUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[NamespaceMultiQueryParamsQueryRankByUnion](u.OfAnyArray,
+		u.OfNamespaceMultiQuerysQueryRankByArray,
+		u.OfVariant2,
+		u.OfVariant3,
+		u.OfVariant3,
+		u.OfVariant3,
+		u.OfNamespaceMultiQuerysQueryRankByRankByAttribute)
+}
+func (u *NamespaceMultiQueryParamsQueryRankByUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *NamespaceMultiQueryParamsQueryRankByUnion) asAny() any {
+	if !param.IsOmitted(u.OfAnyArray) {
+		return &u.OfAnyArray
+	} else if !param.IsOmitted(u.OfNamespaceMultiQuerysQueryRankByArray) {
+		return &u.OfNamespaceMultiQuerysQueryRankByArray
+	} else if !param.IsOmitted(u.OfVariant2) {
+		return &u.OfVariant2
+	} else if !param.IsOmitted(u.OfVariant3) {
+		return &u.OfVariant3
+	} else if !param.IsOmitted(u.OfVariant3) {
+		return &u.OfVariant3
+	} else if !param.IsOmitted(u.OfVariant3) {
+		return &u.OfVariant3
+	} else if !param.IsOmitted(u.OfNamespaceMultiQuerysQueryRankByRankByAttribute) {
+		return &u.OfNamespaceMultiQuerysQueryRankByRankByAttribute
+	}
+	return nil
+}
+
 // The encoding to use for vectors in the response.
 type NamespaceMultiQueryParamsVectorEncoding string
 
@@ -806,7 +850,7 @@ type NamespaceQueryParams struct {
 	Filters        any            `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes NamespaceQueryParamsIncludeAttributesUnion `json:"include_attributes,omitzero"`
-	RankBy            any                                        `json:"rank_by,omitzero"`
+	RankBy            NamespaceQueryParamsRankByUnion            `json:"rank_by,omitzero"`
 	// The encoding to use for vectors in the response.
 	//
 	// Any of "float", "base64".
@@ -868,6 +912,50 @@ func (u *NamespaceQueryParamsIncludeAttributesUnion) asAny() any {
 		return &u.OfBool.Value
 	} else if !param.IsOmitted(u.OfStringArray) {
 		return &u.OfStringArray
+	}
+	return nil
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type NamespaceQueryParamsRankByUnion struct {
+	OfAnyArray                             []any `json:",omitzero,inline"`
+	OfNamespaceQuerysRankByArray           []any `json:",omitzero,inline"`
+	OfVariant2                             []any `json:",omitzero,inline"`
+	OfVariant3                             []any `json:",omitzero,inline"`
+	OfNamespaceQuerysRankByRankByAttribute []any `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u NamespaceQueryParamsRankByUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[NamespaceQueryParamsRankByUnion](u.OfAnyArray,
+		u.OfNamespaceQuerysRankByArray,
+		u.OfVariant2,
+		u.OfVariant3,
+		u.OfVariant3,
+		u.OfVariant3,
+		u.OfNamespaceQuerysRankByRankByAttribute)
+}
+func (u *NamespaceQueryParamsRankByUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *NamespaceQueryParamsRankByUnion) asAny() any {
+	if !param.IsOmitted(u.OfAnyArray) {
+		return &u.OfAnyArray
+	} else if !param.IsOmitted(u.OfNamespaceQuerysRankByArray) {
+		return &u.OfNamespaceQuerysRankByArray
+	} else if !param.IsOmitted(u.OfVariant2) {
+		return &u.OfVariant2
+	} else if !param.IsOmitted(u.OfVariant3) {
+		return &u.OfVariant3
+	} else if !param.IsOmitted(u.OfVariant3) {
+		return &u.OfVariant3
+	} else if !param.IsOmitted(u.OfVariant3) {
+		return &u.OfVariant3
+	} else if !param.IsOmitted(u.OfNamespaceQuerysRankByRankByAttribute) {
+		return &u.OfNamespaceQuerysRankByRankByAttribute
 	}
 	return nil
 }
