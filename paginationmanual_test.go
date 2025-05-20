@@ -24,14 +24,14 @@ func TestManualPagination(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	page, err := client.Namespaces.List(context.TODO(), turbopuffer.NamespaceListParams{
+	page, err := client.ListNamespaces(context.TODO(), turbopuffer.ListNamespacesParams{
 		Prefix: turbopuffer.String("products"),
 	})
 	if err != nil {
 		t.Fatalf("err should be nil: %s", err.Error())
 	}
-	for _, namespace := range page.Namespaces {
-		t.Logf("%+v\n", namespace.ID)
+	for _, client := range page.Namespaces {
+		t.Logf("%+v\n", client.ID)
 	}
 	// Prism mock isn't going to give us real pagination
 	page, err = page.GetNextPage()
@@ -39,8 +39,8 @@ func TestManualPagination(t *testing.T) {
 		t.Fatalf("err should be nil: %s", err.Error())
 	}
 	if page != nil {
-		for _, namespace := range page.Namespaces {
-			t.Logf("%+v\n", namespace.ID)
+		for _, client := range page.Namespaces {
+			t.Logf("%+v\n", client.ID)
 		}
 	}
 }

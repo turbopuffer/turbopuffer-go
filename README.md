@@ -52,11 +52,9 @@ func main() {
 	client := turbopuffer.NewClient(
 		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("TURBOPUFFER_API_KEY")
 	)
-	response, err := client.Namespaces.Write(
-		context.TODO(),
-		"products",
-		turbopuffer.NamespaceWriteParams{},
-	)
+	response, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
+		Namespace: turbopuffer.String("products"),
+	})
 	if err != nil {
 		panic(err.Error())
 	}
@@ -283,7 +281,7 @@ This library provides some conveniences for working with paginated list endpoint
 You can use `.ListAutoPaging()` methods to iterate through items across all pages:
 
 ```go
-iter := client.Namespaces.ListAutoPaging(context.TODO(), turbopuffer.NamespaceListParams{
+iter := client.ListNamespacesAutoPaging(context.TODO(), turbopuffer.ListNamespacesParams{
 	Prefix: turbopuffer.String("products"),
 })
 // Automatically fetches more pages as needed.
@@ -300,12 +298,12 @@ Or you can use simple `.List()` methods to fetch a single page and receive a sta
 with additional helper methods like `.GetNextPage()`, e.g.:
 
 ```go
-page, err := client.Namespaces.List(context.TODO(), turbopuffer.NamespaceListParams{
+page, err := client.ListNamespaces(context.TODO(), turbopuffer.ListNamespacesParams{
 	Prefix: turbopuffer.String("products"),
 })
 for page != nil {
-	for _, namespace := range page.Namespaces {
-		fmt.Printf("%+v\n", namespace)
+	for _, client := range page.Namespaces {
+		fmt.Printf("%+v\n", client)
 	}
 	page, err = page.GetNextPage()
 }
@@ -324,18 +322,16 @@ When the API returns a non-success status code, we return an error with type
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Namespaces.Query(
-	context.TODO(),
-	"products",
-	turbopuffer.NamespaceQueryParams{},
-)
+_, err := client.Namespaces.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
+	Namespace: turbopuffer.String("products"),
+})
 if err != nil {
 	var apierr *turbopuffer.Error
 	if errors.As(err, &apierr) {
 		println(string(apierr.DumpRequest(true)))  // Prints the serialized HTTP request
 		println(string(apierr.DumpResponse(true))) // Prints the serialized HTTP response
 	}
-	panic(err.Error()) // GET "/v1/namespaces/{namespace}/query": 400 Bad Request { ... }
+	panic(err.Error()) // GET "/v2/namespaces/{namespace}/query": 400 Bad Request { ... }
 }
 ```
 
@@ -355,8 +351,9 @@ ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
 client.Namespaces.Query(
 	ctx,
-	"products",
-	turbopuffer.NamespaceQueryParams{},
+	turbopuffer.NamespaceQueryParams{
+		Namespace: turbopuffer.String("products"),
+	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
 )
@@ -392,8 +389,9 @@ client := turbopuffer.NewClient(
 // Override per-request:
 client.Namespaces.Query(
 	context.TODO(),
-	"products",
-	turbopuffer.NamespaceQueryParams{},
+	turbopuffer.NamespaceQueryParams{
+		Namespace: turbopuffer.String("products"),
+	},
 	option.WithMaxRetries(5),
 )
 ```
@@ -406,16 +404,17 @@ you need to examine response headers, status codes, or other details.
 ```go
 // Create a variable to store the HTTP response
 var response *http.Response
-documentRowWithScores, err := client.Namespaces.Query(
+response, err := client.Namespaces.Query(
 	context.TODO(),
-	"products",
-	turbopuffer.NamespaceQueryParams{},
+	turbopuffer.NamespaceQueryParams{
+		Namespace: turbopuffer.String("products"),
+	},
 	option.WithResponseInto(&response),
 )
 if err != nil {
 	// handle error
 }
-fmt.Printf("%+v\n", documentRowWithScores)
+fmt.Printf("%+v\n", response)
 
 fmt.Printf("Status Code: %d\n", response.StatusCode)
 fmt.Printf("Headers: %+#v\n", response.Header)

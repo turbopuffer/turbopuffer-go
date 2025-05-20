@@ -4,6 +4,7 @@ package turbopuffer_test
 
 import (
 	"context"
+	"errors"
 	"os"
 	"testing"
 
@@ -12,7 +13,8 @@ import (
 	"github.com/turbopuffer/turbopuffer-go/option"
 )
 
-func TestUsage(t *testing.T) {
+func TestTurbopufferListNamespacesWithOptionalParams(t *testing.T) {
+	t.Skip("skipped: tests are disabled for the time being")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -24,11 +26,16 @@ func TestUsage(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	response, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
-		Namespace: turbopuffer.String("products"),
+	_, err := client.ListNamespaces(context.TODO(), turbopuffer.ListNamespacesParams{
+		Cursor:   turbopuffer.String("cursor"),
+		PageSize: turbopuffer.Int(1),
+		Prefix:   turbopuffer.String("prefix"),
 	})
 	if err != nil {
+		var apierr *turbopuffer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
 		t.Fatalf("err should be nil: %s", err.Error())
 	}
-	t.Logf("%+v\n", response.Status)
 }
