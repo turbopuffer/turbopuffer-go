@@ -8,8 +8,10 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
+	"github.com/turbopuffer/turbopuffer-go/internal/apiquery"
 	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
 	"github.com/turbopuffer/turbopuffer-go/option"
 	"github.com/turbopuffer/turbopuffer-go/packages/param"
@@ -50,6 +52,23 @@ func (r *NamespaceService) DeleteAll(ctx context.Context, body NamespaceDeleteAl
 	}
 	path := fmt.Sprintf("v2/namespaces/%s", body.Namespace.Value)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, &res, opts...)
+	return
+}
+
+// Export documents.
+func (r *NamespaceService) Export(ctx context.Context, params NamespaceExportParams, opts ...option.RequestOption) (res *NamespaceExportResponse, err error) {
+	opts = append(r.Options[:], opts...)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
+	if params.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return
+	}
+	path := fmt.Sprintf("v1/namespaces/%s", params.Namespace.Value)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, params, &res, opts...)
 	return
 }
 
@@ -100,6 +119,23 @@ func (r *NamespaceService) Query(ctx context.Context, params NamespaceQueryParam
 		return
 	}
 	path := fmt.Sprintf("v2/namespaces/%s/query", params.Namespace.Value)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	return
+}
+
+// Update namespace schema.
+func (r *NamespaceService) UpdateSchema(ctx context.Context, params NamespaceUpdateSchemaParams, opts ...option.RequestOption) (res *NamespaceUpdateSchemaResponse, err error) {
+	opts = append(r.Options[:], opts...)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
+	if params.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return
+	}
+	path := fmt.Sprintf("v1/namespaces/%s/schema", params.Namespace.Value)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return
 }
@@ -299,6 +335,34 @@ const (
 	DistanceMetricCosineDistance   DistanceMetric = "cosine_distance"
 	DistanceMetricEuclideanSquared DistanceMetric = "euclidean_squared"
 )
+
+// A list of documents in columnar format. The keys are the column names.
+type DocumentColumns struct {
+	// The IDs of the documents.
+	ID          []IDUnion        `json:"id" format:"uuid"`
+	ExtraFields map[string][]any `json:",extras"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID          respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r DocumentColumns) RawJSON() string { return r.JSON.raw }
+func (r *DocumentColumns) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// ToParam converts this DocumentColumns to a DocumentColumnsParam.
+//
+// Warning: the fields of the param type will not be present. ToParam should only
+// be used at the last possible moment before sending a request. Test for this with
+// DocumentColumnsParam.Overrides()
+func (r DocumentColumns) ToParam() DocumentColumnsParam {
+	return param.Override[DocumentColumnsParam](r.RawJSON())
+}
 
 // A list of documents in columnar format. The keys are the column names.
 type DocumentColumnsParam struct {
@@ -608,6 +672,25 @@ func (r *NamespaceDeleteAllResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// A list of documents in columnar format. The keys are the column names.
+type NamespaceExportResponse struct {
+	// The cursor to use to retrieve the next page of results.
+	NextCursor string `json:"next_cursor"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		NextCursor  respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+	DocumentColumns
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceExportResponse) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceExportResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 type NamespaceGetSchemaResponse map[string]AttributeSchema
 
 type NamespaceMultiQueryResponse struct {
@@ -664,6 +747,8 @@ func (r *NamespaceQueryResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+type NamespaceUpdateSchemaResponse map[string]AttributeSchema
+
 // The response to a successful upsert request.
 type NamespaceWriteResponse struct {
 	// The status of the request.
@@ -685,6 +770,21 @@ func (r *NamespaceWriteResponse) UnmarshalJSON(data []byte) error {
 type NamespaceDeleteAllParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
 	paramObj
+}
+
+type NamespaceExportParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	// Retrieve the next page of results.
+	Cursor param.Opt[string] `query:"cursor,omitzero" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [NamespaceExportParams]'s query parameters as `url.Values`.
+func (r NamespaceExportParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatComma,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }
 
 type NamespaceGetSchemaParams struct {
@@ -744,8 +844,8 @@ type NamespaceMultiQueryParamsQuery struct {
 	// A function used to calculate vector similarity.
 	//
 	// Any of "cosine_distance", "euclidean_squared".
-	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
-	Filters        any            `json:"filters,omitzero"`
+	DistanceMetric DistanceMetric                             `json:"distance_metric,omitzero"`
+	Filters        NamespaceMultiQueryParamsQueryFiltersUnion `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes NamespaceMultiQueryParamsQueryIncludeAttributesUnion `json:"include_attributes,omitzero"`
 	RankBy            NamespaceMultiQueryParamsQueryRankByUnion            `json:"rank_by,omitzero"`
@@ -758,6 +858,37 @@ func (r NamespaceMultiQueryParamsQuery) MarshalJSON() (data []byte, err error) {
 }
 func (r *NamespaceMultiQueryParamsQuery) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type NamespaceMultiQueryParamsQueryFiltersUnion struct {
+	OfAnyArray                              []any `json:",omitzero,inline"`
+	OfNamespaceMultiQuerysQueryFiltersArray []any `json:",omitzero,inline"`
+	OfVariant2                              []any `json:",omitzero,inline"`
+	OfVariant3                              []any `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u NamespaceMultiQueryParamsQueryFiltersUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[NamespaceMultiQueryParamsQueryFiltersUnion](u.OfAnyArray, u.OfNamespaceMultiQuerysQueryFiltersArray, u.OfVariant2, u.OfVariant3)
+}
+func (u *NamespaceMultiQueryParamsQueryFiltersUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *NamespaceMultiQueryParamsQueryFiltersUnion) asAny() any {
+	if !param.IsOmitted(u.OfAnyArray) {
+		return &u.OfAnyArray
+	} else if !param.IsOmitted(u.OfNamespaceMultiQuerysQueryFiltersArray) {
+		return &u.OfNamespaceMultiQuerysQueryFiltersArray
+	} else if !param.IsOmitted(u.OfVariant2) {
+		return &u.OfVariant2
+	} else if !param.IsOmitted(u.OfVariant3) {
+		return &u.OfVariant3
+	}
+	return nil
 }
 
 // Only one field can be non-zero.
@@ -846,8 +977,8 @@ type NamespaceQueryParams struct {
 	// A function used to calculate vector similarity.
 	//
 	// Any of "cosine_distance", "euclidean_squared".
-	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
-	Filters        any            `json:"filters,omitzero"`
+	DistanceMetric DistanceMetric                   `json:"distance_metric,omitzero"`
+	Filters        NamespaceQueryParamsFiltersUnion `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes NamespaceQueryParamsIncludeAttributesUnion `json:"include_attributes,omitzero"`
 	RankBy            NamespaceQueryParamsRankByUnion            `json:"rank_by,omitzero"`
@@ -890,6 +1021,37 @@ const (
 	NamespaceQueryParamsConsistencyLevelStrong   NamespaceQueryParamsConsistencyLevel = "strong"
 	NamespaceQueryParamsConsistencyLevelEventual NamespaceQueryParamsConsistencyLevel = "eventual"
 )
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type NamespaceQueryParamsFiltersUnion struct {
+	OfAnyArray                    []any `json:",omitzero,inline"`
+	OfNamespaceQuerysFiltersArray []any `json:",omitzero,inline"`
+	OfVariant2                    []any `json:",omitzero,inline"`
+	OfVariant3                    []any `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u NamespaceQueryParamsFiltersUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[NamespaceQueryParamsFiltersUnion](u.OfAnyArray, u.OfNamespaceQuerysFiltersArray, u.OfVariant2, u.OfVariant3)
+}
+func (u *NamespaceQueryParamsFiltersUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *NamespaceQueryParamsFiltersUnion) asAny() any {
+	if !param.IsOmitted(u.OfAnyArray) {
+		return &u.OfAnyArray
+	} else if !param.IsOmitted(u.OfNamespaceQuerysFiltersArray) {
+		return &u.OfNamespaceQuerysFiltersArray
+	} else if !param.IsOmitted(u.OfVariant2) {
+		return &u.OfVariant2
+	} else if !param.IsOmitted(u.OfVariant3) {
+		return &u.OfVariant3
+	}
+	return nil
+}
 
 // Only one field can be non-zero.
 //
@@ -967,6 +1129,20 @@ const (
 	NamespaceQueryParamsVectorEncodingFloat  NamespaceQueryParamsVectorEncoding = "float"
 	NamespaceQueryParamsVectorEncodingBase64 NamespaceQueryParamsVectorEncoding = "base64"
 )
+
+type NamespaceUpdateSchemaParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	// The desired schema for the namespace.
+	Body map[string]AttributeSchemaParam
+	paramObj
+}
+
+func (r NamespaceUpdateSchemaParams) MarshalJSON() (data []byte, err error) {
+	return json.Marshal(r.Body)
+}
+func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
+	return r.Body.UnmarshalJSON(data)
+}
 
 type NamespaceWriteParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
