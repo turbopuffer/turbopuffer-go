@@ -19,9 +19,11 @@ type paramUnion = param.APIUnion
 type paramObj = param.APIObject
 
 type Export[T any] struct {
+	IDs        []T    `json:"ids"`
 	NextCursor string `json:"next_cursor"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
+		IDs         respjson.Field
 		NextCursor  respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
@@ -85,17 +87,17 @@ func NewExportAutoPager[T any](page *Export[T], err error) *ExportAutoPager[T] {
 }
 
 func (r *ExportAutoPager[T]) Next() bool {
-	if r.page == nil || len(r.page.data) == 0 {
+	if r.page == nil || len(r.page.IDs) == 0 {
 		return false
 	}
-	if r.idx >= len(r.page.data) {
+	if r.idx >= len(r.page.IDs) {
 		r.idx = 0
 		r.page, r.err = r.page.GetNextPage()
-		if r.err != nil || r.page == nil || len(r.page.data) == 0 {
+		if r.err != nil || r.page == nil || len(r.page.IDs) == 0 {
 			return false
 		}
 	}
-	r.cur = r.page.data[r.idx]
+	r.cur = r.page.IDs[r.idx]
 	r.run += 1
 	r.idx += 1
 	return true
