@@ -30,8 +30,8 @@ func TestManualPagination(t *testing.T) {
 	if err != nil {
 		t.Fatalf("err should be nil: %s", err.Error())
 	}
-	for _, client := range page.Namespaces {
-		t.Logf("%+v\n", client.ID)
+	for _, client := range page.data {
+		t.Logf("%+v\n", client.Namespaces)
 	}
 	// Prism mock isn't going to give us real pagination
 	page, err = page.GetNextPage()
@@ -39,8 +39,8 @@ func TestManualPagination(t *testing.T) {
 		t.Fatalf("err should be nil: %s", err.Error())
 	}
 	if page != nil {
-		for _, client := range page.Namespaces {
-			t.Logf("%+v\n", client.ID)
+		for _, client := range page.data {
+			t.Logf("%+v\n", client.Namespaces)
 		}
 	}
 }
