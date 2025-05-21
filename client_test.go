@@ -41,7 +41,7 @@ func TestUserAgentHeader(t *testing.T) {
 	client.Namespaces.Query(context.Background(), turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("products"),
 		RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-			OfAnyArray: []any{map[string]interface{}{}},
+			OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
 		},
 		TopK: 0,
 	})
@@ -71,7 +71,7 @@ func TestRetryAfter(t *testing.T) {
 	_, err := client.Namespaces.Query(context.Background(), turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("products"),
 		RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-			OfAnyArray: []any{map[string]interface{}{}},
+			OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
 		},
 		TopK: 0,
 	})
@@ -112,7 +112,7 @@ func TestDeleteRetryCountHeader(t *testing.T) {
 	_, err := client.Namespaces.Query(context.Background(), turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("products"),
 		RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-			OfAnyArray: []any{map[string]interface{}{}},
+			OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
 		},
 		TopK: 0,
 	})
@@ -148,7 +148,7 @@ func TestOverwriteRetryCountHeader(t *testing.T) {
 	_, err := client.Namespaces.Query(context.Background(), turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("products"),
 		RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-			OfAnyArray: []any{map[string]interface{}{}},
+			OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
 		},
 		TopK: 0,
 	})
@@ -183,7 +183,7 @@ func TestRetryAfterMs(t *testing.T) {
 	_, err := client.Namespaces.Query(context.Background(), turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("products"),
 		RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-			OfAnyArray: []any{map[string]interface{}{}},
+			OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
 		},
 		TopK: 0,
 	})
@@ -212,7 +212,7 @@ func TestContextCancel(t *testing.T) {
 	_, err := client.Namespaces.Query(cancelCtx, turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("products"),
 		RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-			OfAnyArray: []any{map[string]interface{}{}},
+			OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
 		},
 		TopK: 0,
 	})
@@ -238,7 +238,7 @@ func TestContextCancelDelay(t *testing.T) {
 	_, err := client.Namespaces.Query(cancelCtx, turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("products"),
 		RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-			OfAnyArray: []any{map[string]interface{}{}},
+			OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
 		},
 		TopK: 0,
 	})
@@ -270,7 +270,7 @@ func TestContextDeadline(t *testing.T) {
 		_, err := client.Namespaces.Query(deadlineCtx, turbopuffer.NamespaceQueryParams{
 			Namespace: turbopuffer.String("products"),
 			RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-				OfAnyArray: []any{map[string]interface{}{}},
+				OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
 			},
 			TopK: 0,
 		})
