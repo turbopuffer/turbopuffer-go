@@ -1,3 +1,7 @@
+# Shared Params Types
+
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared">shared</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared#FilterUnionParam">FilterUnionParam</a>
+
 # turbopuffer
 
 Response Types:

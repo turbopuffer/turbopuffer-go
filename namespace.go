@@ -14,6 +14,7 @@ import (
 	"github.com/turbopuffer/turbopuffer-go/option"
 	"github.com/turbopuffer/turbopuffer-go/packages/param"
 	"github.com/turbopuffer/turbopuffer-go/packages/respjson"
+	"github.com/turbopuffer/turbopuffer-go/shared"
 	"github.com/turbopuffer/turbopuffer-go/shared/constant"
 )
 
@@ -766,8 +767,8 @@ type NamespaceMultiQueryParamsQuery struct {
 	// A function used to calculate vector similarity.
 	//
 	// Any of "cosine_distance", "euclidean_squared".
-	DistanceMetric DistanceMetric                             `json:"distance_metric,omitzero"`
-	Filters        NamespaceMultiQueryParamsQueryFiltersUnion `json:"filters,omitzero"`
+	DistanceMetric DistanceMetric          `json:"distance_metric,omitzero"`
+	Filters        shared.FilterUnionParam `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes NamespaceMultiQueryParamsQueryIncludeAttributesUnion `json:"include_attributes,omitzero"`
 	paramObj
@@ -828,37 +829,6 @@ func (u *NamespaceMultiQueryParamsQueryRankByUnion) asAny() any {
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
-type NamespaceMultiQueryParamsQueryFiltersUnion struct {
-	OfAnyArray                              []any `json:",omitzero,inline"`
-	OfNamespaceMultiQuerysQueryFiltersArray []any `json:",omitzero,inline"`
-	OfVariant2                              []any `json:",omitzero,inline"`
-	OfVariant3                              []any `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u NamespaceMultiQueryParamsQueryFiltersUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[NamespaceMultiQueryParamsQueryFiltersUnion](u.OfAnyArray, u.OfNamespaceMultiQuerysQueryFiltersArray, u.OfVariant2, u.OfVariant3)
-}
-func (u *NamespaceMultiQueryParamsQueryFiltersUnion) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *NamespaceMultiQueryParamsQueryFiltersUnion) asAny() any {
-	if !param.IsOmitted(u.OfAnyArray) {
-		return &u.OfAnyArray
-	} else if !param.IsOmitted(u.OfNamespaceMultiQuerysQueryFiltersArray) {
-		return &u.OfNamespaceMultiQuerysQueryFiltersArray
-	} else if !param.IsOmitted(u.OfVariant2) {
-		return &u.OfVariant2
-	} else if !param.IsOmitted(u.OfVariant3) {
-		return &u.OfVariant3
-	}
-	return nil
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
 type NamespaceMultiQueryParamsQueryIncludeAttributesUnion struct {
 	OfBool        param.Opt[bool] `json:",omitzero,inline"`
 	OfStringArray []string        `json:",omitzero,inline"`
@@ -899,8 +869,8 @@ type NamespaceQueryParams struct {
 	// A function used to calculate vector similarity.
 	//
 	// Any of "cosine_distance", "euclidean_squared".
-	DistanceMetric DistanceMetric                   `json:"distance_metric,omitzero"`
-	Filters        NamespaceQueryParamsFiltersUnion `json:"filters,omitzero"`
+	DistanceMetric DistanceMetric          `json:"distance_metric,omitzero"`
+	Filters        shared.FilterUnionParam `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes NamespaceQueryParamsIncludeAttributesUnion `json:"include_attributes,omitzero"`
 	// The encoding to use for vectors in the response.
@@ -986,37 +956,6 @@ const (
 	NamespaceQueryParamsConsistencyLevelStrong   NamespaceQueryParamsConsistencyLevel = "strong"
 	NamespaceQueryParamsConsistencyLevelEventual NamespaceQueryParamsConsistencyLevel = "eventual"
 )
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type NamespaceQueryParamsFiltersUnion struct {
-	OfAnyArray                    []any `json:",omitzero,inline"`
-	OfNamespaceQuerysFiltersArray []any `json:",omitzero,inline"`
-	OfVariant2                    []any `json:",omitzero,inline"`
-	OfVariant3                    []any `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u NamespaceQueryParamsFiltersUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[NamespaceQueryParamsFiltersUnion](u.OfAnyArray, u.OfNamespaceQuerysFiltersArray, u.OfVariant2, u.OfVariant3)
-}
-func (u *NamespaceQueryParamsFiltersUnion) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *NamespaceQueryParamsFiltersUnion) asAny() any {
-	if !param.IsOmitted(u.OfAnyArray) {
-		return &u.OfAnyArray
-	} else if !param.IsOmitted(u.OfNamespaceQuerysFiltersArray) {
-		return &u.OfNamespaceQuerysFiltersArray
-	} else if !param.IsOmitted(u.OfVariant2) {
-		return &u.OfVariant2
-	} else if !param.IsOmitted(u.OfVariant3) {
-		return &u.OfVariant3
-	}
-	return nil
-}
 
 // Only one field can be non-zero.
 //
