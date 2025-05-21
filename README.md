@@ -325,7 +325,7 @@ To handle errors, we recommend that you use the `errors.As` pattern:
 _, err := client.Namespaces.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
 	Namespace: turbopuffer.String("products"),
 	RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-		OfAnyArray: []any{map[string]interface{}{}},
+		OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
 	},
 	TopK: 0,
 })
@@ -358,7 +358,7 @@ client.Namespaces.Query(
 	turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("products"),
 		RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-			OfAnyArray: []any{map[string]interface{}{}},
+			OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
 		},
 		TopK: 0,
 	},
@@ -400,7 +400,7 @@ client.Namespaces.Query(
 	turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("products"),
 		RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-			OfAnyArray: []any{map[string]interface{}{}},
+			OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
 		},
 		TopK: 0,
 	},
@@ -421,7 +421,7 @@ response, err := client.Namespaces.Query(
 	turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("products"),
 		RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-			OfAnyArray: []any{map[string]interface{}{}},
+			OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
 		},
 		TopK: 0,
 	},

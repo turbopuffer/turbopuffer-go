@@ -84,7 +84,7 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 		},
 		Queries: []turbopuffer.NamespaceMultiQueryParamsQuery{{
 			RankBy: turbopuffer.NamespaceMultiQueryParamsQueryRankByUnion{
-				OfAnyArray: []any{map[string]interface{}{}},
+				OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
 			},
 			TopK:           0,
 			DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
@@ -122,7 +122,7 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 	_, err := client.Namespaces.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("namespace"),
 		RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-			OfAnyArray: []any{map[string]interface{}{}},
+			OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
 		},
 		TopK: 0,
 		Consistency: turbopuffer.NamespaceQueryParamsConsistency{
