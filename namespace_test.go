@@ -11,6 +11,7 @@ import (
 	"github.com/turbopuffer/turbopuffer-go"
 	"github.com/turbopuffer/turbopuffer-go/internal/testutil"
 	"github.com/turbopuffer/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go/shared"
 )
 
 func TestNamespaceDeleteAll(t *testing.T) {
@@ -87,7 +88,7 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 			},
 			TopK:           0,
 			DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
-			Filters: turbopuffer.NamespaceMultiQueryParamsQueryFiltersUnion{
+			Filters: shared.FilterUnionParam{
 				OfAnyArray: []any{map[string]interface{}{}},
 			},
 			IncludeAttributes: turbopuffer.NamespaceMultiQueryParamsQueryIncludeAttributesUnion{
@@ -128,7 +129,7 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 			Level: turbopuffer.NamespaceQueryParamsConsistencyLevelStrong,
 		},
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
-		Filters: turbopuffer.NamespaceQueryParamsFiltersUnion{
+		Filters: shared.FilterUnionParam{
 			OfAnyArray: []any{map[string]interface{}{}},
 		},
 		IncludeAttributes: turbopuffer.NamespaceQueryParamsIncludeAttributesUnion{
