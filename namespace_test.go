@@ -121,7 +121,7 @@ func TestNamespaceRecallWithOptionalParams(t *testing.T) {
 		Namespace: turbopuffer.String("namespace"),
 		Filters:   map[string]interface{}{},
 		Num:       turbopuffer.Int(0),
-		Queries:   []any{map[string]interface{}{}},
+		Queries:   []float64{0},
 		TopK:      turbopuffer.Int(0),
 	})
 	if err != nil {

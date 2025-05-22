@@ -481,7 +481,7 @@ type NamespaceRecallParams struct {
 	Filters any `json:"filters,omitzero"`
 	// Use specific query vectors for the measurement. If omitted, sampled from the
 	// index.
-	Queries []any `json:"queries,omitzero"`
+	Queries []float64 `json:"queries,omitzero"`
 	paramObj
 }
 
