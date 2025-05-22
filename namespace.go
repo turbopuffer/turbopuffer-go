@@ -8,16 +8,13 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"net/url"
 
-	"github.com/stainless-sdks/turbopuffer-go/internal/apijson"
-	"github.com/stainless-sdks/turbopuffer-go/internal/apiquery"
-	"github.com/stainless-sdks/turbopuffer-go/internal/requestconfig"
-	"github.com/stainless-sdks/turbopuffer-go/option"
-	"github.com/stainless-sdks/turbopuffer-go/packages/pagination"
-	"github.com/stainless-sdks/turbopuffer-go/packages/param"
-	"github.com/stainless-sdks/turbopuffer-go/packages/resp"
-	"github.com/stainless-sdks/turbopuffer-go/shared/constant"
+	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
+	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
+	"github.com/turbopuffer/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go/packages/param"
+	"github.com/turbopuffer/turbopuffer-go/packages/respjson"
+	"github.com/turbopuffer/turbopuffer-go/shared/constant"
 )
 
 // NamespaceService contains methods and other services that help with interacting
@@ -33,80 +30,136 @@ type NamespaceService struct {
 // NewNamespaceService generates a new service that applies the given options to
 // each request. These options are applied after the parent client's options (if
 // there is one), and before any request-specific options.
-func NewNamespaceService(opts ...option.RequestOption) (r NamespaceService) {
+func newNamespaceService(opts ...option.RequestOption) (r NamespaceService) {
 	r = NamespaceService{}
 	r.Options = opts
 	return
 }
 
-// List namespaces.
-func (r *NamespaceService) List(ctx context.Context, query NamespaceListParams, opts ...option.RequestOption) (res *pagination.ListNamespaces[NamespaceSummary], err error) {
-	var raw *http.Response
-	opts = append(r.Options[:], opts...)
-	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
-	path := "v1/namespaces"
-	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
+func (r *NamespaceService) ID() string {
+	requestConfig, err := requestconfig.NewRequestConfig(context.Background(), "GET", "/", nil, nil, r.Options...)
 	if err != nil {
-		return nil, err
+		panic(fmt.Errorf("failed to create request config: %w", err))
 	}
-	err = cfg.Execute()
-	if err != nil {
-		return nil, err
-	}
-	res.SetPageConfig(cfg, raw)
-	return res, nil
-}
-
-// List namespaces.
-func (r *NamespaceService) ListAutoPaging(ctx context.Context, query NamespaceListParams, opts ...option.RequestOption) *pagination.ListNamespacesAutoPager[NamespaceSummary] {
-	return pagination.NewListNamespacesAutoPager(r.List(ctx, query, opts...))
+	return *requestConfig.DefaultNamespace
 }
 
 // Delete namespace.
-func (r *NamespaceService) DeleteAll(ctx context.Context, namespace string, opts ...option.RequestOption) (res *NamespaceDeleteAllResponse, err error) {
+func (r *NamespaceService) DeleteAll(ctx context.Context, body NamespaceDeleteAllParams, opts ...option.RequestOption) (res *NamespaceDeleteAllResponse, err error) {
 	opts = append(r.Options[:], opts...)
-	if namespace == "" {
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&body.Namespace, precfg.DefaultNamespace)
+	if body.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v2/namespaces/%s", namespace)
+	path := fmt.Sprintf("v2/namespaces/%s", body.Namespace.Value)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, &res, opts...)
 	return
 }
 
 // Get namespace schema.
-func (r *NamespaceService) GetSchema(ctx context.Context, namespace string, opts ...option.RequestOption) (res *NamespaceGetSchemaResponse, err error) {
+func (r *NamespaceService) GetSchema(ctx context.Context, query NamespaceGetSchemaParams, opts ...option.RequestOption) (res *NamespaceGetSchemaResponse, err error) {
 	opts = append(r.Options[:], opts...)
-	if namespace == "" {
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&query.Namespace, precfg.DefaultNamespace)
+	if query.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v1/namespaces/%s/schema", namespace)
+	path := fmt.Sprintf("v1/namespaces/%s/schema", query.Namespace.Value)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
 }
 
 // Query, filter, full-text search and vector search documents.
-func (r *NamespaceService) Query(ctx context.Context, namespace string, body NamespaceQueryParams, opts ...option.RequestOption) (res *[]DocumentRowWithScore, err error) {
+func (r *NamespaceService) Query(ctx context.Context, params NamespaceQueryParams, opts ...option.RequestOption) (res *NamespaceQueryResponse, err error) {
 	opts = append(r.Options[:], opts...)
-	if namespace == "" {
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
+	if params.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v1/namespaces/%s/query", namespace)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	path := fmt.Sprintf("v2/namespaces/%s/query", params.Namespace.Value)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	return
+}
+
+// Evaluate recall.
+func (r *NamespaceService) Recall(ctx context.Context, params NamespaceRecallParams, opts ...option.RequestOption) (res *NamespaceRecallResponse, err error) {
+	opts = append(r.Options[:], opts...)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
+	if params.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return
+	}
+	path := fmt.Sprintf("v1/namespaces/%s/_debug/recall", params.Namespace.Value)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	return
+}
+
+// Update namespace schema.
+func (r *NamespaceService) UpdateSchema(ctx context.Context, params NamespaceUpdateSchemaParams, opts ...option.RequestOption) (res *NamespaceUpdateSchemaResponse, err error) {
+	opts = append(r.Options[:], opts...)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
+	if params.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return
+	}
+	path := fmt.Sprintf("v1/namespaces/%s/schema", params.Namespace.Value)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	return
+}
+
+// Warm the cache for a namespace.
+func (r *NamespaceService) WarmCache(ctx context.Context, query NamespaceWarmCacheParams, opts ...option.RequestOption) (res *NamespaceWarmCacheResponse, err error) {
+	opts = append(r.Options[:], opts...)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&query.Namespace, precfg.DefaultNamespace)
+	if query.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return
+	}
+	path := fmt.Sprintf("v1/namespaces/%s/hint_cache_warm", query.Namespace.Value)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
 }
 
 // Create, update, or delete documents.
-func (r *NamespaceService) Write(ctx context.Context, namespace string, body NamespaceWriteParams, opts ...option.RequestOption) (res *NamespaceWriteResponse, err error) {
+func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParams, opts ...option.RequestOption) (res *NamespaceWriteResponse, err error) {
 	opts = append(r.Options[:], opts...)
-	if namespace == "" {
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
+	if params.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v2/namespaces/%s", namespace)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	path := fmt.Sprintf("v2/namespaces/%s", params.Namespace.Value)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return
 }
 
@@ -120,15 +173,15 @@ type AttributeSchema struct {
 	FullTextSearch AttributeSchemaFullTextSearchUnion `json:"full_text_search"`
 	// The data type of the attribute.
 	//
-	// Any of "string", "uint", "uuid", "bool", "[]string", "[]uint", "[]uuid".
+	// Any of "string", "uint", "uuid", "bool", "datetime", "[]string", "[]uint",
+	// "[]uuid", "[]datetime".
 	Type AttributeSchemaType `json:"type"`
-	// Metadata for the response, check the presence of optional fields with the
-	// [resp.Field.IsPresent] method.
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Filterable     resp.Field
-		FullTextSearch resp.Field
-		Type           resp.Field
-		ExtraFields    map[string]resp.Field
+		Filterable     respjson.Field
+		FullTextSearch respjson.Field
+		Type           respjson.Field
+		ExtraFields    map[string]respjson.Field
 		raw            string
 	} `json:"-"`
 }
@@ -143,9 +196,9 @@ func (r *AttributeSchema) UnmarshalJSON(data []byte) error {
 //
 // Warning: the fields of the param type will not be present. ToParam should only
 // be used at the last possible moment before sending a request. Test for this with
-// AttributeSchemaParam.IsOverridden()
+// AttributeSchemaParam.Overrides()
 func (r AttributeSchema) ToParam() AttributeSchemaParam {
-	return param.OverrideObj[AttributeSchemaParam](r.RawJSON())
+	return param.Override[AttributeSchemaParam](r.RawJSON())
 }
 
 // AttributeSchemaFullTextSearchUnion contains all possible properties and values
@@ -167,11 +220,11 @@ type AttributeSchemaFullTextSearchUnion struct {
 	// This field is from variant [FullTextSearchConfig].
 	Stemming bool `json:"stemming"`
 	JSON     struct {
-		OfBool          resp.Field
-		CaseSensitive   resp.Field
-		Language        resp.Field
-		RemoveStopwords resp.Field
-		Stemming        resp.Field
+		OfBool          respjson.Field
+		CaseSensitive   respjson.Field
+		Language        respjson.Field
+		RemoveStopwords respjson.Field
+		Stemming        respjson.Field
 		raw             string
 	} `json:"-"`
 }
@@ -221,13 +274,15 @@ const (
 type AttributeSchemaType string
 
 const (
-	AttributeSchemaTypeString      AttributeSchemaType = "string"
-	AttributeSchemaTypeUint        AttributeSchemaType = "uint"
-	AttributeSchemaTypeUuid        AttributeSchemaType = "uuid"
-	AttributeSchemaTypeBool        AttributeSchemaType = "bool"
-	AttributeSchemaTypeStringArray AttributeSchemaType = "[]string"
-	AttributeSchemaTypeUintArray   AttributeSchemaType = "[]uint"
-	AttributeSchemaTypeUuidArray   AttributeSchemaType = "[]uuid"
+	AttributeSchemaTypeString        AttributeSchemaType = "string"
+	AttributeSchemaTypeUint          AttributeSchemaType = "uint"
+	AttributeSchemaTypeUuid          AttributeSchemaType = "uuid"
+	AttributeSchemaTypeBool          AttributeSchemaType = "bool"
+	AttributeSchemaTypeDatetime      AttributeSchemaType = "datetime"
+	AttributeSchemaTypeStringArray   AttributeSchemaType = "[]string"
+	AttributeSchemaTypeUintArray     AttributeSchemaType = "[]uint"
+	AttributeSchemaTypeUuidArray     AttributeSchemaType = "[]uuid"
+	AttributeSchemaTypeDatetimeArray AttributeSchemaType = "[]datetime"
 )
 
 // The schema for an attribute attached to a document.
@@ -240,17 +295,18 @@ type AttributeSchemaParam struct {
 	FullTextSearch AttributeSchemaFullTextSearchUnionParam `json:"full_text_search,omitzero"`
 	// The data type of the attribute.
 	//
-	// Any of "string", "uint", "uuid", "bool", "[]string", "[]uint", "[]uuid".
+	// Any of "string", "uint", "uuid", "bool", "datetime", "[]string", "[]uint",
+	// "[]uuid", "[]datetime".
 	Type AttributeSchemaType `json:"type,omitzero"`
 	paramObj
 }
 
-// IsPresent returns true if the field's value is not omitted and not the JSON
-// "null". To check if this field is omitted, use [param.IsOmitted].
-func (f AttributeSchemaParam) IsPresent() bool { return !param.IsOmitted(f) && !f.IsNull() }
 func (r AttributeSchemaParam) MarshalJSON() (data []byte, err error) {
 	type shadow AttributeSchemaParam
 	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *AttributeSchemaParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
 }
 
 // Only one field can be non-zero.
@@ -262,13 +318,11 @@ type AttributeSchemaFullTextSearchUnionParam struct {
 	paramUnion
 }
 
-// IsPresent returns true if the field's value is not omitted and not the JSON
-// "null". To check if this field is omitted, use [param.IsOmitted].
-func (u AttributeSchemaFullTextSearchUnionParam) IsPresent() bool {
-	return !param.IsOmitted(u) && !u.IsNull()
-}
 func (u AttributeSchemaFullTextSearchUnionParam) MarshalJSON() ([]byte, error) {
 	return param.MarshalUnion[AttributeSchemaFullTextSearchUnionParam](u.OfBool, u.OfFullTextSearchConfig)
+}
+func (u *AttributeSchemaFullTextSearchUnionParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
 }
 
 func (u *AttributeSchemaFullTextSearchUnionParam) asAny() any {
@@ -289,34 +343,69 @@ const (
 )
 
 // A list of documents in columnar format. The keys are the column names.
+//
+// The property ID is required.
 type DocumentColumnsParam struct {
 	// The IDs of the documents.
-	ID          []IDUnionParam              `json:"id,omitzero" format:"uuid"`
-	ExtraFields map[string][]map[string]any `json:"-,extras"`
+	ID []IDUnionParam `json:"id,omitzero,required" format:"uuid"`
+	// The vector embeddings of the documents.
+	Vector      DocumentColumnsVectorUnionParam `json:"vector,omitzero"`
+	ExtraFields map[string][]any                `json:"-"`
 	paramObj
 }
 
-// IsPresent returns true if the field's value is not omitted and not the JSON
-// "null". To check if this field is omitted, use [param.IsOmitted].
-func (f DocumentColumnsParam) IsPresent() bool { return !param.IsOmitted(f) && !f.IsNull() }
 func (r DocumentColumnsParam) MarshalJSON() (data []byte, err error) {
 	type shadow DocumentColumnsParam
-	return param.MarshalObject(r, (*shadow)(&r))
+	extraFields := make(map[string]any)
+	for fieldName, fieldValue := range r.ExtraFields {
+		extraFields[fieldName] = fieldValue
+	}
+	return param.MarshalWithExtras(r, (*shadow)(&r), extraFields)
+}
+func (r *DocumentColumnsParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type DocumentColumnsVectorUnionParam struct {
+	OfVectorArray []VectorUnionParam `json:",omitzero,inline"`
+	OfFloatArray  []float64          `json:",omitzero,inline"`
+	OfString      param.Opt[string]  `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u DocumentColumnsVectorUnionParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[DocumentColumnsVectorUnionParam](u.OfVectorArray, u.OfFloatArray, u.OfString)
+}
+func (u *DocumentColumnsVectorUnionParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *DocumentColumnsVectorUnionParam) asAny() any {
+	if !param.IsOmitted(u.OfVectorArray) {
+		return &u.OfVectorArray
+	} else if !param.IsOmitted(u.OfFloatArray) {
+		return &u.OfFloatArray
+	} else if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	}
+	return nil
 }
 
 // A single document, in a row-based format.
 type DocumentRow struct {
 	// An identifier for a document.
-	ID IDUnion `json:"id" format:"uuid"`
-	// A vector describing the document.
-	Vector      DocumentRowVectorUnion `json:"vector,nullable"`
-	ExtraFields map[string]any         `json:",extras"`
-	// Metadata for the response, check the presence of optional fields with the
-	// [resp.Field.IsPresent] method.
+	ID IDUnion `json:"id,required" format:"uuid"`
+	// A vector embedding associated with a document.
+	Vector      VectorUnion    `json:"vector"`
+	ExtraFields map[string]any `json:",extras"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID          resp.Field
-		Vector      resp.Field
-		ExtraFields map[string]resp.Field
+		ID          respjson.Field
+		Vector      respjson.Field
+		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
 }
@@ -331,109 +420,28 @@ func (r *DocumentRow) UnmarshalJSON(data []byte) error {
 //
 // Warning: the fields of the param type will not be present. ToParam should only
 // be used at the last possible moment before sending a request. Test for this with
-// DocumentRowParam.IsOverridden()
+// DocumentRowParam.Overrides()
 func (r DocumentRow) ToParam() DocumentRowParam {
-	return param.OverrideObj[DocumentRowParam](r.RawJSON())
-}
-
-// DocumentRowVectorUnion contains all possible properties and values from
-// [[]float64], [string].
-//
-// Use the methods beginning with 'As' to cast the union to one of its variants.
-//
-// If the underlying value is not a json object, one of the following properties
-// will be valid: OfDocumentRowVectorArray OfString]
-type DocumentRowVectorUnion struct {
-	// This field will be present if the value is a [[]float64] instead of an object.
-	OfDocumentRowVectorArray []float64 `json:",inline"`
-	// This field will be present if the value is a [string] instead of an object.
-	OfString string `json:",inline"`
-	JSON     struct {
-		OfDocumentRowVectorArray resp.Field
-		OfString                 resp.Field
-		raw                      string
-	} `json:"-"`
-}
-
-func (u DocumentRowVectorUnion) AsDocumentRowVectorArray() (v []float64) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u DocumentRowVectorUnion) AsString() (v string) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-// Returns the unmodified JSON received from the API
-func (u DocumentRowVectorUnion) RawJSON() string { return u.JSON.raw }
-
-func (r *DocumentRowVectorUnion) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
+	return param.Override[DocumentRowParam](r.RawJSON())
 }
 
 // A single document, in a row-based format.
+//
+// The property ID is required.
 type DocumentRowParam struct {
-	// A vector describing the document.
-	Vector DocumentRowVectorUnionParam `json:"vector,omitzero"`
 	// An identifier for a document.
-	ID          IDUnionParam   `json:"id,omitzero" format:"uuid"`
-	ExtraFields map[string]any `json:"-,extras"`
+	ID IDUnionParam `json:"id,omitzero,required" format:"uuid"`
+	// A vector embedding associated with a document.
+	Vector      VectorUnionParam `json:"vector,omitzero"`
+	ExtraFields map[string]any   `json:"-"`
 	paramObj
 }
 
-// IsPresent returns true if the field's value is not omitted and not the JSON
-// "null". To check if this field is omitted, use [param.IsOmitted].
-func (f DocumentRowParam) IsPresent() bool { return !param.IsOmitted(f) && !f.IsNull() }
 func (r DocumentRowParam) MarshalJSON() (data []byte, err error) {
 	type shadow DocumentRowParam
-	return param.MarshalObject(r, (*shadow)(&r))
+	return param.MarshalWithExtras(r, (*shadow)(&r), r.ExtraFields)
 }
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type DocumentRowVectorUnionParam struct {
-	OfDocumentRowVectorArray []float64         `json:",omitzero,inline"`
-	OfString                 param.Opt[string] `json:",omitzero,inline"`
-	paramUnion
-}
-
-// IsPresent returns true if the field's value is not omitted and not the JSON
-// "null". To check if this field is omitted, use [param.IsOmitted].
-func (u DocumentRowVectorUnionParam) IsPresent() bool { return !param.IsOmitted(u) && !u.IsNull() }
-func (u DocumentRowVectorUnionParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[DocumentRowVectorUnionParam](u.OfDocumentRowVectorArray, u.OfString)
-}
-
-func (u *DocumentRowVectorUnionParam) asAny() any {
-	if !param.IsOmitted(u.OfDocumentRowVectorArray) {
-		return &u.OfDocumentRowVectorArray
-	} else if !param.IsOmitted(u.OfString) {
-		return &u.OfString.Value
-	}
-	return nil
-}
-
-// A single document, in a row-based format.
-type DocumentRowWithScore struct {
-	// For vector search, the distance between the query vector and the document
-	// vector. For BM25 full-text search, the score of the document. Not present for
-	// other types of queries.
-	Dist float64 `json:"dist"`
-	// Metadata for the response, check the presence of optional fields with the
-	// [resp.Field.IsPresent] method.
-	JSON struct {
-		Dist        resp.Field
-		ExtraFields map[string]resp.Field
-		raw         string
-	} `json:"-"`
-	DocumentRow
-}
-
-// Returns the unmodified JSON received from the API
-func (r DocumentRowWithScore) RawJSON() string { return r.JSON.raw }
-func (r *DocumentRowWithScore) UnmarshalJSON(data []byte) error {
+func (r *DocumentRowParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -454,14 +462,13 @@ type FullTextSearchConfig struct {
 	// Language-specific stemming for the text. Defaults to `false` (i.e., do not
 	// stem).
 	Stemming bool `json:"stemming"`
-	// Metadata for the response, check the presence of optional fields with the
-	// [resp.Field.IsPresent] method.
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		CaseSensitive   resp.Field
-		Language        resp.Field
-		RemoveStopwords resp.Field
-		Stemming        resp.Field
-		ExtraFields     map[string]resp.Field
+		CaseSensitive   respjson.Field
+		Language        respjson.Field
+		RemoveStopwords respjson.Field
+		Stemming        respjson.Field
+		ExtraFields     map[string]respjson.Field
 		raw             string
 	} `json:"-"`
 }
@@ -476,9 +483,9 @@ func (r *FullTextSearchConfig) UnmarshalJSON(data []byte) error {
 //
 // Warning: the fields of the param type will not be present. ToParam should only
 // be used at the last possible moment before sending a request. Test for this with
-// FullTextSearchConfigParam.IsOverridden()
+// FullTextSearchConfigParam.Overrides()
 func (r FullTextSearchConfig) ToParam() FullTextSearchConfigParam {
-	return param.OverrideObj[FullTextSearchConfigParam](r.RawJSON())
+	return param.Override[FullTextSearchConfigParam](r.RawJSON())
 }
 
 // The language of the text. Defaults to `english`.
@@ -525,12 +532,12 @@ type FullTextSearchConfigParam struct {
 	paramObj
 }
 
-// IsPresent returns true if the field's value is not omitted and not the JSON
-// "null". To check if this field is omitted, use [param.IsOmitted].
-func (f FullTextSearchConfigParam) IsPresent() bool { return !param.IsOmitted(f) && !f.IsNull() }
 func (r FullTextSearchConfigParam) MarshalJSON() (data []byte, err error) {
 	type shadow FullTextSearchConfigParam
 	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *FullTextSearchConfigParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
 }
 
 // IDUnion contains all possible properties and values from [string], [int64].
@@ -545,8 +552,8 @@ type IDUnion struct {
 	// This field will be present if the value is a [int64] instead of an object.
 	OfInt int64 `json:",inline"`
 	JSON  struct {
-		OfString resp.Field
-		OfInt    resp.Field
+		OfString respjson.Field
+		OfInt    respjson.Field
 		raw      string
 	} `json:"-"`
 }
@@ -572,9 +579,9 @@ func (r *IDUnion) UnmarshalJSON(data []byte) error {
 //
 // Warning: the fields of the param type will not be present. ToParam should only
 // be used at the last possible moment before sending a request. Test for this with
-// IDUnionParam.IsOverridden()
+// IDUnionParam.Overrides()
 func (r IDUnion) ToParam() IDUnionParam {
-	return param.OverrideObj[IDUnionParam](r.RawJSON())
+	return param.Override[IDUnionParam](r.RawJSON())
 }
 
 // Only one field can be non-zero.
@@ -586,11 +593,11 @@ type IDUnionParam struct {
 	paramUnion
 }
 
-// IsPresent returns true if the field's value is not omitted and not the JSON
-// "null". To check if this field is omitted, use [param.IsOmitted].
-func (u IDUnionParam) IsPresent() bool { return !param.IsOmitted(u) && !u.IsNull() }
 func (u IDUnionParam) MarshalJSON() ([]byte, error) {
 	return param.MarshalUnion[IDUnionParam](u.OfString, u.OfInt)
+}
+func (u *IDUnionParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
 }
 
 func (u *IDUnionParam) asAny() any {
@@ -602,34 +609,109 @@ func (u *IDUnionParam) asAny() any {
 	return nil
 }
 
-// A summary of a namespace.
-type NamespaceSummary struct {
-	// The namespace ID.
-	ID string `json:"id,required"`
-	// Metadata for the response, check the presence of optional fields with the
-	// [resp.Field.IsPresent] method.
-	JSON struct {
-		ID          resp.Field
-		ExtraFields map[string]resp.Field
-		raw         string
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type IncludeAttributesUnionParam struct {
+	OfBool        param.Opt[bool] `json:",omitzero,inline"`
+	OfStringArray []string        `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u IncludeAttributesUnionParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[IncludeAttributesUnionParam](u.OfBool, u.OfStringArray)
+}
+func (u *IncludeAttributesUnionParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *IncludeAttributesUnionParam) asAny() any {
+	if !param.IsOmitted(u.OfBool) {
+		return &u.OfBool.Value
+	} else if !param.IsOmitted(u.OfStringArray) {
+		return &u.OfStringArray
+	}
+	return nil
+}
+
+// VectorUnion contains all possible properties and values from [[]float64],
+// [string].
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+//
+// If the underlying value is not a json object, one of the following properties
+// will be valid: OfFloatArray OfString]
+type VectorUnion struct {
+	// This field will be present if the value is a [[]float64] instead of an object.
+	OfFloatArray []float64 `json:",inline"`
+	// This field will be present if the value is a [string] instead of an object.
+	OfString string `json:",inline"`
+	JSON     struct {
+		OfFloatArray respjson.Field
+		OfString     respjson.Field
+		raw          string
 	} `json:"-"`
 }
 
+func (u VectorUnion) AsFloatArray() (v []float64) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u VectorUnion) AsString() (v string) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
 // Returns the unmodified JSON received from the API
-func (r NamespaceSummary) RawJSON() string { return r.JSON.raw }
-func (r *NamespaceSummary) UnmarshalJSON(data []byte) error {
+func (u VectorUnion) RawJSON() string { return u.JSON.raw }
+
+func (r *VectorUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+// ToParam converts this VectorUnion to a VectorUnionParam.
+//
+// Warning: the fields of the param type will not be present. ToParam should only
+// be used at the last possible moment before sending a request. Test for this with
+// VectorUnionParam.Overrides()
+func (r VectorUnion) ToParam() VectorUnionParam {
+	return param.Override[VectorUnionParam](r.RawJSON())
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type VectorUnionParam struct {
+	OfFloatArray []float64         `json:",omitzero,inline"`
+	OfString     param.Opt[string] `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u VectorUnionParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[VectorUnionParam](u.OfFloatArray, u.OfString)
+}
+func (u *VectorUnionParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *VectorUnionParam) asAny() any {
+	if !param.IsOmitted(u.OfFloatArray) {
+		return &u.OfFloatArray
+	} else if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	}
+	return nil
 }
 
 // The response to a successful namespace deletion request.
 type NamespaceDeleteAllResponse struct {
 	// The status of the request.
 	Status constant.Ok `json:"status,required"`
-	// Metadata for the response, check the presence of optional fields with the
-	// [resp.Field.IsPresent] method.
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Status      resp.Field
-		ExtraFields map[string]resp.Field
+		Status      respjson.Field
+		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
 }
@@ -640,18 +722,153 @@ func (r *NamespaceDeleteAllResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type NamespaceGetSchemaResponse map[string][]AttributeSchema
+type NamespaceGetSchemaResponse map[string]AttributeSchema
 
-// The response to a successful upsert request.
+// The result of a query.
+type NamespaceQueryResponse struct {
+	Aggregations []map[string]any `json:"aggregations"`
+	// The billing information for a query.
+	Billing NamespaceQueryResponseBilling `json:"billing"`
+	// The performance information for a query.
+	Performance NamespaceQueryResponsePerformance `json:"performance"`
+	Rows        []DocumentRow                     `json:"rows"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Aggregations respjson.Field
+		Billing      respjson.Field
+		Performance  respjson.Field
+		Rows         respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceQueryResponse) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceQueryResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The billing information for a query.
+type NamespaceQueryResponseBilling struct {
+	// The number of billable logical bytes queried from the namespace.
+	BillableLogicalBytesQueried int64 `json:"billable_logical_bytes_queried,required"`
+	// The number of billable logical bytes returned from the query.
+	BillableLogicalBytesReturned int64 `json:"billable_logical_bytes_returned,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		BillableLogicalBytesQueried  respjson.Field
+		BillableLogicalBytesReturned respjson.Field
+		ExtraFields                  map[string]respjson.Field
+		raw                          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceQueryResponseBilling) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceQueryResponseBilling) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The performance information for a query.
+type NamespaceQueryResponsePerformance struct {
+	// the approximate number of documents in the namespace.
+	ApproxNamespaceSize int64 `json:"approx_namespace_size,required"`
+	// The ratio of cache hits to total cache lookups.
+	CacheHitRatio float64 `json:"cache_hit_ratio,required"`
+	// A qualitative description of the cache hit ratio (`hot`, `warm`, or `cold`).
+	CacheTemperature string `json:"cache_temperature,required"`
+	// The number of unindexed documents processed by the query.
+	ExhaustiveSearchCount int64 `json:"exhaustive_search_count,required"`
+	// Request time measured on the server, excluding time spent waiting due to the
+	// namespace concurrency limit.
+	QueryExecutionMs int64 `json:"query_execution_ms,required"`
+	// Request time measured on the server, including time spent waiting for other
+	// queries to complete if the namespace was at its concurrency limit.
+	ServerTotalMs int64 `json:"server_total_ms,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ApproxNamespaceSize   respjson.Field
+		CacheHitRatio         respjson.Field
+		CacheTemperature      respjson.Field
+		ExhaustiveSearchCount respjson.Field
+		QueryExecutionMs      respjson.Field
+		ServerTotalMs         respjson.Field
+		ExtraFields           map[string]respjson.Field
+		raw                   string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceQueryResponsePerformance) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceQueryResponsePerformance) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The response to a successful cache warm request.
+type NamespaceRecallResponse struct {
+	// The average number of documents retrieved by the approximate nearest neighbor
+	// searches.
+	AvgAnnCount float64 `json:"avg_ann_count,required"`
+	// The average number of documents retrieved by the exhaustive searches.
+	AvgExhaustiveCount float64 `json:"avg_exhaustive_count,required"`
+	// The average recall of the queries.
+	AvgRecall float64 `json:"avg_recall,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		AvgAnnCount        respjson.Field
+		AvgExhaustiveCount respjson.Field
+		AvgRecall          respjson.Field
+		ExtraFields        map[string]respjson.Field
+		raw                string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceRecallResponse) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceRecallResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type NamespaceUpdateSchemaResponse map[string]AttributeSchema
+
+// The response to a successful cache warm request.
+type NamespaceWarmCacheResponse struct {
+	// The status of the request.
+	Status  constant.Ok `json:"status,required"`
+	Message string      `json:"message"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Status      respjson.Field
+		Message     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceWarmCacheResponse) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceWarmCacheResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The response to a successful write request.
 type NamespaceWriteResponse struct {
+	Billing NamespaceWriteResponseBilling `json:"billing,required"`
+	// A message describing the result of the write request.
+	Message string `json:"message,required"`
+	// The number of rows affected by the write request.
+	RowsAffected int64 `json:"rows_affected,required"`
 	// The status of the request.
 	Status constant.Ok `json:"status,required"`
-	// Metadata for the response, check the presence of optional fields with the
-	// [resp.Field.IsPresent] method.
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Status      resp.Field
-		ExtraFields map[string]resp.Field
-		raw         string
+		Billing      respjson.Field
+		Message      respjson.Field
+		RowsAffected respjson.Field
+		Status       respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
 	} `json:"-"`
 }
 
@@ -661,34 +878,63 @@ func (r *NamespaceWriteResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type NamespaceListParams struct {
-	// Retrieve the next page of results.
-	Cursor param.Opt[string] `query:"cursor,omitzero" json:"-"`
-	// Limit the number of results per page.
-	PageSize param.Opt[int64] `query:"page_size,omitzero" json:"-"`
-	// Retrieve only the namespaces that match the prefix.
-	Prefix param.Opt[string] `query:"prefix,omitzero" json:"-"`
+type NamespaceWriteResponseBilling struct {
+	// The number of billable logical bytes written to the namespace.
+	BillableLogicalBytesWritten int64 `json:"billable_logical_bytes_written,required"`
+	// The billing information for a query.
+	Query NamespaceWriteResponseBillingQuery `json:"query"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		BillableLogicalBytesWritten respjson.Field
+		Query                       respjson.Field
+		ExtraFields                 map[string]respjson.Field
+		raw                         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceWriteResponseBilling) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceWriteResponseBilling) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The billing information for a query.
+type NamespaceWriteResponseBillingQuery struct {
+	// The number of billable logical bytes queried from the namespace.
+	BillableLogicalBytesQueried int64 `json:"billable_logical_bytes_queried,required"`
+	// The number of billable logical bytes returned from the query.
+	BillableLogicalBytesReturned int64 `json:"billable_logical_bytes_returned,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		BillableLogicalBytesQueried  respjson.Field
+		BillableLogicalBytesReturned respjson.Field
+		ExtraFields                  map[string]respjson.Field
+		raw                          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceWriteResponseBillingQuery) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceWriteResponseBillingQuery) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type NamespaceDeleteAllParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
 	paramObj
 }
 
-// IsPresent returns true if the field's value is not omitted and not the JSON
-// "null". To check if this field is omitted, use [param.IsOmitted].
-func (f NamespaceListParams) IsPresent() bool { return !param.IsOmitted(f) && !f.IsNull() }
-
-// URLQuery serializes [NamespaceListParams]'s query parameters as `url.Values`.
-func (r NamespaceListParams) URLQuery() (v url.Values, err error) {
-	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
-		ArrayFormat:  apiquery.ArrayQueryFormatComma,
-		NestedFormat: apiquery.NestedQueryFormatBrackets,
-	})
+type NamespaceGetSchemaParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	paramObj
 }
 
 type NamespaceQueryParams struct {
-	// Whether to return vectors for the search results. Vectors are large and slow to
-	// deserialize on the client, so use this option only if you need them.
-	IncludeVectors param.Opt[bool] `json:"include_vectors,omitzero"`
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	// How to rank the documents in the namespace.
+	RankBy any `json:"rank_by,omitzero,required"`
 	// The number of results to return.
-	TopK param.Opt[int64] `json:"top_k,omitzero"`
+	TopK int64 `json:"top_k,required"`
 	// The consistency level for a query.
 	Consistency NamespaceQueryParamsConsistency `json:"consistency,omitzero"`
 	// A function used to calculate vector similarity.
@@ -699,22 +945,20 @@ type NamespaceQueryParams struct {
 	// WHERE clause.
 	Filters any `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
-	IncludeAttributes NamespaceQueryParamsIncludeAttributesUnion `json:"include_attributes,omitzero"`
-	// The attribute to rank the results by. Cannot be specified with `vector`.
-	RankBy any `json:"rank_by,omitzero"`
-	// A vector to search for. It must have the same number of dimensions as the
-	// vectors in the namespace. Cannot be specified with `rank_by`.
-	Vector []float64 `json:"vector,omitzero"`
+	IncludeAttributes IncludeAttributesUnionParam `json:"include_attributes,omitzero"`
+	// The encoding to use for vectors in the response.
+	//
+	// Any of "float", "base64".
+	VectorEncoding NamespaceQueryParamsVectorEncoding `json:"vector_encoding,omitzero"`
 	paramObj
 }
-
-// IsPresent returns true if the field's value is not omitted and not the JSON
-// "null". To check if this field is omitted, use [param.IsOmitted].
-func (f NamespaceQueryParams) IsPresent() bool { return !param.IsOmitted(f) && !f.IsNull() }
 
 func (r NamespaceQueryParams) MarshalJSON() (data []byte, err error) {
 	type shadow NamespaceQueryParams
 	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceQueryParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
 }
 
 // The consistency level for a query.
@@ -726,12 +970,12 @@ type NamespaceQueryParamsConsistency struct {
 	paramObj
 }
 
-// IsPresent returns true if the field's value is not omitted and not the JSON
-// "null". To check if this field is omitted, use [param.IsOmitted].
-func (f NamespaceQueryParamsConsistency) IsPresent() bool { return !param.IsOmitted(f) && !f.IsNull() }
 func (r NamespaceQueryParamsConsistency) MarshalJSON() (data []byte, err error) {
 	type shadow NamespaceQueryParamsConsistency
 	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceQueryParamsConsistency) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
 }
 
 // The query's consistency level.
@@ -742,62 +986,62 @@ const (
 	NamespaceQueryParamsConsistencyLevelEventual NamespaceQueryParamsConsistencyLevel = "eventual"
 )
 
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type NamespaceQueryParamsIncludeAttributesUnion struct {
-	OfBool                                  param.Opt[bool] `json:",omitzero,inline"`
-	OfNamespaceQuerysIncludeAttributesArray []string        `json:",omitzero,inline"`
-	paramUnion
-}
+// The encoding to use for vectors in the response.
+type NamespaceQueryParamsVectorEncoding string
 
-// IsPresent returns true if the field's value is not omitted and not the JSON
-// "null". To check if this field is omitted, use [param.IsOmitted].
-func (u NamespaceQueryParamsIncludeAttributesUnion) IsPresent() bool {
-	return !param.IsOmitted(u) && !u.IsNull()
-}
-func (u NamespaceQueryParamsIncludeAttributesUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[NamespaceQueryParamsIncludeAttributesUnion](u.OfBool, u.OfNamespaceQuerysIncludeAttributesArray)
-}
+const (
+	NamespaceQueryParamsVectorEncodingFloat  NamespaceQueryParamsVectorEncoding = "float"
+	NamespaceQueryParamsVectorEncodingBase64 NamespaceQueryParamsVectorEncoding = "base64"
+)
 
-func (u *NamespaceQueryParamsIncludeAttributesUnion) asAny() any {
-	if !param.IsOmitted(u.OfBool) {
-		return &u.OfBool.Value
-	} else if !param.IsOmitted(u.OfNamespaceQuerysIncludeAttributesArray) {
-		return &u.OfNamespaceQuerysIncludeAttributesArray
-	}
-	return nil
-}
-
-type NamespaceWriteParams struct {
-	// Write documents.
-	Operation NamespaceWriteParamsOperationUnion
+type NamespaceRecallParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	// The number of searches to run.
+	Num param.Opt[int64] `json:"num,omitzero"`
+	// Search for `top_k` nearest neighbors.
+	TopK param.Opt[int64] `json:"top_k,omitzero"`
+	// Filter by attributes. Same syntax as the query endpoint.
+	Filters any `json:"filters,omitzero"`
+	// Use specific query vectors for the measurement. If omitted, sampled from the
+	// index.
+	Queries []float64 `json:"queries,omitzero"`
 	paramObj
 }
 
-// IsPresent returns true if the field's value is not omitted and not the JSON
-// "null". To check if this field is omitted, use [param.IsOmitted].
-func (f NamespaceWriteParams) IsPresent() bool { return !param.IsOmitted(f) && !f.IsNull() }
-
-func (r NamespaceWriteParams) MarshalJSON() (data []byte, err error) {
-	return json.Marshal(r.Operation)
+func (r NamespaceRecallParams) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceRecallParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceRecallParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
 }
 
-// Write documents.
-//
-// Satisfied by [NamespaceWriteParamsOperationWriteDocuments],
-// [NamespaceWriteParamsOperationCopyFromNamespace] and
-// [NamespaceWriteParamsOperationDeleteByFilter]
-type NamespaceWriteParamsOperationUnion interface {
-	implNamespaceWriteParamsOperationUnion()
+type NamespaceUpdateSchemaParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	// The desired schema for the namespace.
+	Schema map[string]AttributeSchemaParam
+	paramObj
 }
 
-func (NamespaceWriteParamsOperationWriteDocuments) implNamespaceWriteParamsOperationUnion()    {}
-func (NamespaceWriteParamsOperationCopyFromNamespace) implNamespaceWriteParamsOperationUnion() {}
-func (NamespaceWriteParamsOperationDeleteByFilter) implNamespaceWriteParamsOperationUnion()    {}
+func (r NamespaceUpdateSchemaParams) MarshalJSON() (data []byte, err error) {
+	return json.Marshal(r.Schema)
+}
+func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
-// Write documents.
-type NamespaceWriteParamsOperationWriteDocuments struct {
+type NamespaceWarmCacheParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	paramObj
+}
+
+type NamespaceWriteParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	// The namespace to copy documents from.
+	CopyFromNamespace param.Opt[string] `json:"copy_from_namespace,omitzero"`
+	// The filter specifying which documents to delete.
+	DeleteByFilter any            `json:"delete_by_filter,omitzero"`
+	Deletes        []IDUnionParam `json:"deletes,omitzero" format:"uuid"`
 	// A function used to calculate vector similarity.
 	//
 	// Any of "cosine_distance", "euclidean_squared".
@@ -806,57 +1050,17 @@ type NamespaceWriteParamsOperationWriteDocuments struct {
 	PatchColumns DocumentColumnsParam `json:"patch_columns,omitzero"`
 	PatchRows    []DocumentRowParam   `json:"patch_rows,omitzero"`
 	// The schema of the attributes attached to the documents.
-	Schema map[string][]AttributeSchemaParam `json:"schema,omitzero"`
+	Schema map[string]AttributeSchemaParam `json:"schema,omitzero"`
 	// A list of documents in columnar format. The keys are the column names.
 	UpsertColumns DocumentColumnsParam `json:"upsert_columns,omitzero"`
 	UpsertRows    []DocumentRowParam   `json:"upsert_rows,omitzero"`
 	paramObj
 }
 
-// IsPresent returns true if the field's value is not omitted and not the JSON
-// "null". To check if this field is omitted, use [param.IsOmitted].
-func (f NamespaceWriteParamsOperationWriteDocuments) IsPresent() bool {
-	return !param.IsOmitted(f) && !f.IsNull()
-}
-func (r NamespaceWriteParamsOperationWriteDocuments) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceWriteParamsOperationWriteDocuments
+func (r NamespaceWriteParams) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceWriteParams
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-
-// Copy documents from another namespace.
-//
-// The property CopyFromNamespace is required.
-type NamespaceWriteParamsOperationCopyFromNamespace struct {
-	// The namespace to copy documents from.
-	CopyFromNamespace string `json:"copy_from_namespace,required"`
-	paramObj
-}
-
-// IsPresent returns true if the field's value is not omitted and not the JSON
-// "null". To check if this field is omitted, use [param.IsOmitted].
-func (f NamespaceWriteParamsOperationCopyFromNamespace) IsPresent() bool {
-	return !param.IsOmitted(f) && !f.IsNull()
-}
-func (r NamespaceWriteParamsOperationCopyFromNamespace) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceWriteParamsOperationCopyFromNamespace
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-
-// Delete documents by filter.
-//
-// The property DeleteByFilter is required.
-type NamespaceWriteParamsOperationDeleteByFilter struct {
-	// The filter specifying which documents to delete.
-	DeleteByFilter any `json:"delete_by_filter,omitzero,required"`
-	paramObj
-}
-
-// IsPresent returns true if the field's value is not omitted and not the JSON
-// "null". To check if this field is omitted, use [param.IsOmitted].
-func (f NamespaceWriteParamsOperationDeleteByFilter) IsPresent() bool {
-	return !param.IsOmitted(f) && !f.IsNull()
-}
-func (r NamespaceWriteParamsOperationDeleteByFilter) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceWriteParamsOperationDeleteByFilter
-	return param.MarshalObject(r, (*shadow)(&r))
+func (r *NamespaceWriteParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
 }

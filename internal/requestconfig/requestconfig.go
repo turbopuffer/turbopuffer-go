@@ -18,10 +18,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stainless-sdks/turbopuffer-go/internal"
-	"github.com/stainless-sdks/turbopuffer-go/internal/apierror"
-	"github.com/stainless-sdks/turbopuffer-go/internal/apiform"
-	"github.com/stainless-sdks/turbopuffer-go/internal/apiquery"
+	"github.com/turbopuffer/turbopuffer-go/internal"
+	"github.com/turbopuffer/turbopuffer-go/internal/apierror"
+	"github.com/turbopuffer/turbopuffer-go/internal/apiform"
+	"github.com/turbopuffer/turbopuffer-go/internal/apiquery"
+	"github.com/turbopuffer/turbopuffer-go/packages/param"
 )
 
 func getDefaultHeaders() map[string]string {
@@ -86,6 +87,22 @@ type PreRequestOptionFunc func(*RequestConfig) error
 
 func (s RequestOptionFunc) Apply(r *RequestConfig) error    { return s(r) }
 func (s PreRequestOptionFunc) Apply(r *RequestConfig) error { return s(r) }
+
+// SubstituteServerVariables applies client variables in the request config to the URL template.
+func SubstituteServerVariables(templateURL *url.URL, cfg *RequestConfig) (*url.URL, error) {
+	baseURL := templateURL.String()
+	if strings.Count(baseURL, "REGION") >= 1 {
+		if cfg.Region == "" {
+			return nil, fmt.Errorf("must provide Region to substitute %s", baseURL)
+		}
+		baseURL = strings.ReplaceAll(baseURL, "REGION", cfg.Region)
+	}
+	substitutedURL, err := url.Parse(baseURL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse BaseURL after substitutions: %w", err)
+	}
+	return substitutedURL, nil
+}
 
 func NewRequestConfig(ctx context.Context, method string, u string, body any, dst any, opts ...RequestOption) (*RequestConfig, error) {
 	var reader io.Reader
@@ -174,6 +191,21 @@ func NewRequestConfig(ctx context.Context, method string, u string, body any, ds
 		return nil, err
 	}
 
+	if cfg.BaseURL != nil {
+		var err error
+		cfg.BaseURL, err = SubstituteServerVariables(cfg.BaseURL, &cfg)
+		if err != nil {
+			return nil, err
+		}
+	}
+	if cfg.DefaultBaseURL != nil {
+		var err error
+		cfg.DefaultBaseURL, err = SubstituteServerVariables(cfg.DefaultBaseURL, &cfg)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	// This must run after `cfg.Apply(...)` above in case the request timeout gets modified. We also only
 	// apply our own logic for it if it's still "0" from above. If it's not, then it was deleted or modified
 	// by the user and we should respect that.
@@ -186,6 +218,12 @@ func NewRequestConfig(ctx context.Context, method string, u string, body any, ds
 	}
 
 	return &cfg, nil
+}
+
+func UseDefaultParam[T comparable](dst *param.Opt[T], src *T) {
+	if param.IsOmitted(*dst) && src != nil {
+		*dst = param.NewOpt(*src)
+	}
 }
 
 // This interface is primarily used to describe an [*http.Client], but also
@@ -204,10 +242,15 @@ type RequestConfig struct {
 	Context        context.Context
 	Request        *http.Request
 	BaseURL        *url.URL
-	CustomHTTPDoer HTTPDoer
-	HTTPClient     *http.Client
-	Middlewares    []middleware
-	APIKey         string
+	// DefaultBaseURL will be used if BaseURL is not explicitly overridden using
+	// WithBaseURL.
+	DefaultBaseURL   *url.URL
+	CustomHTTPDoer   HTTPDoer
+	HTTPClient       *http.Client
+	Middlewares      []middleware
+	APIKey           string
+	Region           string
+	DefaultNamespace *string
 	// If ResponseBodyInto not nil, then we will attempt to deserialize into
 	// ResponseBodyInto. If Destination is a []byte, then it will return the body as
 	// is.
@@ -370,7 +413,11 @@ func retryDelay(res *http.Response, retryCount int) time.Duration {
 
 func (cfg *RequestConfig) Execute() (err error) {
 	if cfg.BaseURL == nil {
-		return fmt.Errorf("requestconfig: base url is not set")
+		if cfg.DefaultBaseURL != nil {
+			cfg.BaseURL = cfg.DefaultBaseURL
+		} else {
+			return fmt.Errorf("requestconfig: base url is not set")
+		}
 	}
 
 	cfg.Request.URL, err = cfg.BaseURL.Parse(strings.TrimLeft(cfg.Request.URL.String(), "/"))
@@ -504,6 +551,7 @@ func (cfg *RequestConfig) Execute() (err error) {
 	}
 
 	contents, err := io.ReadAll(res.Body)
+	res.Body.Close()
 	if err != nil {
 		return fmt.Errorf("error reading response body: %w", err)
 	}
@@ -562,14 +610,16 @@ func (cfg *RequestConfig) Clone(ctx context.Context) *RequestConfig {
 		return nil
 	}
 	new := &RequestConfig{
-		MaxRetries:     cfg.MaxRetries,
-		RequestTimeout: cfg.RequestTimeout,
-		Context:        ctx,
-		Request:        req,
-		BaseURL:        cfg.BaseURL,
-		HTTPClient:     cfg.HTTPClient,
-		Middlewares:    cfg.Middlewares,
-		APIKey:         cfg.APIKey,
+		MaxRetries:       cfg.MaxRetries,
+		RequestTimeout:   cfg.RequestTimeout,
+		Context:          ctx,
+		Request:          req,
+		BaseURL:          cfg.BaseURL,
+		HTTPClient:       cfg.HTTPClient,
+		Middlewares:      cfg.Middlewares,
+		APIKey:           cfg.APIKey,
+		Region:           cfg.Region,
+		DefaultNamespace: cfg.DefaultNamespace,
 	}
 
 	return new
@@ -602,4 +652,18 @@ func PreRequestOptions(opts ...RequestOption) (RequestConfig, error) {
 		}
 	}
 	return cfg, nil
+}
+
+// WithDefaultBaseURL returns a RequestOption that sets the client's default Base URL.
+// This is always overridden by setting a base URL with WithBaseURL.
+// WithBaseURL should be used instead of WithDefaultBaseURL except in internal code.
+func WithDefaultBaseURL(baseURL string) RequestOption {
+	u, err := url.Parse(baseURL)
+	return RequestOptionFunc(func(r *RequestConfig) error {
+		if err != nil {
+			return err
+		}
+		r.DefaultBaseURL = u
+		return nil
+	})
 }

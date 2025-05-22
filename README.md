@@ -1,6 +1,6 @@
 # Turbopuffer Go API Library
 
-<a href="https://pkg.go.dev/github.com/stainless-sdks/turbopuffer-go"><img src="https://pkg.go.dev/badge/github.com/stainless-sdks/turbopuffer-go.svg" alt="Go Reference"></a>
+<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go"><img src="https://pkg.go.dev/badge/github.com/turbopuffer/turbopuffer-go.svg" alt="Go Reference"></a>
 
 The Turbopuffer Go library provides convenient access to the [Turbopuffer REST API](https://turbopuffer.com/docs)
 from applications written in Go.
@@ -9,17 +9,25 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## Installation
 
+<!-- x-release-please-start-version -->
+
 ```go
 import (
-	"github.com/stainless-sdks/turbopuffer-go" // imported as turbopuffer
+	"github.com/turbopuffer/turbopuffer-go" // imported as turbopuffer
 )
 ```
 
+<!-- x-release-please-end -->
+
 Or to pin the version:
 
+<!-- x-release-please-start-version -->
+
 ```sh
-go get -u 'github.com/stainless-sdks/turbopuffer-go@v0.0.1-alpha.0'
+go get -u 'github.com/turbopuffer/turbopuffer-go@v0.1.0-alpha.1'
 ```
+
+<!-- x-release-please-end -->
 
 ## Requirements
 
@@ -36,23 +44,31 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/stainless-sdks/turbopuffer-go"
-	"github.com/stainless-sdks/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go"
+	"github.com/turbopuffer/turbopuffer-go/option"
 )
 
 func main() {
 	client := turbopuffer.NewClient(
-		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("TURBOPUFFER_API_KEY")
+		option.WithAPIKey("tpuf_A1..."),      // defaults to os.LookupEnv("TURBOPUFFER_API_KEY")
+		option.WithRegion("gcp-us-central1"), // defaults to os.LookupEnv("TURBOPUFFER_REGION")
 	)
-	response, err := client.Namespaces.Write(
-		context.TODO(),
-		"products",
-		turbopuffer.NamespaceWriteParams{},
-	)
+	response, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
+		Namespace:      turbopuffer.String("products"),
+		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+		UpsertRows: []turbopuffer.DocumentRowParam{{
+			ID: turbopuffer.IDUnionParam{
+				OfString: turbopuffer.String("2108ed60-6851-49a0-9016-8325434f3845"),
+			},
+			Vector: turbopuffer.VectorUnionParam{
+				OfFloatArray: []float64{0.1, 0.2},
+			},
+		}},
+	})
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", response.Status)
+	fmt.Printf("%+v\n", response.RowsAffected)
 }
 
 ```
@@ -62,29 +78,20 @@ func main() {
 The turbopuffer library uses the [`omitzero`](https://tip.golang.org/doc/go1.24#encodingjsonpkgencodingjson)
 semantics from the Go 1.24+ `encoding/json` release for request fields.
 
-Required primitive fields (`int64`, `string`, etc.) feature the tag <code>\`json:...,required\`</code>. These
+Required primitive fields (`int64`, `string`, etc.) feature the tag <code>\`json:"...,required"\`</code>. These
 fields are always serialized, even their zero values.
 
-Optional primitive types are wrapped in a `param.Opt[T]`. Use the provided constructors set `param.Opt[T]` fields such as `turbopuffer.String(string)`, `turbopuffer.Int(int64)`, etc.
+Optional primitive types are wrapped in a `param.Opt[T]`. These fields can be set with the provided constructors, `turbopuffer.String(string)`, `turbopuffer.Int(int64)`, etc.
 
-Optional primitives, maps, slices and structs and string enums (represented as `string`) always feature the
-tag <code>\`json:"...,omitzero"\`</code>. Their zero values are considered omitted.
+Any `param.Opt[T]`, map, slice, struct or string enum uses the
+tag <code>\`json:"...,omitzero"\`</code>. Its zero value is considered omitted.
 
-Any non-nil slice of length zero will serialize as an empty JSON array, `"[]"`. Similarly, any non-nil map with length zero with serialize as an empty JSON object, `"{}"`.
-
-To send `null` instead of an `param.Opt[T]`, use `param.NullOpt[T]()`.
-To send `null` instead of a struct, use `param.NullObj[T]()`, where `T` is a struct.
-To send a custom value instead of a struct, use `param.OverrideObj[T](value)`.
-
-To override request structs contain a `.WithExtraFields(map[string]any)` method which can be used to
-send non-conforming fields in the request body. Extra fields overwrite any struct fields with a matching
-key, so only use with trusted data.
+The `param.IsOmitted(any)` function can confirm the presence of any `omitzero` field.
 
 ```go
-params := turbopuffer.ExampleParams{
-	ID:          "id_xxx",                  // required property
-	Name:        turbopuffer.String("..."), // optional property
-	Description: param.NullOpt[string](),   // explicit null property
+p := turbopuffer.ExampleParams{
+	ID:   "id_xxx",                  // required property
+	Name: turbopuffer.String("..."), // optional property
 
 	Point: turbopuffer.Point{
 		X: 0,                  // required field will serialize as 0
@@ -94,19 +101,35 @@ params := turbopuffer.ExampleParams{
 
 	Origin: turbopuffer.Origin{}, // the zero value of [Origin] is considered omitted
 }
+```
 
+To send `null` instead of a `param.Opt[T]`, use `param.Null[T]()`.
+To send `null` instead of a struct `T`, use `param.NullStruct[T]()`.
+
+```go
+p.Name = param.Null[string]()       // 'null' instead of string
+p.Point = param.NullStruct[Point]() // 'null' instead of struct
+
+param.IsNull(p.Name)  // true
+param.IsNull(p.Point) // true
+```
+
+Request structs contain a `.SetExtraFields(map[string]any)` method which can send non-conforming
+fields in the request body. Extra fields overwrite any struct fields with a matching
+key. For security reasons, only use `SetExtraFields` with trusted data.
+
+To send a custom value instead of a struct, use `param.Override[T](value)`.
+
+```go
 // In cases where the API specifies a given type,
-// but you want to send something else, use [WithExtraFields]:
-params.WithExtraFields(map[string]any{
+// but you want to send something else, use [SetExtraFields]:
+p.SetExtraFields(map[string]any{
 	"x": 0.01, // send "x" as a float instead of int
 })
 
 // Send a number instead of an object
-custom := param.OverrideObj[turbopuffer.FooParams](12)
+custom := param.Override[turbopuffer.FooParams](12)
 ```
-
-When available, use the `.IsPresent()` method to check if an optional parameter is not omitted or `null`.
-Otherwise, the `param.IsOmitted(any)` function can confirm the presence of any `omitzero` field.
 
 ### Request unions
 
@@ -140,14 +163,9 @@ if address := animal.GetOwner().GetAddress(); address != nil {
 
 ### Response objects
 
-All fields in response structs are value types (not pointers or wrappers).
-
-If a given field is `null`, not present, or invalid, the corresponding field
-will simply be its zero value. To handle optional fields, see the `IsPresent()` method
-below.
-
-All response structs also include a special `JSON` field, containing more detailed
-information about each property, which you can use like so:
+All fields in response structs are ordinary value types (not pointers or wrappers).
+Response structs also include a special `JSON` field containing metadata about
+each property.
 
 ```go
 type Animal struct {
@@ -155,29 +173,44 @@ type Animal struct {
 	Owners int    `json:"owners"`
 	Age    int    `json:"age"`
 	JSON   struct {
-		Name  resp.Field
-		Owner resp.Field
-		Age   resp.Field
+		Name        respjson.Field
+		Owner       respjson.Field
+		Age         respjson.Field
+		ExtraFields map[string]respjson.Field
 	} `json:"-"`
 }
+```
+
+To handle optional data, use the `.Valid()` method on the JSON field.
+`.Valid()` returns true if a field is not `null`, not present, or couldn't be marshaled.
+
+If `.Valid()` is false, the corresponding field will simply be its zero value.
+
+```go
+raw := `{"owners": 1, "name": null}`
 
 var res Animal
-json.Unmarshal([]byte(`{"name": null, "owners": 0}`), &res)
+json.Unmarshal([]byte(raw), &res)
 
-// Use the IsPresent() method to handle optional fields
-res.Owners                  // 0
-res.JSON.Owners.IsPresent() // true
-res.JSON.Owners.Raw()       // "0"
+// Accessing regular fields
 
-res.Age                  // 0
-res.JSON.Age.IsPresent() // false
-res.JSON.Age.Raw()       // ""
+res.Owners // 1
+res.Name   // ""
+res.Age    // 0
 
-// Use the IsExplicitNull() method to differentiate null and omitted
-res.Name                       // ""
-res.JSON.Name.IsPresent()      // false
-res.JSON.Name.Raw()            // "null"
-res.JSON.Name.IsExplicitNull() // true
+// Optional field checks
+
+res.JSON.Owners.Valid() // true
+res.JSON.Name.Valid()   // false
+res.JSON.Age.Valid()    // false
+
+// Raw JSON values
+
+res.JSON.Owners.Raw()                  // "1"
+res.JSON.Name.Raw() == "null"          // true
+res.JSON.Name.Raw() == respjson.Null   // true
+res.JSON.Age.Raw() == ""               // true
+res.JSON.Age.Raw() == respjson.Omitted // true
 ```
 
 These `.JSON` structs also include an `ExtraFields` map containing
@@ -207,8 +240,9 @@ type AnimalUnion struct {
 	// From variant [Cat]
 	CatBreed string `json:"cat_breed"`
 	// ...
+
 	JSON struct {
-		Owner resp.Field
+		Owner respjson.Field
 		// ...
 	} `json:"-"`
 }
@@ -248,7 +282,7 @@ client.Namespaces.Query(context.TODO(), ...,
 )
 ```
 
-See the [full list of request options](https://pkg.go.dev/github.com/stainless-sdks/turbopuffer-go/option).
+See the [full list of request options](https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/option).
 
 ### Pagination
 
@@ -257,7 +291,7 @@ This library provides some conveniences for working with paginated list endpoint
 You can use `.ListAutoPaging()` methods to iterate through items across all pages:
 
 ```go
-iter := client.Namespaces.ListAutoPaging(context.TODO(), turbopuffer.NamespaceListParams{
+iter := client.ListNamespacesAutoPaging(context.TODO(), turbopuffer.ListNamespacesParams{
 	Prefix: turbopuffer.String("products"),
 })
 // Automatically fetches more pages as needed.
@@ -274,12 +308,12 @@ Or you can use simple `.List()` methods to fetch a single page and receive a sta
 with additional helper methods like `.GetNextPage()`, e.g.:
 
 ```go
-page, err := client.Namespaces.List(context.TODO(), turbopuffer.NamespaceListParams{
+page, err := client.ListNamespaces(context.TODO(), turbopuffer.ListNamespacesParams{
 	Prefix: turbopuffer.String("products"),
 })
 for page != nil {
-	for _, namespace := range page.Namespaces {
-		fmt.Printf("%+v\n", namespace)
+	for _, client := range page.Namespaces {
+		fmt.Printf("%+v\n", client)
 	}
 	page, err = page.GetNextPage()
 }
@@ -298,18 +332,25 @@ When the API returns a non-success status code, we return an error with type
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Namespaces.Query(
-	context.TODO(),
-	"products",
-	turbopuffer.NamespaceQueryParams{},
-)
+_, err := client.Namespaces.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
+	Namespace: turbopuffer.String("products"),
+	RankBy: map[string]interface{}{
+		"0": "vector",
+		"1": "ANN",
+		"2": map[string]interface{}{
+			"0": 0.2,
+			"1": 0.3,
+		},
+	},
+	TopK: 10,
+})
 if err != nil {
 	var apierr *turbopuffer.Error
 	if errors.As(err, &apierr) {
 		println(string(apierr.DumpRequest(true)))  // Prints the serialized HTTP request
 		println(string(apierr.DumpResponse(true))) // Prints the serialized HTTP response
 	}
-	panic(err.Error()) // GET "/v1/namespaces/{namespace}/query": 400 Bad Request { ... }
+	panic(err.Error()) // GET "/v2/namespaces/{namespace}/query": 400 Bad Request { ... }
 }
 ```
 
@@ -329,8 +370,18 @@ ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
 client.Namespaces.Query(
 	ctx,
-	"products",
-	turbopuffer.NamespaceQueryParams{},
+	turbopuffer.NamespaceQueryParams{
+		Namespace: turbopuffer.String("products"),
+		RankBy: map[string]interface{}{
+			"0": "vector",
+			"1": "ANN",
+			"2": map[string]interface{}{
+				"0": 0.2,
+				"1": 0.3,
+			},
+		},
+		TopK: 10,
+	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
 )
@@ -366,8 +417,18 @@ client := turbopuffer.NewClient(
 // Override per-request:
 client.Namespaces.Query(
 	context.TODO(),
-	"products",
-	turbopuffer.NamespaceQueryParams{},
+	turbopuffer.NamespaceQueryParams{
+		Namespace: turbopuffer.String("products"),
+		RankBy: map[string]interface{}{
+			"0": "vector",
+			"1": "ANN",
+			"2": map[string]interface{}{
+				"0": 0.2,
+				"1": 0.3,
+			},
+		},
+		TopK: 10,
+	},
 	option.WithMaxRetries(5),
 )
 ```
@@ -380,16 +441,26 @@ you need to examine response headers, status codes, or other details.
 ```go
 // Create a variable to store the HTTP response
 var response *http.Response
-documentRowWithScores, err := client.Namespaces.Query(
+response, err := client.Namespaces.Query(
 	context.TODO(),
-	"products",
-	turbopuffer.NamespaceQueryParams{},
+	turbopuffer.NamespaceQueryParams{
+		Namespace: turbopuffer.String("products"),
+		RankBy: map[string]interface{}{
+			"0": "vector",
+			"1": "ANN",
+			"2": map[string]interface{}{
+				"0": 0.2,
+				"1": 0.3,
+			},
+		},
+		TopK: 10,
+	},
 	option.WithResponseInto(&response),
 )
 if err != nil {
 	// handle error
 }
-fmt.Printf("%+v\n", documentRowWithScores)
+fmt.Printf("%+v\n", response)
 
 fmt.Printf("Status Code: %d\n", response.StatusCode)
 fmt.Printf("Headers: %+#v\n", response.Header)
@@ -490,7 +561,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/turbopuffer-go/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/turbopuffer/turbopuffer-go/issues) with questions, bugs, or suggestions.
 
 ## Contributing
 

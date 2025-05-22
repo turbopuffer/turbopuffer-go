@@ -1,7 +1,7 @@
 package turbopuffer
 
 import (
-	"github.com/stainless-sdks/turbopuffer-go/packages/param"
+	"github.com/turbopuffer/turbopuffer-go/packages/param"
 	"io"
 	"time"
 )

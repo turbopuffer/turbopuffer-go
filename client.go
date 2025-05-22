@@ -7,20 +7,21 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/stainless-sdks/turbopuffer-go/internal/requestconfig"
-	"github.com/stainless-sdks/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
+	"github.com/turbopuffer/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go/packages/pagination"
 )
 
 // Client creates a struct with services and top level methods that help with
 // interacting with the turbopuffer API. You should not instantiate this client
 // directly, and instead use the [NewClient] method instead.
 type Client struct {
-	Options    []option.RequestOption
-	Namespaces NamespaceService
+	Options []option.RequestOption
 }
 
 // DefaultClientOptions read from the environment (TURBOPUFFER_API_KEY,
-// TURBOPUFFER_BASE_URL). This should be used to initialize new clients.
+// TURBOPUFFER_REGION, TURBOPUFFER_BASE_URL). This should be used to initialize new
+// clients.
 func DefaultClientOptions() []option.RequestOption {
 	defaults := []option.RequestOption{option.WithEnvironmentProduction()}
 	if o, ok := os.LookupEnv("TURBOPUFFER_BASE_URL"); ok {
@@ -29,21 +30,27 @@ func DefaultClientOptions() []option.RequestOption {
 	if o, ok := os.LookupEnv("TURBOPUFFER_API_KEY"); ok {
 		defaults = append(defaults, option.WithAPIKey(o))
 	}
+	if o, ok := os.LookupEnv("TURBOPUFFER_REGION"); ok {
+		defaults = append(defaults, option.WithRegion(o))
+	}
 	return defaults
 }
 
 // NewClient generates a new client with the default option read from the
-// environment (TURBOPUFFER_API_KEY, TURBOPUFFER_BASE_URL). The option passed in as
-// arguments are applied after these default arguments, and all option will be
-// passed down to the services and requests that this client makes.
+// environment (TURBOPUFFER_API_KEY, TURBOPUFFER_REGION, TURBOPUFFER_BASE_URL). The
+// option passed in as arguments are applied after these default arguments, and all
+// option will be passed down to the services and requests that this client makes.
 func NewClient(opts ...option.RequestOption) (r Client) {
 	opts = append(DefaultClientOptions(), opts...)
 
 	r = Client{Options: opts}
 
-	r.Namespaces = NewNamespaceService(opts...)
-
 	return
+}
+
+func (r *Client) Namespace(namespace string) NamespaceService {
+	opts := append(r.Options, option.WithDefaultNamespace(namespace))
+	return newNamespaceService(opts...)
 }
 
 // Execute makes a request with the given context, method, URL, request params,
@@ -113,4 +120,27 @@ func (r *Client) Patch(ctx context.Context, path string, params any, res any, op
 // response.
 func (r *Client) Delete(ctx context.Context, path string, params any, res any, opts ...option.RequestOption) error {
 	return r.Execute(ctx, http.MethodDelete, path, params, res, opts...)
+}
+
+// List namespaces.
+func (r *Client) ListNamespaces(ctx context.Context, query ListNamespacesParams, opts ...option.RequestOption) (res *pagination.ListNamespaces[NamespaceSummary], err error) {
+	var raw *http.Response
+	opts = append(r.Options[:], opts...)
+	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
+	path := "v1/namespaces"
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
+	if err != nil {
+		return nil, err
+	}
+	err = cfg.Execute()
+	if err != nil {
+		return nil, err
+	}
+	res.SetPageConfig(cfg, raw)
+	return res, nil
+}
+
+// List namespaces.
+func (r *Client) ListNamespacesAutoPaging(ctx context.Context, query ListNamespacesParams, opts ...option.RequestOption) *pagination.ListNamespacesAutoPager[NamespaceSummary] {
+	return pagination.NewListNamespacesAutoPager(r.ListNamespaces(ctx, query, opts...))
 }

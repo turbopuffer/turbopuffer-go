@@ -7,9 +7,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks/turbopuffer-go"
-	"github.com/stainless-sdks/turbopuffer-go/internal/testutil"
-	"github.com/stainless-sdks/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go"
+	"github.com/turbopuffer/turbopuffer-go/internal/testutil"
+	"github.com/turbopuffer/turbopuffer-go/option"
 )
 
 func TestAutoPagination(t *testing.T) {
@@ -22,15 +22,16 @@ func TestAutoPagination(t *testing.T) {
 	}
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 	)
-	iter := client.Namespaces.ListAutoPaging(context.TODO(), turbopuffer.NamespaceListParams{
+	iter := client.ListNamespacesAutoPaging(context.TODO(), turbopuffer.ListNamespacesParams{
 		Prefix: turbopuffer.String("products"),
 	})
 	// Prism mock isn't going to give us real pagination
 	for i := 0; i < 3 && iter.Next(); i++ {
-		namespace := iter.Current()
-		t.Logf("%+v\n", namespace.Namespace.ID)
+		client := iter.Current()
+		t.Logf("%+v\n", client.ID)
 	}
 	if err := iter.Err(); err != nil {
 		t.Fatalf("err should be nil: %s", err.Error())

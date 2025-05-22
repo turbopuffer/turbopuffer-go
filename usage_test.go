@@ -7,9 +7,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks/turbopuffer-go"
-	"github.com/stainless-sdks/turbopuffer-go/internal/testutil"
-	"github.com/stainless-sdks/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go"
+	"github.com/turbopuffer/turbopuffer-go/internal/testutil"
+	"github.com/turbopuffer/turbopuffer-go/option"
 )
 
 func TestUsage(t *testing.T) {
@@ -22,15 +22,23 @@ func TestUsage(t *testing.T) {
 	}
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 	)
-	response, err := client.Namespaces.Write(
-		context.TODO(),
-		"products",
-		turbopuffer.NamespaceWriteParams{},
-	)
+	response, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
+		Namespace:      turbopuffer.String("products"),
+		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+		UpsertRows: []turbopuffer.DocumentRowParam{{
+			ID: turbopuffer.IDUnionParam{
+				OfString: turbopuffer.String("2108ed60-6851-49a0-9016-8325434f3845"),
+			},
+			Vector: turbopuffer.VectorUnionParam{
+				OfFloatArray: []float64{0.1, 0.2},
+			},
+		}},
+	})
 	if err != nil {
 		t.Fatalf("err should be nil: %s", err.Error())
 	}
-	t.Logf("%+v\n", response.Status)
+	t.Logf("%+v\n", response.RowsAffected)
 }

@@ -11,15 +11,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stainless-sdks/turbopuffer-go/internal/requestconfig"
 	"github.com/tidwall/sjson"
+	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
 )
 
 // RequestOption is an option for the requests made by the turbopuffer API Client
 // which can be supplied to clients, services, and methods. You can read more about this functional
 // options pattern in our [README].
 //
-// [README]: https://pkg.go.dev/github.com/stainless-sdks/turbopuffer-go#readme-requestoptions
+// [README]: https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#readme-requestoptions
 type RequestOption = requestconfig.RequestOption
 
 // WithBaseURL returns a RequestOption that sets the BaseURL for the client.
@@ -169,17 +169,25 @@ func WithQueryDel(key string) RequestOption {
 // [sjson format]: https://github.com/tidwall/sjson
 func WithJSONSet(key string, value any) RequestOption {
 	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) (err error) {
-		if buffer, ok := r.Body.(*bytes.Buffer); ok {
-			b := buffer.Bytes()
+		var b []byte
+
+		if r.Body == nil {
+			b, err = sjson.SetBytes(nil, key, value)
+			if err != nil {
+				return err
+			}
+		} else if buffer, ok := r.Body.(*bytes.Buffer); ok {
+			b = buffer.Bytes()
 			b, err = sjson.SetBytes(b, key, value)
 			if err != nil {
 				return err
 			}
-			r.Body = bytes.NewBuffer(b)
-			return nil
+		} else {
+			return fmt.Errorf("cannot use WithJSONSet on a body that is not serialized as *bytes.Buffer")
 		}
 
-		return fmt.Errorf("cannot use WithJSONSet on a body that is not serialized as *bytes.Buffer")
+		r.Body = bytes.NewBuffer(b)
+		return nil
 	})
 }
 
@@ -254,7 +262,7 @@ func WithRequestTimeout(dur time.Duration) RequestOption {
 // environment to be the "production" environment. An environment specifies which base URL
 // to use by default.
 func WithEnvironmentProduction() RequestOption {
-	return WithBaseURL("https://api.turbopuffer.com/")
+	return requestconfig.WithDefaultBaseURL("https://REGION.turbopuffer.com/")
 }
 
 // WithAPIKey returns a RequestOption that sets the client setting "api_key".
@@ -262,5 +270,24 @@ func WithAPIKey(value string) RequestOption {
 	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) error {
 		r.APIKey = value
 		return r.Apply(WithHeader("authorization", fmt.Sprintf("Bearer %s", r.APIKey)))
+	})
+}
+
+// WithRegion returns a RequestOption that sets the client setting "region".
+func WithRegion(value string) RequestOption {
+	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) error {
+		r.Region = value
+		return nil
+	})
+}
+
+// WithDefaultNamespace returns a RequestOption that sets the client setting "default_namespace".
+func WithDefaultNamespace(value string) RequestOption {
+	return requestconfig.PreRequestOptionFunc(func(r *requestconfig.RequestConfig) error {
+		if value == "" {
+			return fmt.Errorf("default param cannot be empty string")
+		}
+		r.DefaultNamespace = &value
+		return nil
 	})
 }

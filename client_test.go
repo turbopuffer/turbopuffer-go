@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stainless-sdks/turbopuffer-go"
-	"github.com/stainless-sdks/turbopuffer-go/internal"
-	"github.com/stainless-sdks/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go"
+	"github.com/turbopuffer/turbopuffer-go/internal"
+	"github.com/turbopuffer/turbopuffer-go/option"
 )
 
 type closureTransport struct {
@@ -26,7 +26,8 @@ func (t *closureTransport) RoundTrip(req *http.Request) (*http.Response, error) 
 func TestUserAgentHeader(t *testing.T) {
 	var userAgent string
 	client := turbopuffer.NewClient(
-		option.WithAPIKey("My API Key"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
 				fn: func(req *http.Request) (*http.Response, error) {
@@ -38,11 +39,18 @@ func TestUserAgentHeader(t *testing.T) {
 			},
 		}),
 	)
-	client.Namespaces.Query(
-		context.Background(),
-		"products",
-		turbopuffer.NamespaceQueryParams{},
-	)
+	client.Namespaces.Query(context.Background(), turbopuffer.NamespaceQueryParams{
+		Namespace: turbopuffer.String("products"),
+		RankBy: map[string]interface{}{
+			"0": "vector",
+			"1": "ANN",
+			"2": map[string]interface{}{
+				"0": 0.2,
+				"1": 0.3,
+			},
+		},
+		TopK: 10,
+	})
 	if userAgent != fmt.Sprintf("Turbopuffer/Go %s", internal.PackageVersion) {
 		t.Errorf("Expected User-Agent to be correct, but got: %#v", userAgent)
 	}
@@ -51,7 +59,8 @@ func TestUserAgentHeader(t *testing.T) {
 func TestRetryAfter(t *testing.T) {
 	retryCountHeaders := make([]string, 0)
 	client := turbopuffer.NewClient(
-		option.WithAPIKey("My API Key"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
 				fn: func(req *http.Request) (*http.Response, error) {
@@ -66,11 +75,18 @@ func TestRetryAfter(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.Namespaces.Query(
-		context.Background(),
-		"products",
-		turbopuffer.NamespaceQueryParams{},
-	)
+	_, err := client.Namespaces.Query(context.Background(), turbopuffer.NamespaceQueryParams{
+		Namespace: turbopuffer.String("products"),
+		RankBy: map[string]interface{}{
+			"0": "vector",
+			"1": "ANN",
+			"2": map[string]interface{}{
+				"0": 0.2,
+				"1": 0.3,
+			},
+		},
+		TopK: 10,
+	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -89,7 +105,8 @@ func TestRetryAfter(t *testing.T) {
 func TestDeleteRetryCountHeader(t *testing.T) {
 	retryCountHeaders := make([]string, 0)
 	client := turbopuffer.NewClient(
-		option.WithAPIKey("My API Key"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
 				fn: func(req *http.Request) (*http.Response, error) {
@@ -105,11 +122,18 @@ func TestDeleteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeaderDel("X-Stainless-Retry-Count"),
 	)
-	_, err := client.Namespaces.Query(
-		context.Background(),
-		"products",
-		turbopuffer.NamespaceQueryParams{},
-	)
+	_, err := client.Namespaces.Query(context.Background(), turbopuffer.NamespaceQueryParams{
+		Namespace: turbopuffer.String("products"),
+		RankBy: map[string]interface{}{
+			"0": "vector",
+			"1": "ANN",
+			"2": map[string]interface{}{
+				"0": 0.2,
+				"1": 0.3,
+			},
+		},
+		TopK: 10,
+	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -123,7 +147,8 @@ func TestDeleteRetryCountHeader(t *testing.T) {
 func TestOverwriteRetryCountHeader(t *testing.T) {
 	retryCountHeaders := make([]string, 0)
 	client := turbopuffer.NewClient(
-		option.WithAPIKey("My API Key"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
 				fn: func(req *http.Request) (*http.Response, error) {
@@ -139,11 +164,18 @@ func TestOverwriteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeader("X-Stainless-Retry-Count", "42"),
 	)
-	_, err := client.Namespaces.Query(
-		context.Background(),
-		"products",
-		turbopuffer.NamespaceQueryParams{},
-	)
+	_, err := client.Namespaces.Query(context.Background(), turbopuffer.NamespaceQueryParams{
+		Namespace: turbopuffer.String("products"),
+		RankBy: map[string]interface{}{
+			"0": "vector",
+			"1": "ANN",
+			"2": map[string]interface{}{
+				"0": 0.2,
+				"1": 0.3,
+			},
+		},
+		TopK: 10,
+	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -157,7 +189,8 @@ func TestOverwriteRetryCountHeader(t *testing.T) {
 func TestRetryAfterMs(t *testing.T) {
 	attempts := 0
 	client := turbopuffer.NewClient(
-		option.WithAPIKey("My API Key"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
 				fn: func(req *http.Request) (*http.Response, error) {
@@ -172,11 +205,18 @@ func TestRetryAfterMs(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.Namespaces.Query(
-		context.Background(),
-		"products",
-		turbopuffer.NamespaceQueryParams{},
-	)
+	_, err := client.Namespaces.Query(context.Background(), turbopuffer.NamespaceQueryParams{
+		Namespace: turbopuffer.String("products"),
+		RankBy: map[string]interface{}{
+			"0": "vector",
+			"1": "ANN",
+			"2": map[string]interface{}{
+				"0": 0.2,
+				"1": 0.3,
+			},
+		},
+		TopK: 10,
+	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -187,7 +227,8 @@ func TestRetryAfterMs(t *testing.T) {
 
 func TestContextCancel(t *testing.T) {
 	client := turbopuffer.NewClient(
-		option.WithAPIKey("My API Key"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
 				fn: func(req *http.Request) (*http.Response, error) {
@@ -199,11 +240,18 @@ func TestContextCancel(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithCancel(context.Background())
 	cancel()
-	_, err := client.Namespaces.Query(
-		cancelCtx,
-		"products",
-		turbopuffer.NamespaceQueryParams{},
-	)
+	_, err := client.Namespaces.Query(cancelCtx, turbopuffer.NamespaceQueryParams{
+		Namespace: turbopuffer.String("products"),
+		RankBy: map[string]interface{}{
+			"0": "vector",
+			"1": "ANN",
+			"2": map[string]interface{}{
+				"0": 0.2,
+				"1": 0.3,
+			},
+		},
+		TopK: 10,
+	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -211,7 +259,8 @@ func TestContextCancel(t *testing.T) {
 
 func TestContextCancelDelay(t *testing.T) {
 	client := turbopuffer.NewClient(
-		option.WithAPIKey("My API Key"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
 				fn: func(req *http.Request) (*http.Response, error) {
@@ -223,11 +272,18 @@ func TestContextCancelDelay(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithTimeout(context.Background(), 2*time.Millisecond)
 	defer cancel()
-	_, err := client.Namespaces.Query(
-		cancelCtx,
-		"products",
-		turbopuffer.NamespaceQueryParams{},
-	)
+	_, err := client.Namespaces.Query(cancelCtx, turbopuffer.NamespaceQueryParams{
+		Namespace: turbopuffer.String("products"),
+		RankBy: map[string]interface{}{
+			"0": "vector",
+			"1": "ANN",
+			"2": map[string]interface{}{
+				"0": 0.2,
+				"1": 0.3,
+			},
+		},
+		TopK: 10,
+	})
 	if err == nil {
 		t.Error("expected there to be a cancel error")
 	}
@@ -243,7 +299,8 @@ func TestContextDeadline(t *testing.T) {
 
 	go func() {
 		client := turbopuffer.NewClient(
-			option.WithAPIKey("My API Key"),
+			option.WithAPIKey("tpuf_A1..."),
+			option.WithRegion("gcp-us-central1"),
 			option.WithHTTPClient(&http.Client{
 				Transport: &closureTransport{
 					fn: func(req *http.Request) (*http.Response, error) {
@@ -253,11 +310,18 @@ func TestContextDeadline(t *testing.T) {
 				},
 			}),
 		)
-		_, err := client.Namespaces.Query(
-			deadlineCtx,
-			"products",
-			turbopuffer.NamespaceQueryParams{},
-		)
+		_, err := client.Namespaces.Query(deadlineCtx, turbopuffer.NamespaceQueryParams{
+			Namespace: turbopuffer.String("products"),
+			RankBy: map[string]interface{}{
+				"0": "vector",
+				"1": "ANN",
+				"2": map[string]interface{}{
+					"0": 0.2,
+					"1": 0.3,
+				},
+			},
+			TopK: 10,
+		})
 		if err == nil {
 			t.Error("expected there to be a deadline error")
 		}

@@ -8,37 +8,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks/turbopuffer-go"
-	"github.com/stainless-sdks/turbopuffer-go/internal/testutil"
-	"github.com/stainless-sdks/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go"
+	"github.com/turbopuffer/turbopuffer-go/internal/testutil"
+	"github.com/turbopuffer/turbopuffer-go/option"
 )
-
-func TestNamespaceListWithOptionalParams(t *testing.T) {
-	t.Skip("skipped: tests are disabled for the time being")
-	baseURL := "http://localhost:4010"
-	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
-		baseURL = envURL
-	}
-	if !testutil.CheckTestServer(t, baseURL) {
-		return
-	}
-	client := turbopuffer.NewClient(
-		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
-	)
-	_, err := client.Namespaces.List(context.TODO(), turbopuffer.NamespaceListParams{
-		Cursor:   turbopuffer.String("cursor"),
-		PageSize: turbopuffer.Int(1),
-		Prefix:   turbopuffer.String("prefix"),
-	})
-	if err != nil {
-		var apierr *turbopuffer.Error
-		if errors.As(err, &apierr) {
-			t.Log(string(apierr.DumpRequest(true)))
-		}
-		t.Fatalf("err should be nil: %s", err.Error())
-	}
-}
 
 func TestNamespaceDeleteAll(t *testing.T) {
 	t.Skip("skipped: tests are disabled for the time being")
@@ -51,9 +24,12 @@ func TestNamespaceDeleteAll(t *testing.T) {
 	}
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 	)
-	_, err := client.Namespaces.DeleteAll(context.TODO(), "namespace")
+	_, err := client.Namespaces.DeleteAll(context.TODO(), turbopuffer.NamespaceDeleteAllParams{
+		Namespace: turbopuffer.String("namespace"),
+	})
 	if err != nil {
 		var apierr *turbopuffer.Error
 		if errors.As(err, &apierr) {
@@ -74,9 +50,12 @@ func TestNamespaceGetSchema(t *testing.T) {
 	}
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 	)
-	_, err := client.Namespaces.GetSchema(context.TODO(), "namespace")
+	_, err := client.Namespaces.GetSchema(context.TODO(), turbopuffer.NamespaceGetSchemaParams{
+		Namespace: turbopuffer.String("namespace"),
+	})
 	if err != nil {
 		var apierr *turbopuffer.Error
 		if errors.As(err, &apierr) {
@@ -97,26 +76,114 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 	}
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 	)
-	_, err := client.Namespaces.Query(
-		context.TODO(),
-		"namespace",
-		turbopuffer.NamespaceQueryParams{
-			Consistency: turbopuffer.NamespaceQueryParamsConsistency{
-				Level: turbopuffer.NamespaceQueryParamsConsistencyLevelStrong,
-			},
-			DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
-			Filters:        map[string]interface{}{},
-			IncludeAttributes: turbopuffer.NamespaceQueryParamsIncludeAttributesUnion{
-				OfBool: turbopuffer.Bool(true),
-			},
-			IncludeVectors: turbopuffer.Bool(true),
-			RankBy:         map[string]interface{}{},
-			TopK:           turbopuffer.Int(0),
-			Vector:         []float64{0},
+	_, err := client.Namespaces.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
+		Namespace: turbopuffer.String("namespace"),
+		RankBy:    map[string]interface{}{},
+		TopK:      0,
+		Consistency: turbopuffer.NamespaceQueryParamsConsistency{
+			Level: turbopuffer.NamespaceQueryParamsConsistencyLevelStrong,
 		},
+		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+		Filters:        map[string]interface{}{},
+		IncludeAttributes: turbopuffer.IncludeAttributesUnionParam{
+			OfBool: turbopuffer.Bool(true),
+		},
+		VectorEncoding: turbopuffer.NamespaceQueryParamsVectorEncodingFloat,
+	})
+	if err != nil {
+		var apierr *turbopuffer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestNamespaceRecallWithOptionalParams(t *testing.T) {
+	t.Skip("skipped: tests are disabled for the time being")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := turbopuffer.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 	)
+	_, err := client.Namespaces.Recall(context.TODO(), turbopuffer.NamespaceRecallParams{
+		Namespace: turbopuffer.String("namespace"),
+		Filters:   map[string]interface{}{},
+		Num:       turbopuffer.Int(0),
+		Queries:   []float64{0},
+		TopK:      turbopuffer.Int(0),
+	})
+	if err != nil {
+		var apierr *turbopuffer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
+	t.Skip("skipped: tests are disabled for the time being")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := turbopuffer.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
+	)
+	_, err := client.Namespaces.UpdateSchema(context.TODO(), turbopuffer.NamespaceUpdateSchemaParams{
+		Namespace: turbopuffer.String("namespace"),
+		Schema: map[string]turbopuffer.AttributeSchemaParam{
+			"foo": {
+				Filterable: turbopuffer.Bool(true),
+				FullTextSearch: turbopuffer.AttributeSchemaFullTextSearchUnionParam{
+					OfBool: turbopuffer.Bool(true),
+				},
+				Type: turbopuffer.AttributeSchemaTypeString,
+			},
+		},
+	})
+	if err != nil {
+		var apierr *turbopuffer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestNamespaceWarmCache(t *testing.T) {
+	t.Skip("skipped: tests are disabled for the time being")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := turbopuffer.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
+	)
+	_, err := client.Namespaces.WarmCache(context.TODO(), turbopuffer.NamespaceWarmCacheParams{
+		Namespace: turbopuffer.String("namespace"),
+	})
 	if err != nil {
 		var apierr *turbopuffer.Error
 		if errors.As(err, &apierr) {
@@ -137,52 +204,63 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 	}
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 	)
-	_, err := client.Namespaces.Write(
-		context.TODO(),
-		"namespace",
-		turbopuffer.NamespaceWriteParams{
-			Operation: turbopuffer.NamespaceWriteParamsOperationWriteDocuments{
-				DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
-				PatchColumns: turbopuffer.DocumentColumnsParam{
-					ID: []turbopuffer.IDUnionParam{{
-						OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-					}},
-				},
-				PatchRows: []turbopuffer.DocumentRowParam{{
-					ID: turbopuffer.IDUnionParam{
-						OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-					},
-					Vector: turbopuffer.DocumentRowVectorUnionParam{
-						OfDocumentRowVectorArray: []float64{0},
-					},
-				}},
-				Schema: map[string][]turbopuffer.AttributeSchemaParam{
-					"foo": {{
-						Filterable: turbopuffer.Bool(true),
-						FullTextSearch: turbopuffer.AttributeSchemaFullTextSearchUnionParam{
-							OfBool: turbopuffer.Bool(true),
-						},
-						Type: turbopuffer.AttributeSchemaTypeString,
-					}},
-				},
-				UpsertColumns: turbopuffer.DocumentColumnsParam{
-					ID: []turbopuffer.IDUnionParam{{
-						OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-					}},
-				},
-				UpsertRows: []turbopuffer.DocumentRowParam{{
-					ID: turbopuffer.IDUnionParam{
-						OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-					},
-					Vector: turbopuffer.DocumentRowVectorUnionParam{
-						OfDocumentRowVectorArray: []float64{0},
-					},
+	_, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
+		Namespace:         turbopuffer.String("namespace"),
+		CopyFromNamespace: turbopuffer.String("copy_from_namespace"),
+		DeleteByFilter:    map[string]interface{}{},
+		Deletes: []turbopuffer.IDUnionParam{{
+			OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		}},
+		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+		PatchColumns: turbopuffer.DocumentColumnsParam{
+			ID: []turbopuffer.IDUnionParam{{
+				OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			}},
+			Vector: turbopuffer.DocumentColumnsVectorUnionParam{
+				OfVectorArray: []turbopuffer.VectorUnionParam{{
+					OfFloatArray: []float64{0},
 				}},
 			},
 		},
-	)
+		PatchRows: []turbopuffer.DocumentRowParam{{
+			ID: turbopuffer.IDUnionParam{
+				OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			},
+			Vector: turbopuffer.VectorUnionParam{
+				OfFloatArray: []float64{0},
+			},
+		}},
+		Schema: map[string]turbopuffer.AttributeSchemaParam{
+			"foo": {
+				Filterable: turbopuffer.Bool(true),
+				FullTextSearch: turbopuffer.AttributeSchemaFullTextSearchUnionParam{
+					OfBool: turbopuffer.Bool(true),
+				},
+				Type: turbopuffer.AttributeSchemaTypeString,
+			},
+		},
+		UpsertColumns: turbopuffer.DocumentColumnsParam{
+			ID: []turbopuffer.IDUnionParam{{
+				OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			}},
+			Vector: turbopuffer.DocumentColumnsVectorUnionParam{
+				OfVectorArray: []turbopuffer.VectorUnionParam{{
+					OfFloatArray: []float64{0},
+				}},
+			},
+		},
+		UpsertRows: []turbopuffer.DocumentRowParam{{
+			ID: turbopuffer.IDUnionParam{
+				OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			},
+			Vector: turbopuffer.VectorUnionParam{
+				OfFloatArray: []float64{0},
+			},
+		}},
+	})
 	if err != nil {
 		var apierr *turbopuffer.Error
 		if errors.As(err, &apierr) {

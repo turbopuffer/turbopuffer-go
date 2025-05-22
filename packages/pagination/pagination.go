@@ -5,11 +5,11 @@ package pagination
 import (
 	"net/http"
 
-	"github.com/stainless-sdks/turbopuffer-go/internal/apijson"
-	"github.com/stainless-sdks/turbopuffer-go/internal/requestconfig"
-	"github.com/stainless-sdks/turbopuffer-go/option"
-	"github.com/stainless-sdks/turbopuffer-go/packages/param"
-	"github.com/stainless-sdks/turbopuffer-go/packages/resp"
+	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
+	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
+	"github.com/turbopuffer/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go/packages/param"
+	"github.com/turbopuffer/turbopuffer-go/packages/respjson"
 )
 
 // aliased to make [param.APIUnion] private when embedding
@@ -21,12 +21,11 @@ type paramObj = param.APIObject
 type ListNamespaces[T any] struct {
 	Namespaces []T    `json:"namespaces"`
 	NextCursor string `json:"next_cursor"`
-	// Metadata for the response, check the presence of optional fields with the
-	// [resp.Field.IsPresent] method.
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Namespaces  resp.Field
-		NextCursor  resp.Field
-		ExtraFields map[string]resp.Field
+		Namespaces  respjson.Field
+		NextCursor  respjson.Field
+		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
 	cfg *requestconfig.RequestConfig
@@ -48,7 +47,10 @@ func (r *ListNamespaces[T]) GetNextPage() (res *ListNamespaces[T], err error) {
 		return nil, nil
 	}
 	cfg := r.cfg.Clone(r.cfg.Context)
-	cfg.Apply(option.WithQuery("cursor", next))
+	err = cfg.Apply(option.WithQuery("cursor", next))
+	if err != nil {
+		return nil, err
+	}
 	var raw *http.Response
 	cfg.ResponseInto = &raw
 	cfg.ResponseBodyInto = &res

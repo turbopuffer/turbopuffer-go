@@ -1,7 +1,7 @@
 package apiform
 
 import (
-	"github.com/stainless-sdks/turbopuffer-go/packages/param"
+	"github.com/turbopuffer/turbopuffer-go/packages/param"
 	"mime/multipart"
 	"reflect"
 )
@@ -10,9 +10,9 @@ func (e *encoder) newRichFieldTypeEncoder(t reflect.Type) encoderFunc {
 	f, _ := t.FieldByName("Value")
 	enc := e.newPrimitiveTypeEncoder(f.Type)
 	return func(key string, value reflect.Value, writer *multipart.Writer) error {
-		if opt, ok := value.Interface().(param.Optional); ok && opt.IsPresent() {
+		if opt, ok := value.Interface().(param.Optional); ok && opt.Valid() {
 			return enc(key, value.FieldByIndex(f.Index), writer)
-		} else if ok && opt.IsNull() {
+		} else if ok && param.IsNull(opt) {
 			return writer.WriteField(key, "null")
 		}
 		return nil

@@ -1,7 +1,7 @@
-package param
+package paramutil
 
 import (
-	"github.com/stainless-sdks/turbopuffer-go/internal/encoding/json/sentinel"
+	"github.com/turbopuffer/turbopuffer-go/internal/encoding/json/sentinel"
 )
 
 // NullPtr returns a pointer to the zero value of the type T.

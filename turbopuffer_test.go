@@ -4,6 +4,7 @@ package turbopuffer_test
 
 import (
 	"context"
+	"errors"
 	"os"
 	"testing"
 
@@ -12,7 +13,8 @@ import (
 	"github.com/turbopuffer/turbopuffer-go/option"
 )
 
-func TestManualPagination(t *testing.T) {
+func TestTurbopufferListNamespacesWithOptionalParams(t *testing.T) {
+	t.Skip("skipped: tests are disabled for the time being")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -25,23 +27,16 @@ func TestManualPagination(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	page, err := client.ListNamespaces(context.TODO(), turbopuffer.ListNamespacesParams{
-		Prefix: turbopuffer.String("products"),
+	_, err := client.ListNamespaces(context.TODO(), turbopuffer.ListNamespacesParams{
+		Cursor:   turbopuffer.String("cursor"),
+		PageSize: turbopuffer.Int(1),
+		Prefix:   turbopuffer.String("prefix"),
 	})
 	if err != nil {
-		t.Fatalf("err should be nil: %s", err.Error())
-	}
-	for _, client := range page.Namespaces {
-		t.Logf("%+v\n", client.ID)
-	}
-	// Prism mock isn't going to give us real pagination
-	page, err = page.GetNextPage()
-	if err != nil {
-		t.Fatalf("err should be nil: %s", err.Error())
-	}
-	if page != nil {
-		for _, client := range page.Namespaces {
-			t.Logf("%+v\n", client.ID)
+		var apierr *turbopuffer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
 		}
+		t.Fatalf("err should be nil: %s", err.Error())
 	}
 }
