@@ -597,6 +597,31 @@ func (u *IDUnionParam) asAny() any {
 	return nil
 }
 
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type IncludeAttributesUnionParam struct {
+	OfBool        param.Opt[bool] `json:",omitzero,inline"`
+	OfStringArray []string        `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u IncludeAttributesUnionParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[IncludeAttributesUnionParam](u.OfBool, u.OfStringArray)
+}
+func (u *IncludeAttributesUnionParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *IncludeAttributesUnionParam) asAny() any {
+	if !param.IsOmitted(u.OfBool) {
+		return &u.OfBool.Value
+	} else if !param.IsOmitted(u.OfStringArray) {
+		return &u.OfStringArray
+	}
+	return nil
+}
+
 // VectorUnion contains all possible properties and values from [[]float64],
 // [string].
 //
@@ -908,7 +933,7 @@ type NamespaceQueryParams struct {
 	// WHERE clause.
 	Filters any `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
-	IncludeAttributes NamespaceQueryParamsIncludeAttributesUnion `json:"include_attributes,omitzero"`
+	IncludeAttributes IncludeAttributesUnionParam `json:"include_attributes,omitzero"`
 	// The encoding to use for vectors in the response.
 	//
 	// Any of "float", "base64".
@@ -948,31 +973,6 @@ const (
 	NamespaceQueryParamsConsistencyLevelStrong   NamespaceQueryParamsConsistencyLevel = "strong"
 	NamespaceQueryParamsConsistencyLevelEventual NamespaceQueryParamsConsistencyLevel = "eventual"
 )
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type NamespaceQueryParamsIncludeAttributesUnion struct {
-	OfBool        param.Opt[bool] `json:",omitzero,inline"`
-	OfStringArray []string        `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u NamespaceQueryParamsIncludeAttributesUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[NamespaceQueryParamsIncludeAttributesUnion](u.OfBool, u.OfStringArray)
-}
-func (u *NamespaceQueryParamsIncludeAttributesUnion) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *NamespaceQueryParamsIncludeAttributesUnion) asAny() any {
-	if !param.IsOmitted(u.OfBool) {
-		return &u.OfBool.Value
-	} else if !param.IsOmitted(u.OfStringArray) {
-		return &u.OfStringArray
-	}
-	return nil
-}
 
 // The encoding to use for vectors in the response.
 type NamespaceQueryParamsVectorEncoding string
