@@ -262,7 +262,7 @@ func WithRequestTimeout(dur time.Duration) RequestOption {
 // environment to be the "production" environment. An environment specifies which base URL
 // to use by default.
 func WithEnvironmentProduction() RequestOption {
-	return requestconfig.WithDefaultBaseURL("https://api.turbopuffer.com/")
+	return requestconfig.WithDefaultBaseURL("https://REGION.turbopuffer.com/")
 }
 
 // WithAPIKey returns a RequestOption that sets the client setting "api_key".
@@ -270,6 +270,14 @@ func WithAPIKey(value string) RequestOption {
 	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) error {
 		r.APIKey = value
 		return r.Apply(WithHeader("authorization", fmt.Sprintf("Bearer %s", r.APIKey)))
+	})
+}
+
+// WithRegion returns a RequestOption that sets the client setting "region".
+func WithRegion(value string) RequestOption {
+	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) error {
+		r.Region = value
+		return nil
 	})
 }
 

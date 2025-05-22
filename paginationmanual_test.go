@@ -23,6 +23,7 @@ func TestManualPagination(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
+		option.WithRegion("My-Region"),
 	)
 	page, err := client.ListNamespaces(context.TODO(), turbopuffer.ListNamespacesParams{
 		Prefix: turbopuffer.String("products"),
