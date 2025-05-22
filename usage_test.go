@@ -10,7 +10,6 @@ import (
 	"github.com/turbopuffer/turbopuffer-go"
 	"github.com/turbopuffer/turbopuffer-go/internal/testutil"
 	"github.com/turbopuffer/turbopuffer-go/option"
-	"github.com/turbopuffer/turbopuffer-go/shared"
 )
 
 func TestUsage(t *testing.T) {
@@ -28,12 +27,12 @@ func TestUsage(t *testing.T) {
 	)
 	response, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
 		Namespace:      turbopuffer.String("products"),
-		DistanceMetric: shared.DistanceMetricCosineDistance,
-		UpsertRows: []shared.DocumentRowParam{{
-			ID: shared.IDUnionParam{
+		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+		UpsertRows: []turbopuffer.DocumentRowParam{{
+			ID: turbopuffer.IDUnionParam{
 				OfString: turbopuffer.String("2108ed60-6851-49a0-9016-8325434f3845"),
 			},
-			Vector: shared.DocumentRowVectorUnionParam{
+			Vector: turbopuffer.DocumentRowVectorUnionParam{
 				OfFloatArray: []float64{0.1, 0.2},
 			},
 		}},
