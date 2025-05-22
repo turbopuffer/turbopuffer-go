@@ -335,9 +335,11 @@ const (
 )
 
 // A list of documents in columnar format. The keys are the column names.
+//
+// The property ID is required.
 type DocumentColumnsParam struct {
 	// The IDs of the documents.
-	ID []IDUnionParam `json:"id,omitzero" format:"uuid"`
+	ID []IDUnionParam `json:"id,omitzero,required" format:"uuid"`
 	// The vector embeddings of the documents.
 	Vector      DocumentColumnsVectorUnionParam `json:"vector,omitzero"`
 	ExtraFields map[string][]any                `json:"-"`
