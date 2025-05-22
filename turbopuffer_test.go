@@ -25,6 +25,7 @@ func TestTurbopufferListNamespacesWithOptionalParams(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
+		option.WithRegion("My-Region"),
 	)
 	_, err := client.ListNamespaces(context.TODO(), turbopuffer.ListNamespacesParams{
 		Cursor:   turbopuffer.String("cursor"),
