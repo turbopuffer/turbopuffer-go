@@ -25,8 +25,8 @@ func TestNamespaceDeleteAll(t *testing.T) {
 	}
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
-		option.WithRegion("My-Region"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 	)
 	_, err := client.Namespaces.DeleteAll(context.TODO(), turbopuffer.NamespaceDeleteAllParams{
 		Namespace: turbopuffer.String("namespace"),
@@ -51,8 +51,8 @@ func TestNamespaceGetSchema(t *testing.T) {
 	}
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
-		option.WithRegion("My-Region"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 	)
 	_, err := client.Namespaces.GetSchema(context.TODO(), turbopuffer.NamespaceGetSchemaParams{
 		Namespace: turbopuffer.String("namespace"),
@@ -77,8 +77,8 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 	}
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
-		option.WithRegion("My-Region"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 	)
 	_, err := client.Namespaces.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("namespace"),
@@ -114,8 +114,8 @@ func TestNamespaceRecallWithOptionalParams(t *testing.T) {
 	}
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
-		option.WithRegion("My-Region"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 	)
 	_, err := client.Namespaces.Recall(context.TODO(), turbopuffer.NamespaceRecallParams{
 		Namespace: turbopuffer.String("namespace"),
@@ -144,8 +144,8 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 	}
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
-		option.WithRegion("My-Region"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 	)
 	_, err := client.Namespaces.UpdateSchema(context.TODO(), turbopuffer.NamespaceUpdateSchemaParams{
 		Namespace: turbopuffer.String("namespace"),
@@ -179,8 +179,8 @@ func TestNamespaceWarmCache(t *testing.T) {
 	}
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
-		option.WithRegion("My-Region"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 	)
 	_, err := client.Namespaces.WarmCache(context.TODO(), turbopuffer.NamespaceWarmCacheParams{
 		Namespace: turbopuffer.String("namespace"),
@@ -205,8 +205,8 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 	}
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
-		option.WithRegion("My-Region"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 	)
 	_, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
 		Namespace:         turbopuffer.String("namespace"),
