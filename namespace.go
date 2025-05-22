@@ -30,10 +30,18 @@ type NamespaceService struct {
 // NewNamespaceService generates a new service that applies the given options to
 // each request. These options are applied after the parent client's options (if
 // there is one), and before any request-specific options.
-func NewNamespaceService(opts ...option.RequestOption) (r NamespaceService) {
+func newNamespaceService(opts ...option.RequestOption) (r NamespaceService) {
 	r = NamespaceService{}
 	r.Options = opts
 	return
+}
+
+func (r *NamespaceService) ID() string {
+	requestConfig, err := requestconfig.NewRequestConfig(context.Background(), "GET", "/", nil, nil, r.Options...)
+	if err != nil {
+		panic(fmt.Errorf("failed to create request config: %w", err))
+	}
+	return *requestConfig.DefaultNamespace
 }
 
 // Delete namespace.
@@ -348,7 +356,11 @@ type DocumentColumnsParam struct {
 
 func (r DocumentColumnsParam) MarshalJSON() (data []byte, err error) {
 	type shadow DocumentColumnsParam
-	return param.MarshalWithExtras(r, (*shadow)(&r), r.ExtraFields)
+	extraFields := make(map[string]any)
+	for fieldName, fieldValue := range r.ExtraFields {
+		extraFields[fieldName] = fieldValue
+	}
+	return param.MarshalWithExtras(r, (*shadow)(&r), extraFields)
 }
 func (r *DocumentColumnsParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
@@ -1015,7 +1027,7 @@ func (r NamespaceUpdateSchemaParams) MarshalJSON() (data []byte, err error) {
 	return json.Marshal(r.Schema)
 }
 func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
-	return r.Schema.UnmarshalJSON(data)
+	return apijson.UnmarshalRoot(data, r)
 }
 
 type NamespaceWarmCacheParams struct {
