@@ -23,8 +23,8 @@ func TestUsage(t *testing.T) {
 	}
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
-		option.WithRegion("My-Region"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
 	)
 	response, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
 		Namespace:      turbopuffer.String("products"),

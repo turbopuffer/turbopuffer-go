@@ -51,8 +51,8 @@ import (
 
 func main() {
 	client := turbopuffer.NewClient(
-		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("TURBOPUFFER_API_KEY")
-		option.WithRegion("My-Region"),  // defaults to os.LookupEnv("TURBOPUFFER_REGION")
+		option.WithAPIKey("tpuf_A1..."),      // defaults to os.LookupEnv("TURBOPUFFER_API_KEY")
+		option.WithRegion("gcp-us-central1"), // defaults to os.LookupEnv("TURBOPUFFER_REGION")
 	)
 	response, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
 		Namespace:      turbopuffer.String("products"),
