@@ -324,10 +324,8 @@ To handle errors, we recommend that you use the `errors.As` pattern:
 ```go
 _, err := client.Namespaces.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
 	Namespace: turbopuffer.String("products"),
-	RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-		OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
-	},
-	TopK: 0,
+	RankBy:    map[string]interface{}{},
+	TopK:      0,
 })
 if err != nil {
 	var apierr *turbopuffer.Error
@@ -357,10 +355,8 @@ client.Namespaces.Query(
 	ctx,
 	turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("products"),
-		RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-			OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
-		},
-		TopK: 0,
+		RankBy:    map[string]interface{}{},
+		TopK:      0,
 	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
@@ -399,10 +395,8 @@ client.Namespaces.Query(
 	context.TODO(),
 	turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("products"),
-		RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-			OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
-		},
-		TopK: 0,
+		RankBy:    map[string]interface{}{},
+		TopK:      0,
 	},
 	option.WithMaxRetries(5),
 )
@@ -420,10 +414,8 @@ response, err := client.Namespaces.Query(
 	context.TODO(),
 	turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("products"),
-		RankBy: turbopuffer.NamespaceQueryParamsRankByUnion{
-			OfAnyArray: []any{map[string]interface{}{}, map[string]interface{}{}, map[string]interface{}{}},
-		},
-		TopK: 0,
+		RankBy:    map[string]interface{}{},
+		TopK:      0,
 	},
 	option.WithResponseInto(&response),
 )
