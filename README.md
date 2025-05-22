@@ -7,6 +7,11 @@ from applications written in Go.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
+> [!WARNING]
+> **The turbopuffer Go client is in alpha.**
+>
+> You may encounter bugs or performance issues. APIs are subject to change.
+
 ## Installation
 
 <!-- x-release-please-start-version -->
