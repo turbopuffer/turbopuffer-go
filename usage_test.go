@@ -30,5 +30,5 @@ func TestUsage(t *testing.T) {
 	if err != nil {
 		t.Fatalf("err should be nil: %s", err.Error())
 	}
-	t.Logf("%+v\n", response.Status)
+	t.Logf("%+v\n", response.RowsAffected)
 }

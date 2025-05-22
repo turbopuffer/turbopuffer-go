@@ -11,6 +11,7 @@ import (
 	"github.com/turbopuffer/turbopuffer-go"
 	"github.com/turbopuffer/turbopuffer-go/internal/testutil"
 	"github.com/turbopuffer/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go/shared"
 )
 
 func TestNamespaceDeleteAll(t *testing.T) {
@@ -83,7 +84,7 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		Consistency: turbopuffer.NamespaceQueryParamsConsistency{
 			Level: turbopuffer.NamespaceQueryParamsConsistencyLevelStrong,
 		},
-		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+		DistanceMetric: shared.DistanceMetricCosineDistance,
 		Filters:        map[string]interface{}{},
 		IncludeAttributes: turbopuffer.NamespaceQueryParamsIncludeAttributesUnion{
 			OfBool: turbopuffer.Bool(true),
@@ -99,7 +100,7 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestNamespaceRecall(t *testing.T) {
+func TestNamespaceRecallWithOptionalParams(t *testing.T) {
 	t.Skip("skipped: tests are disabled for the time being")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -114,6 +115,10 @@ func TestNamespaceRecall(t *testing.T) {
 	)
 	_, err := client.Namespaces.Recall(context.TODO(), turbopuffer.NamespaceRecallParams{
 		Namespace: turbopuffer.String("namespace"),
+		Filters:   map[string]interface{}{},
+		Num:       turbopuffer.Int(0),
+		Queries:   []any{map[string]interface{}{}},
+		TopK:      turbopuffer.Int(0),
 	})
 	if err != nil {
 		var apierr *turbopuffer.Error
@@ -139,13 +144,13 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 	)
 	_, err := client.Namespaces.UpdateSchema(context.TODO(), turbopuffer.NamespaceUpdateSchemaParams{
 		Namespace: turbopuffer.String("namespace"),
-		Body: map[string]turbopuffer.AttributeSchemaParam{
+		Schema: map[string]shared.AttributeSchemaParam{
 			"foo": {
 				Filterable: turbopuffer.Bool(true),
-				FullTextSearch: turbopuffer.AttributeSchemaFullTextSearchUnionParam{
+				FullTextSearch: shared.AttributeSchemaFullTextSearchUnionParam{
 					OfBool: turbopuffer.Bool(true),
 				},
-				Type: turbopuffer.AttributeSchemaTypeString,
+				Type: shared.AttributeSchemaTypeString,
 			},
 		},
 	})
@@ -200,42 +205,42 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		Namespace:         turbopuffer.String("namespace"),
 		CopyFromNamespace: turbopuffer.String("copy_from_namespace"),
 		DeleteByFilter:    map[string]interface{}{},
-		Deletes: []turbopuffer.IDUnionParam{{
+		Deletes: []shared.IDUnionParam{{
 			OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		}},
-		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
-		PatchColumns: turbopuffer.DocumentColumnsParam{
-			ID: []turbopuffer.IDUnionParam{{
+		DistanceMetric: shared.DistanceMetricCosineDistance,
+		PatchColumns: shared.DocumentColumnsParam{
+			ID: []shared.IDUnionParam{{
 				OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			}},
 		},
-		PatchRows: []turbopuffer.DocumentRowParam{{
-			ID: turbopuffer.IDUnionParam{
+		PatchRows: []shared.DocumentRowParam{{
+			ID: shared.IDUnionParam{
 				OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			},
-			Vector: turbopuffer.DocumentRowVectorUnionParam{
+			Vector: shared.DocumentRowVectorUnionParam{
 				OfFloatArray: []float64{0},
 			},
 		}},
-		Schema: map[string]turbopuffer.AttributeSchemaParam{
+		Schema: map[string]shared.AttributeSchemaParam{
 			"foo": {
 				Filterable: turbopuffer.Bool(true),
-				FullTextSearch: turbopuffer.AttributeSchemaFullTextSearchUnionParam{
+				FullTextSearch: shared.AttributeSchemaFullTextSearchUnionParam{
 					OfBool: turbopuffer.Bool(true),
 				},
-				Type: turbopuffer.AttributeSchemaTypeString,
+				Type: shared.AttributeSchemaTypeString,
 			},
 		},
-		UpsertColumns: turbopuffer.DocumentColumnsParam{
-			ID: []turbopuffer.IDUnionParam{{
+		UpsertColumns: shared.DocumentColumnsParam{
+			ID: []shared.IDUnionParam{{
 				OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			}},
 		},
-		UpsertRows: []turbopuffer.DocumentRowParam{{
-			ID: turbopuffer.IDUnionParam{
+		UpsertRows: []shared.DocumentRowParam{{
+			ID: shared.IDUnionParam{
 				OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			},
-			Vector: turbopuffer.DocumentRowVectorUnionParam{
+			Vector: shared.DocumentRowVectorUnionParam{
 				OfFloatArray: []float64{0},
 			},
 		}},
