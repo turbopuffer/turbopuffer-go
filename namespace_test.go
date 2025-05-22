@@ -88,7 +88,7 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		},
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
 		Filters:        map[string]interface{}{},
-		IncludeAttributes: turbopuffer.NamespaceQueryParamsIncludeAttributesUnion{
+		IncludeAttributes: turbopuffer.IncludeAttributesUnionParam{
 			OfBool: turbopuffer.Bool(true),
 		},
 		VectorEncoding: turbopuffer.NamespaceQueryParamsVectorEncodingFloat,

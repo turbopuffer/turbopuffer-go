@@ -18,6 +18,7 @@ Params Types:
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#DocumentRowParam">DocumentRowParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#FullTextSearchConfigParam">FullTextSearchConfigParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#IDUnionParam">IDUnionParam</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#IncludeAttributesUnionParam">IncludeAttributesUnionParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#VectorUnionParam">VectorUnionParam</a>
 
 Response Types:
