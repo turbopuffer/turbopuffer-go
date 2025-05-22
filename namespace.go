@@ -337,8 +337,10 @@ const (
 // A list of documents in columnar format. The keys are the column names.
 type DocumentColumnsParam struct {
 	// The IDs of the documents.
-	ID          []IDUnionParam   `json:"id,omitzero" format:"uuid"`
-	ExtraFields map[string][]any `json:"-"`
+	ID []IDUnionParam `json:"id,omitzero" format:"uuid"`
+	// The vector embeddings of the documents.
+	Vector      DocumentColumnsVectorUnionParam `json:"vector,omitzero"`
+	ExtraFields map[string][]any                `json:"-"`
 	paramObj
 }
 
@@ -350,12 +352,65 @@ func (r *DocumentColumnsParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type DocumentColumnsVectorUnionParam struct {
+	OfDocumentColumnsVectorArray []DocumentColumnsVectorArrayItemUnionParam `json:",omitzero,inline"`
+	OfFloatArray                 []float64                                  `json:",omitzero,inline"`
+	OfString                     param.Opt[string]                          `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u DocumentColumnsVectorUnionParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[DocumentColumnsVectorUnionParam](u.OfDocumentColumnsVectorArray, u.OfFloatArray, u.OfString)
+}
+func (u *DocumentColumnsVectorUnionParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *DocumentColumnsVectorUnionParam) asAny() any {
+	if !param.IsOmitted(u.OfDocumentColumnsVectorArray) {
+		return &u.OfDocumentColumnsVectorArray
+	} else if !param.IsOmitted(u.OfFloatArray) {
+		return &u.OfFloatArray
+	} else if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	}
+	return nil
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type DocumentColumnsVectorArrayItemUnionParam struct {
+	OfFloatArray []float64         `json:",omitzero,inline"`
+	OfString     param.Opt[string] `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u DocumentColumnsVectorArrayItemUnionParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[DocumentColumnsVectorArrayItemUnionParam](u.OfFloatArray, u.OfString)
+}
+func (u *DocumentColumnsVectorArrayItemUnionParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *DocumentColumnsVectorArrayItemUnionParam) asAny() any {
+	if !param.IsOmitted(u.OfFloatArray) {
+		return &u.OfFloatArray
+	} else if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	}
+	return nil
+}
+
 // A single document, in a row-based format.
 type DocumentRow struct {
 	// An identifier for a document.
-	ID IDUnion `json:"id" format:"uuid"`
-	// A vector describing the document.
-	Vector      DocumentRowVectorUnion `json:"vector,nullable"`
+	ID IDUnion `json:"id,required" format:"uuid"`
+	// A vector embedding associated with a document.
+	Vector      DocumentRowVectorUnion `json:"vector"`
 	ExtraFields map[string]any         `json:",extras"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -418,12 +473,14 @@ func (r *DocumentRowVectorUnion) UnmarshalJSON(data []byte) error {
 }
 
 // A single document, in a row-based format.
+//
+// The property ID is required.
 type DocumentRowParam struct {
-	// A vector describing the document.
-	Vector DocumentRowVectorUnionParam `json:"vector,omitzero"`
 	// An identifier for a document.
-	ID          IDUnionParam   `json:"id,omitzero" format:"uuid"`
-	ExtraFields map[string]any `json:"-"`
+	ID IDUnionParam `json:"id,omitzero,required" format:"uuid"`
+	// A vector embedding associated with a document.
+	Vector      DocumentRowVectorUnionParam `json:"vector,omitzero"`
+	ExtraFields map[string]any              `json:"-"`
 	paramObj
 }
 
