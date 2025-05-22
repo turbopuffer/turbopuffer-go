@@ -32,7 +32,7 @@ func TestUsage(t *testing.T) {
 			ID: turbopuffer.IDUnionParam{
 				OfString: turbopuffer.String("2108ed60-6851-49a0-9016-8325434f3845"),
 			},
-			Vector: turbopuffer.DocumentRowVectorUnionParam{
+			Vector: turbopuffer.VectorUnionParam{
 				OfFloatArray: []float64{0.1, 0.2},
 			},
 		}},

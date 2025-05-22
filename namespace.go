@@ -358,48 +358,23 @@ func (r *DocumentColumnsParam) UnmarshalJSON(data []byte) error {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type DocumentColumnsVectorUnionParam struct {
-	OfDocumentColumnsVectorArray []DocumentColumnsVectorArrayItemUnionParam `json:",omitzero,inline"`
-	OfFloatArray                 []float64                                  `json:",omitzero,inline"`
-	OfString                     param.Opt[string]                          `json:",omitzero,inline"`
+	OfVectorArray []VectorUnionParam `json:",omitzero,inline"`
+	OfFloatArray  []float64          `json:",omitzero,inline"`
+	OfString      param.Opt[string]  `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u DocumentColumnsVectorUnionParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[DocumentColumnsVectorUnionParam](u.OfDocumentColumnsVectorArray, u.OfFloatArray, u.OfString)
+	return param.MarshalUnion[DocumentColumnsVectorUnionParam](u.OfVectorArray, u.OfFloatArray, u.OfString)
 }
 func (u *DocumentColumnsVectorUnionParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
 func (u *DocumentColumnsVectorUnionParam) asAny() any {
-	if !param.IsOmitted(u.OfDocumentColumnsVectorArray) {
-		return &u.OfDocumentColumnsVectorArray
+	if !param.IsOmitted(u.OfVectorArray) {
+		return &u.OfVectorArray
 	} else if !param.IsOmitted(u.OfFloatArray) {
-		return &u.OfFloatArray
-	} else if !param.IsOmitted(u.OfString) {
-		return &u.OfString.Value
-	}
-	return nil
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type DocumentColumnsVectorArrayItemUnionParam struct {
-	OfFloatArray []float64         `json:",omitzero,inline"`
-	OfString     param.Opt[string] `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u DocumentColumnsVectorArrayItemUnionParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[DocumentColumnsVectorArrayItemUnionParam](u.OfFloatArray, u.OfString)
-}
-func (u *DocumentColumnsVectorArrayItemUnionParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *DocumentColumnsVectorArrayItemUnionParam) asAny() any {
-	if !param.IsOmitted(u.OfFloatArray) {
 		return &u.OfFloatArray
 	} else if !param.IsOmitted(u.OfString) {
 		return &u.OfString.Value
@@ -412,8 +387,8 @@ type DocumentRow struct {
 	// An identifier for a document.
 	ID IDUnion `json:"id,required" format:"uuid"`
 	// A vector embedding associated with a document.
-	Vector      DocumentRowVectorUnion `json:"vector"`
-	ExtraFields map[string]any         `json:",extras"`
+	Vector      VectorUnion    `json:"vector"`
+	ExtraFields map[string]any `json:",extras"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID          respjson.Field
@@ -438,42 +413,6 @@ func (r DocumentRow) ToParam() DocumentRowParam {
 	return param.Override[DocumentRowParam](r.RawJSON())
 }
 
-// DocumentRowVectorUnion contains all possible properties and values from
-// [[]float64], [string].
-//
-// Use the methods beginning with 'As' to cast the union to one of its variants.
-//
-// If the underlying value is not a json object, one of the following properties
-// will be valid: OfFloatArray OfString]
-type DocumentRowVectorUnion struct {
-	// This field will be present if the value is a [[]float64] instead of an object.
-	OfFloatArray []float64 `json:",inline"`
-	// This field will be present if the value is a [string] instead of an object.
-	OfString string `json:",inline"`
-	JSON     struct {
-		OfFloatArray respjson.Field
-		OfString     respjson.Field
-		raw          string
-	} `json:"-"`
-}
-
-func (u DocumentRowVectorUnion) AsFloatArray() (v []float64) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u DocumentRowVectorUnion) AsString() (v string) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-// Returns the unmodified JSON received from the API
-func (u DocumentRowVectorUnion) RawJSON() string { return u.JSON.raw }
-
-func (r *DocumentRowVectorUnion) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
 // A single document, in a row-based format.
 //
 // The property ID is required.
@@ -481,8 +420,8 @@ type DocumentRowParam struct {
 	// An identifier for a document.
 	ID IDUnionParam `json:"id,omitzero,required" format:"uuid"`
 	// A vector embedding associated with a document.
-	Vector      DocumentRowVectorUnionParam `json:"vector,omitzero"`
-	ExtraFields map[string]any              `json:"-"`
+	Vector      VectorUnionParam `json:"vector,omitzero"`
+	ExtraFields map[string]any   `json:"-"`
 	paramObj
 }
 
@@ -492,31 +431,6 @@ func (r DocumentRowParam) MarshalJSON() (data []byte, err error) {
 }
 func (r *DocumentRowParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type DocumentRowVectorUnionParam struct {
-	OfFloatArray []float64         `json:",omitzero,inline"`
-	OfString     param.Opt[string] `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u DocumentRowVectorUnionParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[DocumentRowVectorUnionParam](u.OfFloatArray, u.OfString)
-}
-func (u *DocumentRowVectorUnionParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *DocumentRowVectorUnionParam) asAny() any {
-	if !param.IsOmitted(u.OfFloatArray) {
-		return &u.OfFloatArray
-	} else if !param.IsOmitted(u.OfString) {
-		return &u.OfString.Value
-	}
-	return nil
 }
 
 // Detailed configuration options for BM25 full-text search.
@@ -679,6 +593,76 @@ func (u *IDUnionParam) asAny() any {
 		return &u.OfString.Value
 	} else if !param.IsOmitted(u.OfInt) {
 		return &u.OfInt.Value
+	}
+	return nil
+}
+
+// VectorUnion contains all possible properties and values from [[]float64],
+// [string].
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+//
+// If the underlying value is not a json object, one of the following properties
+// will be valid: OfFloatArray OfString]
+type VectorUnion struct {
+	// This field will be present if the value is a [[]float64] instead of an object.
+	OfFloatArray []float64 `json:",inline"`
+	// This field will be present if the value is a [string] instead of an object.
+	OfString string `json:",inline"`
+	JSON     struct {
+		OfFloatArray respjson.Field
+		OfString     respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+func (u VectorUnion) AsFloatArray() (v []float64) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u VectorUnion) AsString() (v string) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u VectorUnion) RawJSON() string { return u.JSON.raw }
+
+func (r *VectorUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// ToParam converts this VectorUnion to a VectorUnionParam.
+//
+// Warning: the fields of the param type will not be present. ToParam should only
+// be used at the last possible moment before sending a request. Test for this with
+// VectorUnionParam.Overrides()
+func (r VectorUnion) ToParam() VectorUnionParam {
+	return param.Override[VectorUnionParam](r.RawJSON())
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type VectorUnionParam struct {
+	OfFloatArray []float64         `json:",omitzero,inline"`
+	OfString     param.Opt[string] `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u VectorUnionParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[VectorUnionParam](u.OfFloatArray, u.OfString)
+}
+func (u *VectorUnionParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *VectorUnionParam) asAny() any {
+	if !param.IsOmitted(u.OfFloatArray) {
+		return &u.OfFloatArray
+	} else if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
 	}
 	return nil
 }
