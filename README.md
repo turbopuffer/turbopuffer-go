@@ -58,7 +58,7 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", response.Status)
+	fmt.Printf("%+v\n", response.RowsAffected)
 }
 
 ```
@@ -324,8 +324,15 @@ To handle errors, we recommend that you use the `errors.As` pattern:
 ```go
 _, err := client.Namespaces.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
 	Namespace: turbopuffer.String("products"),
-	RankBy:    map[string]interface{}{},
-	TopK:      0,
+	RankBy: map[string]interface{}{
+		"0": "vector",
+		"1": "ANN",
+		"2": map[string]interface{}{
+			"0": 0.2,
+			"1": 0.3,
+		},
+	},
+	TopK: 10,
 })
 if err != nil {
 	var apierr *turbopuffer.Error
@@ -355,8 +362,15 @@ client.Namespaces.Query(
 	ctx,
 	turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("products"),
-		RankBy:    map[string]interface{}{},
-		TopK:      0,
+		RankBy: map[string]interface{}{
+			"0": "vector",
+			"1": "ANN",
+			"2": map[string]interface{}{
+				"0": 0.2,
+				"1": 0.3,
+			},
+		},
+		TopK: 10,
 	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
@@ -395,8 +409,15 @@ client.Namespaces.Query(
 	context.TODO(),
 	turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("products"),
-		RankBy:    map[string]interface{}{},
-		TopK:      0,
+		RankBy: map[string]interface{}{
+			"0": "vector",
+			"1": "ANN",
+			"2": map[string]interface{}{
+				"0": 0.2,
+				"1": 0.3,
+			},
+		},
+		TopK: 10,
 	},
 	option.WithMaxRetries(5),
 )
@@ -414,8 +435,15 @@ response, err := client.Namespaces.Query(
 	context.TODO(),
 	turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("products"),
-		RankBy:    map[string]interface{}{},
-		TopK:      0,
+		RankBy: map[string]interface{}{
+			"0": "vector",
+			"1": "ANN",
+			"2": map[string]interface{}{
+				"0": 0.2,
+				"1": 0.3,
+			},
+		},
+		TopK: 10,
 	},
 	option.WithResponseInto(&response),
 )
