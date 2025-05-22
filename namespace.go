@@ -14,7 +14,6 @@ import (
 	"github.com/turbopuffer/turbopuffer-go/option"
 	"github.com/turbopuffer/turbopuffer-go/packages/param"
 	"github.com/turbopuffer/turbopuffer-go/packages/respjson"
-	"github.com/turbopuffer/turbopuffer-go/shared"
 	"github.com/turbopuffer/turbopuffer-go/shared/constant"
 )
 
@@ -71,23 +70,6 @@ func (r *NamespaceService) GetSchema(ctx context.Context, query NamespaceGetSche
 	return
 }
 
-// Send multiple queries at once.
-func (r *NamespaceService) MultiQuery(ctx context.Context, params NamespaceMultiQueryParams, opts ...option.RequestOption) (res *NamespaceMultiQueryResponse, err error) {
-	opts = append(r.Options[:], opts...)
-	precfg, err := requestconfig.PreRequestOptions(opts...)
-	if err != nil {
-		return
-	}
-	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
-	if params.Namespace.Value == "" {
-		err = errors.New("missing required namespace parameter")
-		return
-	}
-	path := fmt.Sprintf("v2/namespaces/%s/query?overload=multi", params.Namespace.Value)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return
-}
-
 // Query, filter, full-text search and vector search documents.
 func (r *NamespaceService) Query(ctx context.Context, params NamespaceQueryParams, opts ...option.RequestOption) (res *NamespaceQueryResponse, err error) {
 	opts = append(r.Options[:], opts...)
@@ -105,6 +87,23 @@ func (r *NamespaceService) Query(ctx context.Context, params NamespaceQueryParam
 	return
 }
 
+// Evaluate recall.
+func (r *NamespaceService) Recall(ctx context.Context, query NamespaceRecallParams, opts ...option.RequestOption) (res *NamespaceRecallResponse, err error) {
+	opts = append(r.Options[:], opts...)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&query.Namespace, precfg.DefaultNamespace)
+	if query.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return
+	}
+	path := fmt.Sprintf("v1/namespaces/%s/_debug/recall", query.Namespace.Value)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	return
+}
+
 // Update namespace schema.
 func (r *NamespaceService) UpdateSchema(ctx context.Context, params NamespaceUpdateSchemaParams, opts ...option.RequestOption) (res *NamespaceUpdateSchemaResponse, err error) {
 	opts = append(r.Options[:], opts...)
@@ -119,6 +118,23 @@ func (r *NamespaceService) UpdateSchema(ctx context.Context, params NamespaceUpd
 	}
 	path := fmt.Sprintf("v1/namespaces/%s/schema", params.Namespace.Value)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	return
+}
+
+// Warm the cache for a namespace.
+func (r *NamespaceService) WarmCache(ctx context.Context, query NamespaceWarmCacheParams, opts ...option.RequestOption) (res *NamespaceWarmCacheResponse, err error) {
+	opts = append(r.Options[:], opts...)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&query.Namespace, precfg.DefaultNamespace)
+	if query.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return
+	}
+	path := fmt.Sprintf("v1/namespaces/%s/hint_cache_warm", query.Namespace.Value)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
 }
 
@@ -628,41 +644,6 @@ func (r *NamespaceDeleteAllResponse) UnmarshalJSON(data []byte) error {
 
 type NamespaceGetSchemaResponse map[string]AttributeSchema
 
-type NamespaceMultiQueryResponse struct {
-	Results []NamespaceMultiQueryResponseResult `json:"results,required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Results     respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r NamespaceMultiQueryResponse) RawJSON() string { return r.JSON.raw }
-func (r *NamespaceMultiQueryResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// The result of a query.
-type NamespaceMultiQueryResponseResult struct {
-	Aggregations []map[string]any `json:"aggregations"`
-	Rows         []DocumentRow    `json:"rows"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Aggregations respjson.Field
-		Rows         respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r NamespaceMultiQueryResponseResult) RawJSON() string { return r.JSON.raw }
-func (r *NamespaceMultiQueryResponseResult) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
 // The result of a query.
 type NamespaceQueryResponse struct {
 	Aggregations []map[string]any `json:"aggregations"`
@@ -682,7 +663,52 @@ func (r *NamespaceQueryResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The response to a successful cache warm request.
+type NamespaceRecallResponse struct {
+	// The average number of documents retrieved by the approximate nearest neighbor
+	// searches.
+	AvgAnnCount float64 `json:"avg_ann_count,required"`
+	// The average number of documents retrieved by the exhaustive searches.
+	AvgExhaustiveCount float64 `json:"avg_exhaustive_count,required"`
+	// The average recall of the queries.
+	AvgRecall float64 `json:"avg_recall,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		AvgAnnCount        respjson.Field
+		AvgExhaustiveCount respjson.Field
+		AvgRecall          respjson.Field
+		ExtraFields        map[string]respjson.Field
+		raw                string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceRecallResponse) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceRecallResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 type NamespaceUpdateSchemaResponse map[string]AttributeSchema
+
+// The response to a successful cache warm request.
+type NamespaceWarmCacheResponse struct {
+	// The status of the request.
+	Status  constant.Ok `json:"status,required"`
+	Message string      `json:"message"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Status      respjson.Field
+		Message     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceWarmCacheResponse) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceWarmCacheResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 // The response to a successful upsert request.
 type NamespaceWriteResponse struct {
@@ -712,156 +738,10 @@ type NamespaceGetSchemaParams struct {
 	paramObj
 }
 
-type NamespaceMultiQueryParams struct {
-	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
-	// The consistency level for a query.
-	Consistency NamespaceMultiQueryParamsConsistency `json:"consistency,omitzero"`
-	Queries     []NamespaceMultiQueryParamsQuery     `json:"queries,omitzero"`
-	// The encoding to use for vectors in the response.
-	//
-	// Any of "float", "base64".
-	VectorEncoding NamespaceMultiQueryParamsVectorEncoding `json:"vector_encoding,omitzero"`
-	paramObj
-}
-
-func (r NamespaceMultiQueryParams) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceMultiQueryParams
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *NamespaceMultiQueryParams) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// The consistency level for a query.
-type NamespaceMultiQueryParamsConsistency struct {
-	// The query's consistency level.
-	//
-	// Any of "strong", "eventual".
-	Level NamespaceMultiQueryParamsConsistencyLevel `json:"level,omitzero"`
-	paramObj
-}
-
-func (r NamespaceMultiQueryParamsConsistency) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceMultiQueryParamsConsistency
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *NamespaceMultiQueryParamsConsistency) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// The query's consistency level.
-type NamespaceMultiQueryParamsConsistencyLevel string
-
-const (
-	NamespaceMultiQueryParamsConsistencyLevelStrong   NamespaceMultiQueryParamsConsistencyLevel = "strong"
-	NamespaceMultiQueryParamsConsistencyLevelEventual NamespaceMultiQueryParamsConsistencyLevel = "eventual"
-)
-
-// Query, filter, full-text search and vector search documents.
-//
-// The properties RankBy, TopK are required.
-type NamespaceMultiQueryParamsQuery struct {
-	RankBy NamespaceMultiQueryParamsQueryRankByUnion `json:"rank_by,omitzero,required"`
-	// The number of results to return.
-	TopK int64 `json:"top_k,required"`
-	// A function used to calculate vector similarity.
-	//
-	// Any of "cosine_distance", "euclidean_squared".
-	DistanceMetric DistanceMetric          `json:"distance_metric,omitzero"`
-	Filters        shared.FilterUnionParam `json:"filters,omitzero"`
-	// Whether to include attributes in the response.
-	IncludeAttributes NamespaceMultiQueryParamsQueryIncludeAttributesUnion `json:"include_attributes,omitzero"`
-	paramObj
-}
-
-func (r NamespaceMultiQueryParamsQuery) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceMultiQueryParamsQuery
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *NamespaceMultiQueryParamsQuery) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type NamespaceMultiQueryParamsQueryRankByUnion struct {
-	OfAnyArray                                       []any `json:",omitzero,inline"`
-	OfNamespaceMultiQuerysQueryRankByArray           []any `json:",omitzero,inline"`
-	OfVariant2                                       []any `json:",omitzero,inline"`
-	OfVariant3                                       []any `json:",omitzero,inline"`
-	OfNamespaceMultiQuerysQueryRankByRankByAttribute []any `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u NamespaceMultiQueryParamsQueryRankByUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[NamespaceMultiQueryParamsQueryRankByUnion](u.OfAnyArray,
-		u.OfNamespaceMultiQuerysQueryRankByArray,
-		u.OfVariant2,
-		u.OfVariant3,
-		u.OfVariant3,
-		u.OfVariant3,
-		u.OfNamespaceMultiQuerysQueryRankByRankByAttribute)
-}
-func (u *NamespaceMultiQueryParamsQueryRankByUnion) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *NamespaceMultiQueryParamsQueryRankByUnion) asAny() any {
-	if !param.IsOmitted(u.OfAnyArray) {
-		return &u.OfAnyArray
-	} else if !param.IsOmitted(u.OfNamespaceMultiQuerysQueryRankByArray) {
-		return &u.OfNamespaceMultiQuerysQueryRankByArray
-	} else if !param.IsOmitted(u.OfVariant2) {
-		return &u.OfVariant2
-	} else if !param.IsOmitted(u.OfVariant3) {
-		return &u.OfVariant3
-	} else if !param.IsOmitted(u.OfVariant3) {
-		return &u.OfVariant3
-	} else if !param.IsOmitted(u.OfVariant3) {
-		return &u.OfVariant3
-	} else if !param.IsOmitted(u.OfNamespaceMultiQuerysQueryRankByRankByAttribute) {
-		return &u.OfNamespaceMultiQuerysQueryRankByRankByAttribute
-	}
-	return nil
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type NamespaceMultiQueryParamsQueryIncludeAttributesUnion struct {
-	OfBool        param.Opt[bool] `json:",omitzero,inline"`
-	OfStringArray []string        `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u NamespaceMultiQueryParamsQueryIncludeAttributesUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[NamespaceMultiQueryParamsQueryIncludeAttributesUnion](u.OfBool, u.OfStringArray)
-}
-func (u *NamespaceMultiQueryParamsQueryIncludeAttributesUnion) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *NamespaceMultiQueryParamsQueryIncludeAttributesUnion) asAny() any {
-	if !param.IsOmitted(u.OfBool) {
-		return &u.OfBool.Value
-	} else if !param.IsOmitted(u.OfStringArray) {
-		return &u.OfStringArray
-	}
-	return nil
-}
-
-// The encoding to use for vectors in the response.
-type NamespaceMultiQueryParamsVectorEncoding string
-
-const (
-	NamespaceMultiQueryParamsVectorEncodingFloat  NamespaceMultiQueryParamsVectorEncoding = "float"
-	NamespaceMultiQueryParamsVectorEncodingBase64 NamespaceMultiQueryParamsVectorEncoding = "base64"
-)
-
 type NamespaceQueryParams struct {
-	Namespace param.Opt[string]               `path:"namespace,omitzero,required" json:"-"`
-	RankBy    NamespaceQueryParamsRankByUnion `json:"rank_by,omitzero,required"`
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	// How to rank the documents in the namespace.
+	RankBy any `json:"rank_by,omitzero,required"`
 	// The number of results to return.
 	TopK int64 `json:"top_k,required"`
 	// The consistency level for a query.
@@ -869,8 +749,10 @@ type NamespaceQueryParams struct {
 	// A function used to calculate vector similarity.
 	//
 	// Any of "cosine_distance", "euclidean_squared".
-	DistanceMetric DistanceMetric          `json:"distance_metric,omitzero"`
-	Filters        shared.FilterUnionParam `json:"filters,omitzero"`
+	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
+	// Exact filters for attributes to refine search results for. Think of it as a SQL
+	// WHERE clause.
+	Filters any `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes NamespaceQueryParamsIncludeAttributesUnion `json:"include_attributes,omitzero"`
 	// The encoding to use for vectors in the response.
@@ -886,50 +768,6 @@ func (r NamespaceQueryParams) MarshalJSON() (data []byte, err error) {
 }
 func (r *NamespaceQueryParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type NamespaceQueryParamsRankByUnion struct {
-	OfAnyArray                             []any `json:",omitzero,inline"`
-	OfNamespaceQuerysRankByArray           []any `json:",omitzero,inline"`
-	OfVariant2                             []any `json:",omitzero,inline"`
-	OfVariant3                             []any `json:",omitzero,inline"`
-	OfNamespaceQuerysRankByRankByAttribute []any `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u NamespaceQueryParamsRankByUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[NamespaceQueryParamsRankByUnion](u.OfAnyArray,
-		u.OfNamespaceQuerysRankByArray,
-		u.OfVariant2,
-		u.OfVariant3,
-		u.OfVariant3,
-		u.OfVariant3,
-		u.OfNamespaceQuerysRankByRankByAttribute)
-}
-func (u *NamespaceQueryParamsRankByUnion) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *NamespaceQueryParamsRankByUnion) asAny() any {
-	if !param.IsOmitted(u.OfAnyArray) {
-		return &u.OfAnyArray
-	} else if !param.IsOmitted(u.OfNamespaceQuerysRankByArray) {
-		return &u.OfNamespaceQuerysRankByArray
-	} else if !param.IsOmitted(u.OfVariant2) {
-		return &u.OfVariant2
-	} else if !param.IsOmitted(u.OfVariant3) {
-		return &u.OfVariant3
-	} else if !param.IsOmitted(u.OfVariant3) {
-		return &u.OfVariant3
-	} else if !param.IsOmitted(u.OfVariant3) {
-		return &u.OfVariant3
-	} else if !param.IsOmitted(u.OfNamespaceQuerysRankByRankByAttribute) {
-		return &u.OfNamespaceQuerysRankByRankByAttribute
-	}
-	return nil
 }
 
 // The consistency level for a query.
@@ -990,6 +828,11 @@ const (
 	NamespaceQueryParamsVectorEncodingBase64 NamespaceQueryParamsVectorEncoding = "base64"
 )
 
+type NamespaceRecallParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	paramObj
+}
+
 type NamespaceUpdateSchemaParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
 	// The desired schema for the namespace.
@@ -1002,6 +845,11 @@ func (r NamespaceUpdateSchemaParams) MarshalJSON() (data []byte, err error) {
 }
 func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
 	return r.Body.UnmarshalJSON(data)
+}
+
+type NamespaceWarmCacheParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	paramObj
 }
 
 type NamespaceWriteParams struct {
