@@ -1,19 +1,3 @@
-# Shared Params Types
-
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared">shared</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared#AttributeSchemaParam">AttributeSchemaParam</a>
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared">shared</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared#DistanceMetric">DistanceMetric</a>
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared">shared</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared#DocumentColumnsParam">DocumentColumnsParam</a>
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared">shared</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared#DocumentRowParam">DocumentRowParam</a>
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared">shared</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared#FullTextSearchConfigParam">FullTextSearchConfigParam</a>
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared">shared</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared#IDUnionParam">IDUnionParam</a>
-
-# Shared Response Types
-
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared">shared</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared#AttributeSchema">AttributeSchema</a>
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared">shared</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared#DocumentRow">DocumentRow</a>
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared">shared</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared#FullTextSearchConfig">FullTextSearchConfig</a>
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared">shared</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/shared#IDUnion">IDUnion</a>
-
 # turbopuffer
 
 Response Types:
@@ -26,8 +10,21 @@ Methods:
 
 # Namespaces
 
+Params Types:
+
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#AttributeSchemaParam">AttributeSchemaParam</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#DistanceMetric">DistanceMetric</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#DocumentColumnsParam">DocumentColumnsParam</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#DocumentRowParam">DocumentRowParam</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#FullTextSearchConfigParam">FullTextSearchConfigParam</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#IDUnionParam">IDUnionParam</a>
+
 Response Types:
 
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#AttributeSchema">AttributeSchema</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#DocumentRow">DocumentRow</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#FullTextSearchConfig">FullTextSearchConfig</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#IDUnion">IDUnion</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#NamespaceDeleteAllResponse">NamespaceDeleteAllResponse</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#NamespaceGetSchemaResponse">NamespaceGetSchemaResponse</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#NamespaceQueryResponse">NamespaceQueryResponse</a>
