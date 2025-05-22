@@ -220,7 +220,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 				OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			}},
 			Vector: turbopuffer.DocumentColumnsVectorUnionParam{
-				OfDocumentColumnsVectorArray: []turbopuffer.DocumentColumnsVectorArrayItemUnionParam{{
+				OfVectorArray: []turbopuffer.VectorUnionParam{{
 					OfFloatArray: []float64{0},
 				}},
 			},
@@ -229,7 +229,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 			ID: turbopuffer.IDUnionParam{
 				OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			},
-			Vector: turbopuffer.DocumentRowVectorUnionParam{
+			Vector: turbopuffer.VectorUnionParam{
 				OfFloatArray: []float64{0},
 			},
 		}},
@@ -247,7 +247,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 				OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			}},
 			Vector: turbopuffer.DocumentColumnsVectorUnionParam{
-				OfDocumentColumnsVectorArray: []turbopuffer.DocumentColumnsVectorArrayItemUnionParam{{
+				OfVectorArray: []turbopuffer.VectorUnionParam{{
 					OfFloatArray: []float64{0},
 				}},
 			},
@@ -256,7 +256,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 			ID: turbopuffer.IDUnionParam{
 				OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			},
-			Vector: turbopuffer.DocumentRowVectorUnionParam{
+			Vector: turbopuffer.VectorUnionParam{
 				OfFloatArray: []float64{0},
 			},
 		}},
