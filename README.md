@@ -1,8 +1,8 @@
-# Turbopuffer Go API Library
+# turbopuffer Go API Library <a href="https://turbopuffer.com"><img src="https://private-user-images.githubusercontent.com/1594638/291012656-0482aa50-4665-4998-afd3-78afe56b52f3.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDgxNDQwOTEsIm5iZiI6MTc0ODE0Mzc5MSwicGF0aCI6Ii8xNTk0NjM4LzI5MTAxMjY1Ni0wNDgyYWE1MC00NjY1LTQ5OTgtYWZkMy03OGFmZTU2YjUyZjMucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI1MDUyNSUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNTA1MjVUMDMyOTUxWiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9OTgwMmY1OTk5MDUwOGY2YWQwZDE1ZDQ1ZjY3NmZhNTU2Y2FhZjQ5NWYwZDZhYzU2NWJjMTY5OGQ2YjU3MDIzOCZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.pvtP06Dg7SWehMw9HiSpM8aTyukkPtdgU-hQ0tGcb44" align="right"></a>
 
-<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go"><img src="https://pkg.go.dev/badge/github.com/turbopuffer/turbopuffer-go.svg" alt="Go Reference"></a>
+<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go"><img src="https://pkg.go.dev/badge/github.com/turbopuffer/turbopuffer-go.svg" alt="Go Reference" align="right"></a>
 
-The Turbopuffer Go library provides convenient access to the [Turbopuffer REST API](https://turbopuffer.com/docs)
+The turbopuffer Go library provides convenient access to the [turbopuffer REST API](https://turbopuffer.com/docs)
 from applications written in Go.
 
 It is generated with [Stainless](https://www.stainless.com/).
@@ -58,8 +58,8 @@ func main() {
 		option.WithAPIKey("tpuf_A1..."),      // defaults to os.LookupEnv("TURBOPUFFER_API_KEY")
 		option.WithRegion("gcp-us-central1"), // defaults to os.LookupEnv("TURBOPUFFER_REGION")
 	)
-	response, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
-		Namespace:      turbopuffer.String("products"),
+	namespace := client.namespace("products")
+	response, err := client.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
 		UpsertRows: []turbopuffer.DocumentRowParam{{
 			ID: turbopuffer.IDUnionParam{
@@ -279,7 +279,7 @@ client := turbopuffer.NewClient(
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
 
-client.Namespaces.Query(context.TODO(), ...,
+client.ListNamespaces(context.TODO(), ...,
 	// Override the header
 	option.WithHeader("X-Some-Header", "some_other_custom_header_info"),
 	// Add an undocumented field to the request body, using sjson syntax
@@ -337,8 +337,7 @@ When the API returns a non-success status code, we return an error with type
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Namespaces.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
-	Namespace: turbopuffer.String("products"),
+_, err := namespace.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
 	RankBy: map[string]interface{}{
 		"0": "vector",
 		"1": "ANN",
@@ -373,10 +372,9 @@ To set a per-retry timeout, use `option.WithRequestTimeout()`.
 // This sets the timeout for the request, including all the retries.
 ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
-client.Namespaces.Query(
+namespace.Query(
 	ctx,
 	turbopuffer.NamespaceQueryParams{
-		Namespace: turbopuffer.String("products"),
 		RankBy: map[string]interface{}{
 			"0": "vector",
 			"1": "ANN",
@@ -420,10 +418,9 @@ client := turbopuffer.NewClient(
 )
 
 // Override per-request:
-client.Namespaces.Query(
+namespaces.Query(
 	context.TODO(),
 	turbopuffer.NamespaceQueryParams{
-		Namespace: turbopuffer.String("products"),
 		RankBy: map[string]interface{}{
 			"0": "vector",
 			"1": "ANN",
@@ -446,10 +443,9 @@ you need to examine response headers, status codes, or other details.
 ```go
 // Create a variable to store the HTTP response
 var response *http.Response
-response, err := client.Namespaces.Query(
+response, err := namespace.Query(
 	context.TODO(),
 	turbopuffer.NamespaceQueryParams{
-		Namespace: turbopuffer.String("products"),
 		RankBy: map[string]interface{}{
 			"0": "vector",
 			"1": "ANN",
