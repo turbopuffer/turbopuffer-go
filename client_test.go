@@ -39,17 +39,8 @@ func TestUserAgentHeader(t *testing.T) {
 			},
 		}),
 	)
-	client.Namespaces.Query(context.Background(), turbopuffer.NamespaceQueryParams{
-		Namespace: turbopuffer.String("products"),
-		RankBy: map[string]interface{}{
-			"0": "vector",
-			"1": "ANN",
-			"2": map[string]interface{}{
-				"0": 0.2,
-				"1": 0.3,
-			},
-		},
-		TopK: 10,
+	client.ListNamespaces(context.Background(), turbopuffer.ListNamespacesParams{
+		Prefix: turbopuffer.String("foo"),
 	})
 	if userAgent != fmt.Sprintf("Turbopuffer/Go %s", internal.PackageVersion) {
 		t.Errorf("Expected User-Agent to be correct, but got: %#v", userAgent)
@@ -75,17 +66,8 @@ func TestRetryAfter(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.Namespaces.Query(context.Background(), turbopuffer.NamespaceQueryParams{
-		Namespace: turbopuffer.String("products"),
-		RankBy: map[string]interface{}{
-			"0": "vector",
-			"1": "ANN",
-			"2": map[string]interface{}{
-				"0": 0.2,
-				"1": 0.3,
-			},
-		},
-		TopK: 10,
+	_, err := client.ListNamespaces(context.Background(), turbopuffer.ListNamespacesParams{
+		Prefix: turbopuffer.String("foo"),
 	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
@@ -122,17 +104,8 @@ func TestDeleteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeaderDel("X-Stainless-Retry-Count"),
 	)
-	_, err := client.Namespaces.Query(context.Background(), turbopuffer.NamespaceQueryParams{
-		Namespace: turbopuffer.String("products"),
-		RankBy: map[string]interface{}{
-			"0": "vector",
-			"1": "ANN",
-			"2": map[string]interface{}{
-				"0": 0.2,
-				"1": 0.3,
-			},
-		},
-		TopK: 10,
+	_, err := client.ListNamespaces(context.Background(), turbopuffer.ListNamespacesParams{
+		Prefix: turbopuffer.String("foo"),
 	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
@@ -164,17 +137,8 @@ func TestOverwriteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeader("X-Stainless-Retry-Count", "42"),
 	)
-	_, err := client.Namespaces.Query(context.Background(), turbopuffer.NamespaceQueryParams{
-		Namespace: turbopuffer.String("products"),
-		RankBy: map[string]interface{}{
-			"0": "vector",
-			"1": "ANN",
-			"2": map[string]interface{}{
-				"0": 0.2,
-				"1": 0.3,
-			},
-		},
-		TopK: 10,
+	_, err := client.ListNamespaces(context.Background(), turbopuffer.ListNamespacesParams{
+		Prefix: turbopuffer.String("foo"),
 	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
@@ -205,17 +169,8 @@ func TestRetryAfterMs(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.Namespaces.Query(context.Background(), turbopuffer.NamespaceQueryParams{
-		Namespace: turbopuffer.String("products"),
-		RankBy: map[string]interface{}{
-			"0": "vector",
-			"1": "ANN",
-			"2": map[string]interface{}{
-				"0": 0.2,
-				"1": 0.3,
-			},
-		},
-		TopK: 10,
+	_, err := client.ListNamespaces(context.Background(), turbopuffer.ListNamespacesParams{
+		Prefix: turbopuffer.String("foo"),
 	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
@@ -240,17 +195,8 @@ func TestContextCancel(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithCancel(context.Background())
 	cancel()
-	_, err := client.Namespaces.Query(cancelCtx, turbopuffer.NamespaceQueryParams{
-		Namespace: turbopuffer.String("products"),
-		RankBy: map[string]interface{}{
-			"0": "vector",
-			"1": "ANN",
-			"2": map[string]interface{}{
-				"0": 0.2,
-				"1": 0.3,
-			},
-		},
-		TopK: 10,
+	_, err := client.ListNamespaces(cancelCtx, turbopuffer.ListNamespacesParams{
+		Prefix: turbopuffer.String("foo"),
 	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
@@ -272,17 +218,8 @@ func TestContextCancelDelay(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithTimeout(context.Background(), 2*time.Millisecond)
 	defer cancel()
-	_, err := client.Namespaces.Query(cancelCtx, turbopuffer.NamespaceQueryParams{
-		Namespace: turbopuffer.String("products"),
-		RankBy: map[string]interface{}{
-			"0": "vector",
-			"1": "ANN",
-			"2": map[string]interface{}{
-				"0": 0.2,
-				"1": 0.3,
-			},
-		},
-		TopK: 10,
+	_, err := client.ListNamespaces(cancelCtx, turbopuffer.ListNamespacesParams{
+		Prefix: turbopuffer.String("foo"),
 	})
 	if err == nil {
 		t.Error("expected there to be a cancel error")
@@ -310,17 +247,8 @@ func TestContextDeadline(t *testing.T) {
 				},
 			}),
 		)
-		_, err := client.Namespaces.Query(deadlineCtx, turbopuffer.NamespaceQueryParams{
-			Namespace: turbopuffer.String("products"),
-			RankBy: map[string]interface{}{
-				"0": "vector",
-				"1": "ANN",
-				"2": map[string]interface{}{
-					"0": 0.2,
-					"1": 0.3,
-				},
-			},
-			TopK: 10,
+		_, err := client.ListNamespaces(deadlineCtx, turbopuffer.ListNamespacesParams{
+			Prefix: turbopuffer.String("foo"),
 		})
 		if err == nil {
 			t.Error("expected there to be a deadline error")

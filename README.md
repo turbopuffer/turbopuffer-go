@@ -274,7 +274,7 @@ client := turbopuffer.NewClient(
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
 
-client.Namespaces.Query(context.TODO(), ...,
+client.ListNamespaces(context.TODO(), ...,
 	// Override the header
 	option.WithHeader("X-Some-Header", "some_other_custom_header_info"),
 	// Add an undocumented field to the request body, using sjson syntax
@@ -332,17 +332,8 @@ When the API returns a non-success status code, we return an error with type
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Namespaces.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
-	Namespace: turbopuffer.String("products"),
-	RankBy: map[string]interface{}{
-		"0": "vector",
-		"1": "ANN",
-		"2": map[string]interface{}{
-			"0": 0.2,
-			"1": 0.3,
-		},
-	},
-	TopK: 10,
+_, err := client.ListNamespaces(context.TODO(), turbopuffer.ListNamespacesParams{
+	Prefix: turbopuffer.String("foo"),
 })
 if err != nil {
 	var apierr *turbopuffer.Error
@@ -350,7 +341,7 @@ if err != nil {
 		println(string(apierr.DumpRequest(true)))  // Prints the serialized HTTP request
 		println(string(apierr.DumpResponse(true))) // Prints the serialized HTTP response
 	}
-	panic(err.Error()) // GET "/v2/namespaces/{namespace}/query": 400 Bad Request { ... }
+	panic(err.Error()) // GET "/v1/namespaces": 400 Bad Request { ... }
 }
 ```
 
@@ -368,19 +359,10 @@ To set a per-retry timeout, use `option.WithRequestTimeout()`.
 // This sets the timeout for the request, including all the retries.
 ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
-client.Namespaces.Query(
+client.ListNamespaces(
 	ctx,
-	turbopuffer.NamespaceQueryParams{
-		Namespace: turbopuffer.String("products"),
-		RankBy: map[string]interface{}{
-			"0": "vector",
-			"1": "ANN",
-			"2": map[string]interface{}{
-				"0": 0.2,
-				"1": 0.3,
-			},
-		},
-		TopK: 10,
+	turbopuffer.ListNamespacesParams{
+		Prefix: turbopuffer.String("foo"),
 	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
@@ -415,19 +397,10 @@ client := turbopuffer.NewClient(
 )
 
 // Override per-request:
-client.Namespaces.Query(
+client.ListNamespaces(
 	context.TODO(),
-	turbopuffer.NamespaceQueryParams{
-		Namespace: turbopuffer.String("products"),
-		RankBy: map[string]interface{}{
-			"0": "vector",
-			"1": "ANN",
-			"2": map[string]interface{}{
-				"0": 0.2,
-				"1": 0.3,
-			},
-		},
-		TopK: 10,
+	turbopuffer.ListNamespacesParams{
+		Prefix: turbopuffer.String("foo"),
 	},
 	option.WithMaxRetries(5),
 )
@@ -441,26 +414,17 @@ you need to examine response headers, status codes, or other details.
 ```go
 // Create a variable to store the HTTP response
 var response *http.Response
-response, err := client.Namespaces.Query(
+namespaces, err := client.ListNamespaces(
 	context.TODO(),
-	turbopuffer.NamespaceQueryParams{
-		Namespace: turbopuffer.String("products"),
-		RankBy: map[string]interface{}{
-			"0": "vector",
-			"1": "ANN",
-			"2": map[string]interface{}{
-				"0": 0.2,
-				"1": 0.3,
-			},
-		},
-		TopK: 10,
+	turbopuffer.ListNamespacesParams{
+		Prefix: turbopuffer.String("foo"),
 	},
 	option.WithResponseInto(&response),
 )
 if err != nil {
 	// handle error
 }
-fmt.Printf("%+v\n", response)
+fmt.Printf("%+v\n", namespaces)
 
 fmt.Printf("Status Code: %d\n", response.StatusCode)
 fmt.Printf("Headers: %+#v\n", response.Header)
