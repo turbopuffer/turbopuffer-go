@@ -1051,6 +1051,8 @@ type NamespaceWriteParams struct {
 	//
 	// Any of "cosine_distance", "euclidean_squared".
 	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
+	// The encryption configuration for a namespace.
+	Encryption NamespaceWriteParamsEncryption `json:"encryption,omitzero"`
 	// A list of documents in columnar format. The keys are the column names.
 	PatchColumns DocumentColumnsParam `json:"patch_columns,omitzero"`
 	PatchRows    []DocumentRowParam   `json:"patch_rows,omitzero"`
@@ -1067,5 +1069,35 @@ func (r NamespaceWriteParams) MarshalJSON() (data []byte, err error) {
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *NamespaceWriteParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The encryption configuration for a namespace.
+type NamespaceWriteParamsEncryption struct {
+	Cmek NamespaceWriteParamsEncryptionCmek `json:"cmek,omitzero"`
+	paramObj
+}
+
+func (r NamespaceWriteParamsEncryption) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceWriteParamsEncryption
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceWriteParamsEncryption) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The property KeyName is required.
+type NamespaceWriteParamsEncryptionCmek struct {
+	// The identifier of the CMEK key to use for encryption. For GCP, the
+	// fully-qualified resource name of the key. For AWS, the ARN of the key.
+	KeyName string `json:"key_name,required"`
+	paramObj
+}
+
+func (r NamespaceWriteParamsEncryptionCmek) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceWriteParamsEncryptionCmek
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceWriteParamsEncryptionCmek) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
