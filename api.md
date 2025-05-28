@@ -13,20 +13,24 @@ Methods:
 Params Types:
 
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#AttributeSchemaParam">AttributeSchemaParam</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#AttributeType">AttributeType</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#DistanceMetric">DistanceMetric</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#DocumentColumnsParam">DocumentColumnsParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#DocumentRowParam">DocumentRowParam</a>
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#FullTextSearchConfigUnionParam">FullTextSearchConfigUnionParam</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#FullTextSearchConfigParam">FullTextSearchConfigParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#IDUnionParam">IDUnionParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#IncludeAttributesUnionParam">IncludeAttributesUnionParam</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#Language">Language</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#VectorUnionParam">VectorUnionParam</a>
 
 Response Types:
 
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#AttributeSchema">AttributeSchema</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#AttributeType">AttributeType</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#DocumentRow">DocumentRow</a>
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#FullTextSearchConfigUnion">FullTextSearchConfigUnion</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#FullTextSearchConfig">FullTextSearchConfig</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#IDUnion">IDUnion</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#Language">Language</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#VectorUnion">VectorUnion</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#NamespaceDeleteAllResponse">NamespaceDeleteAllResponse</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#NamespaceGetSchemaResponse">NamespaceGetSchemaResponse</a>
