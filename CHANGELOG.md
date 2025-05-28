@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.1.0-alpha.2 (2025-05-28)
+
+Full Changelog: [v0.1.0-alpha.1...v0.1.0-alpha.2](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.1...v0.1.0-alpha.2)
+
+### Features
+
+* **api:** api update ([e43993f](https://github.com/turbopuffer/turbopuffer-go/commit/e43993f9d730f170d9434fd72b86c76fdbcea3bd))
+* **api:** api update ([cc1114e](https://github.com/turbopuffer/turbopuffer-go/commit/cc1114eac9c052e16be62fd88689773df244069a))
+* **api:** api update ([4111c5e](https://github.com/turbopuffer/turbopuffer-go/commit/4111c5ea17dba916a2bfd37d223e8d859461ed40))
+* **README:** add alpha warning ([187bfa2](https://github.com/turbopuffer/turbopuffer-go/commit/187bfa209a0a16c7193bb831b1157e22180ff56b))
+
+
+### Bug Fixes
+
+* **README:** update code examples ([235b34d](https://github.com/turbopuffer/turbopuffer-go/commit/235b34dc822fce37c25b85434c32a270be43097b))
+
 ## 0.1.0-alpha.1 (2025-05-22)
 
 Full Changelog: [v0.0.1-alpha.0...v0.1.0-alpha.1](https://github.com/turbopuffer/turbopuffer-go/compare/v0.0.1-alpha.0...v0.1.0-alpha.1)
