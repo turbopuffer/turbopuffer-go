@@ -751,17 +751,17 @@ func (r *NamespaceHintCacheWarmResponse) UnmarshalJSON(data []byte) error {
 
 // The result of a query.
 type NamespaceQueryResponse struct {
-	Aggregations []map[string]any `json:"aggregations"`
 	// The billing information for a query.
-	Billing NamespaceQueryResponseBilling `json:"billing"`
+	Billing NamespaceQueryResponseBilling `json:"billing,required"`
 	// The performance information for a query.
-	Performance NamespaceQueryResponsePerformance `json:"performance"`
-	Rows        []DocumentRow                     `json:"rows"`
+	Performance  NamespaceQueryResponsePerformance `json:"performance,required"`
+	Aggregations []map[string]any                  `json:"aggregations"`
+	Rows         []DocumentRow                     `json:"rows"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Aggregations respjson.Field
 		Billing      respjson.Field
 		Performance  respjson.Field
+		Aggregations respjson.Field
 		Rows         respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
