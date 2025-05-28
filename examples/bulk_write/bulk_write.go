@@ -1,6 +1,6 @@
 // Upserts several large batches of documents and prints the total time taken.
 //
-// Run this example with: go run examples/bulk_write.go
+// Run this example with: go run examples/bulk_write/bulk_write.go
 
 package main
 

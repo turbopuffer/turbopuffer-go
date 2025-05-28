@@ -170,7 +170,7 @@ type AttributeSchema struct {
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
 	// filterable. You can override this by setting `filterable: true`.
-	FullTextSearch AttributeSchemaFullTextSearchUnion `json:"full_text_search"`
+	FullTextSearch FullTextSearchConfigUnion `json:"full_text_search"`
 	// The data type of the attribute.
 	//
 	// Any of "string", "uint", "uuid", "bool", "datetime", "[]string", "[]uint",
@@ -201,75 +201,6 @@ func (r AttributeSchema) ToParam() AttributeSchemaParam {
 	return param.Override[AttributeSchemaParam](r.RawJSON())
 }
 
-// AttributeSchemaFullTextSearchUnion contains all possible properties and values
-// from [bool], [FullTextSearchConfig].
-//
-// Use the methods beginning with 'As' to cast the union to one of its variants.
-//
-// If the underlying value is not a json object, one of the following properties
-// will be valid: OfBool]
-type AttributeSchemaFullTextSearchUnion struct {
-	// This field will be present if the value is a [bool] instead of an object.
-	OfBool bool `json:",inline"`
-	// This field is from variant [FullTextSearchConfig].
-	CaseSensitive bool `json:"case_sensitive"`
-	// This field is from variant [FullTextSearchConfig].
-	Language FullTextSearchConfigLanguage `json:"language"`
-	// This field is from variant [FullTextSearchConfig].
-	RemoveStopwords bool `json:"remove_stopwords"`
-	// This field is from variant [FullTextSearchConfig].
-	Stemming bool `json:"stemming"`
-	JSON     struct {
-		OfBool          respjson.Field
-		CaseSensitive   respjson.Field
-		Language        respjson.Field
-		RemoveStopwords respjson.Field
-		Stemming        respjson.Field
-		raw             string
-	} `json:"-"`
-}
-
-func (u AttributeSchemaFullTextSearchUnion) AsBool() (v bool) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u AttributeSchemaFullTextSearchUnion) AsFullTextSearchConfig() (v FullTextSearchConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-// Returns the unmodified JSON received from the API
-func (u AttributeSchemaFullTextSearchUnion) RawJSON() string { return u.JSON.raw }
-
-func (r *AttributeSchemaFullTextSearchUnion) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// The language of the text. Defaults to `english`.
-type AttributeSchemaFullTextSearchLanguage string
-
-const (
-	AttributeSchemaFullTextSearchLanguageArabic     AttributeSchemaFullTextSearchLanguage = "arabic"
-	AttributeSchemaFullTextSearchLanguageDanish     AttributeSchemaFullTextSearchLanguage = "danish"
-	AttributeSchemaFullTextSearchLanguageDutch      AttributeSchemaFullTextSearchLanguage = "dutch"
-	AttributeSchemaFullTextSearchLanguageEnglish    AttributeSchemaFullTextSearchLanguage = "english"
-	AttributeSchemaFullTextSearchLanguageFinnish    AttributeSchemaFullTextSearchLanguage = "finnish"
-	AttributeSchemaFullTextSearchLanguageFrench     AttributeSchemaFullTextSearchLanguage = "french"
-	AttributeSchemaFullTextSearchLanguageGerman     AttributeSchemaFullTextSearchLanguage = "german"
-	AttributeSchemaFullTextSearchLanguageGreek      AttributeSchemaFullTextSearchLanguage = "greek"
-	AttributeSchemaFullTextSearchLanguageHungarian  AttributeSchemaFullTextSearchLanguage = "hungarian"
-	AttributeSchemaFullTextSearchLanguageItalian    AttributeSchemaFullTextSearchLanguage = "italian"
-	AttributeSchemaFullTextSearchLanguageNorwegian  AttributeSchemaFullTextSearchLanguage = "norwegian"
-	AttributeSchemaFullTextSearchLanguagePortuguese AttributeSchemaFullTextSearchLanguage = "portuguese"
-	AttributeSchemaFullTextSearchLanguageRomanian   AttributeSchemaFullTextSearchLanguage = "romanian"
-	AttributeSchemaFullTextSearchLanguageRussian    AttributeSchemaFullTextSearchLanguage = "russian"
-	AttributeSchemaFullTextSearchLanguageSpanish    AttributeSchemaFullTextSearchLanguage = "spanish"
-	AttributeSchemaFullTextSearchLanguageSwedish    AttributeSchemaFullTextSearchLanguage = "swedish"
-	AttributeSchemaFullTextSearchLanguageTamil      AttributeSchemaFullTextSearchLanguage = "tamil"
-	AttributeSchemaFullTextSearchLanguageTurkish    AttributeSchemaFullTextSearchLanguage = "turkish"
-)
-
 // The data type of the attribute.
 type AttributeSchemaType string
 
@@ -292,7 +223,7 @@ type AttributeSchemaParam struct {
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
 	// filterable. You can override this by setting `filterable: true`.
-	FullTextSearch AttributeSchemaFullTextSearchUnionParam `json:"full_text_search,omitzero"`
+	FullTextSearch FullTextSearchConfigUnionParam `json:"full_text_search,omitzero"`
 	// The data type of the attribute.
 	//
 	// Any of "string", "uint", "uuid", "bool", "datetime", "[]string", "[]uint",
@@ -307,31 +238,6 @@ func (r AttributeSchemaParam) MarshalJSON() (data []byte, err error) {
 }
 func (r *AttributeSchemaParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type AttributeSchemaFullTextSearchUnionParam struct {
-	OfBool                 param.Opt[bool]            `json:",omitzero,inline"`
-	OfFullTextSearchConfig *FullTextSearchConfigParam `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u AttributeSchemaFullTextSearchUnionParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[AttributeSchemaFullTextSearchUnionParam](u.OfBool, u.OfFullTextSearchConfig)
-}
-func (u *AttributeSchemaFullTextSearchUnionParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *AttributeSchemaFullTextSearchUnionParam) asAny() any {
-	if !param.IsOmitted(u.OfBool) {
-		return &u.OfBool.Value
-	} else if !param.IsOmitted(u.OfFullTextSearchConfig) {
-		return u.OfFullTextSearchConfig
-	}
-	return nil
 }
 
 // A function used to calculate vector similarity.
@@ -445,8 +351,62 @@ func (r *DocumentRowParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Detailed configuration options for BM25 full-text search.
-type FullTextSearchConfig struct {
+// FullTextSearchConfigUnion contains all possible properties and values from
+// [bool], [FullTextSearchConfigFullTextSearchDetailedConfig].
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+//
+// If the underlying value is not a json object, one of the following properties
+// will be valid: OfBool]
+type FullTextSearchConfigUnion struct {
+	// This field will be present if the value is a [bool] instead of an object.
+	OfBool bool `json:",inline"`
+	// This field is from variant [FullTextSearchConfigFullTextSearchDetailedConfig].
+	CaseSensitive bool `json:"case_sensitive"`
+	// This field is from variant [FullTextSearchConfigFullTextSearchDetailedConfig].
+	Language FullTextSearchConfigFullTextSearchDetailedConfigLanguage `json:"language"`
+	// This field is from variant [FullTextSearchConfigFullTextSearchDetailedConfig].
+	RemoveStopwords bool `json:"remove_stopwords"`
+	// This field is from variant [FullTextSearchConfigFullTextSearchDetailedConfig].
+	Stemming bool `json:"stemming"`
+	JSON     struct {
+		OfBool          respjson.Field
+		CaseSensitive   respjson.Field
+		Language        respjson.Field
+		RemoveStopwords respjson.Field
+		Stemming        respjson.Field
+		raw             string
+	} `json:"-"`
+}
+
+func (u FullTextSearchConfigUnion) AsBool() (v bool) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u FullTextSearchConfigUnion) AsFullTextSearchDetailedConfig() (v FullTextSearchConfigFullTextSearchDetailedConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u FullTextSearchConfigUnion) RawJSON() string { return u.JSON.raw }
+
+func (r *FullTextSearchConfigUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// ToParam converts this FullTextSearchConfigUnion to a
+// FullTextSearchConfigUnionParam.
+//
+// Warning: the fields of the param type will not be present. ToParam should only
+// be used at the last possible moment before sending a request. Test for this with
+// FullTextSearchConfigUnionParam.Overrides()
+func (r FullTextSearchConfigUnion) ToParam() FullTextSearchConfigUnionParam {
+	return param.Override[FullTextSearchConfigUnionParam](r.RawJSON())
+}
+
+type FullTextSearchConfigFullTextSearchDetailedConfig struct {
 	// Whether searching is case-sensitive. Defaults to `false` (i.e.
 	// case-insensitive).
 	CaseSensitive bool `json:"case_sensitive"`
@@ -455,7 +415,7 @@ type FullTextSearchConfig struct {
 	// Any of "arabic", "danish", "dutch", "english", "finnish", "french", "german",
 	// "greek", "hungarian", "italian", "norwegian", "portuguese", "romanian",
 	// "russian", "spanish", "swedish", "tamil", "turkish".
-	Language FullTextSearchConfigLanguage `json:"language"`
+	Language FullTextSearchConfigFullTextSearchDetailedConfigLanguage `json:"language"`
 	// Removes common words from the text based on language. Defaults to `true` (i.e.
 	// remove common words).
 	RemoveStopwords bool `json:"remove_stopwords"`
@@ -474,19 +434,34 @@ type FullTextSearchConfig struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r FullTextSearchConfig) RawJSON() string { return r.JSON.raw }
-func (r *FullTextSearchConfig) UnmarshalJSON(data []byte) error {
+func (r FullTextSearchConfigFullTextSearchDetailedConfig) RawJSON() string { return r.JSON.raw }
+func (r *FullTextSearchConfigFullTextSearchDetailedConfig) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// ToParam converts this FullTextSearchConfig to a FullTextSearchConfigParam.
-//
-// Warning: the fields of the param type will not be present. ToParam should only
-// be used at the last possible moment before sending a request. Test for this with
-// FullTextSearchConfigParam.Overrides()
-func (r FullTextSearchConfig) ToParam() FullTextSearchConfigParam {
-	return param.Override[FullTextSearchConfigParam](r.RawJSON())
-}
+// The language of the text. Defaults to `english`.
+type FullTextSearchConfigFullTextSearchDetailedConfigLanguage string
+
+const (
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageArabic     FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "arabic"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageDanish     FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "danish"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageDutch      FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "dutch"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageEnglish    FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "english"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageFinnish    FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "finnish"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageFrench     FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "french"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageGerman     FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "german"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageGreek      FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "greek"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageHungarian  FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "hungarian"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageItalian    FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "italian"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageNorwegian  FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "norwegian"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguagePortuguese FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "portuguese"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageRomanian   FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "romanian"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageRussian    FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "russian"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageSpanish    FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "spanish"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageSwedish    FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "swedish"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageTamil      FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "tamil"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageTurkish    FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "turkish"
+)
 
 // The language of the text. Defaults to `english`.
 type FullTextSearchConfigLanguage string
@@ -512,8 +487,32 @@ const (
 	FullTextSearchConfigLanguageTurkish    FullTextSearchConfigLanguage = "turkish"
 )
 
-// Detailed configuration options for BM25 full-text search.
-type FullTextSearchConfigParam struct {
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type FullTextSearchConfigUnionParam struct {
+	OfBool                         param.Opt[bool]                                        `json:",omitzero,inline"`
+	OfFullTextSearchDetailedConfig *FullTextSearchConfigFullTextSearchDetailedConfigParam `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u FullTextSearchConfigUnionParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[FullTextSearchConfigUnionParam](u.OfBool, u.OfFullTextSearchDetailedConfig)
+}
+func (u *FullTextSearchConfigUnionParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *FullTextSearchConfigUnionParam) asAny() any {
+	if !param.IsOmitted(u.OfBool) {
+		return &u.OfBool.Value
+	} else if !param.IsOmitted(u.OfFullTextSearchDetailedConfig) {
+		return u.OfFullTextSearchDetailedConfig
+	}
+	return nil
+}
+
+type FullTextSearchConfigFullTextSearchDetailedConfigParam struct {
 	// Whether searching is case-sensitive. Defaults to `false` (i.e.
 	// case-insensitive).
 	CaseSensitive param.Opt[bool] `json:"case_sensitive,omitzero"`
@@ -528,15 +527,15 @@ type FullTextSearchConfigParam struct {
 	// Any of "arabic", "danish", "dutch", "english", "finnish", "french", "german",
 	// "greek", "hungarian", "italian", "norwegian", "portuguese", "romanian",
 	// "russian", "spanish", "swedish", "tamil", "turkish".
-	Language FullTextSearchConfigLanguage `json:"language,omitzero"`
+	Language FullTextSearchConfigFullTextSearchDetailedConfigLanguage `json:"language,omitzero"`
 	paramObj
 }
 
-func (r FullTextSearchConfigParam) MarshalJSON() (data []byte, err error) {
-	type shadow FullTextSearchConfigParam
+func (r FullTextSearchConfigFullTextSearchDetailedConfigParam) MarshalJSON() (data []byte, err error) {
+	type shadow FullTextSearchConfigFullTextSearchDetailedConfigParam
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *FullTextSearchConfigParam) UnmarshalJSON(data []byte) error {
+func (r *FullTextSearchConfigFullTextSearchDetailedConfigParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -932,7 +931,7 @@ type NamespaceGetSchemaParams struct {
 type NamespaceQueryParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
 	// How to rank the documents in the namespace.
-	RankBy any `json:"rank_by,omitzero,required"`
+	RankBy RankBy `json:"rank_by,omitzero,required"`
 	// The number of results to return.
 	TopK int64 `json:"top_k,required"`
 	// The consistency level for a query.
@@ -943,7 +942,7 @@ type NamespaceQueryParams struct {
 	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
 	// Exact filters for attributes to refine search results for. Think of it as a SQL
 	// WHERE clause.
-	Filters any `json:"filters,omitzero"`
+	Filters Filter `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesUnionParam `json:"include_attributes,omitzero"`
 	// The encoding to use for vectors in the response.
@@ -1040,7 +1039,7 @@ type NamespaceWriteParams struct {
 	// The namespace to copy documents from.
 	CopyFromNamespace param.Opt[string] `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
-	DeleteByFilter any            `json:"delete_by_filter,omitzero"`
+	DeleteByFilter Filter         `json:"delete_by_filter,omitzero"`
 	Deletes        []IDUnionParam `json:"deletes,omitzero" format:"uuid"`
 	// A function used to calculate vector similarity.
 	//
