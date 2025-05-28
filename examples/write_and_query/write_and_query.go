@@ -1,7 +1,7 @@
 // A straightforward example of storing and retrieving documents via vector
 // similarity search.
 //
-// Run this example with: go run examples/write_and_query.go
+// Run this example with: go run examples/write_and_query/write_and_query.go
 
 package main
 
@@ -68,13 +68,13 @@ func main() {
 	// Do a vector query.
 	{
 		res, err := namespace.Query(ctx, turbopuffer.NamespaceQueryParams{
-			RankBy:            []any{"vector", "ANN", []float64{3.0, 4.0, 5.0}},
+			RankBy:            turbopuffer.NewRankByVector("vector", []float64{3.0, 4.0, 5.0}),
 			TopK:              10,
 			IncludeAttributes: turbopuffer.IncludeAttributesUnionParam{OfBool: turbopuffer.Bool(true)},
-			Filters: []any{"And", []any{
-				[]any{"age", "Gt", 30},
-				[]any{"age", "Lt", 35},
-			}},
+			Filters: turbopuffer.NewFilterAnd([]turbopuffer.Filter{
+				turbopuffer.NewFilterGt("age", 30),
+				turbopuffer.NewFilterLt("age", 35),
+			}),
 		})
 		if err != nil {
 			panic(err)
@@ -116,7 +116,7 @@ func main() {
 	// Do a non-vector query to see the patched results.
 	{
 		res, err := namespace.Query(ctx, turbopuffer.NamespaceQueryParams{
-			RankBy:            []any{"id", "asc"},
+			RankBy:            turbopuffer.NewRankByAttribute("id", "asc"),
 			TopK:              10,
 			IncludeAttributes: turbopuffer.IncludeAttributesUnionParam{OfBool: turbopuffer.Bool(true)},
 		})

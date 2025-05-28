@@ -1,6 +1,6 @@
 // A simple example that lists all extant namespaces.
 //
-// Run this example with: go run examples/list_namespaces.go
+// Run this example with: go run examples/list_namespaces/list_namespaces.go
 
 package main
 

@@ -25,8 +25,8 @@ func TestUsage(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	response, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
-		Namespace:      turbopuffer.String("products"),
+	ns := client.Namespace("products")
+	response, err := ns.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
 		UpsertRows: []turbopuffer.DocumentRowParam{{
 			ID: turbopuffer.IDUnionParam{

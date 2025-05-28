@@ -27,9 +27,8 @@ func TestNamespaceDeleteAll(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	_, err := client.Namespaces.DeleteAll(context.TODO(), turbopuffer.NamespaceDeleteAllParams{
-		Namespace: turbopuffer.String("namespace"),
-	})
+	ns := client.Namespace("ns")
+	_, err := ns.DeleteAll(context.TODO(), turbopuffer.NamespaceDeleteAllParams{})
 	if err != nil {
 		var apierr *turbopuffer.Error
 		if errors.As(err, &apierr) {
@@ -53,9 +52,8 @@ func TestNamespaceGetSchema(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	_, err := client.Namespaces.GetSchema(context.TODO(), turbopuffer.NamespaceGetSchemaParams{
-		Namespace: turbopuffer.String("namespace"),
-	})
+	ns := client.Namespace("ns")
+	_, err := ns.GetSchema(context.TODO(), turbopuffer.NamespaceGetSchemaParams{})
 	if err != nil {
 		var apierr *turbopuffer.Error
 		if errors.As(err, &apierr) {
@@ -79,15 +77,14 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	_, err := client.Namespaces.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
-		Namespace: turbopuffer.String("namespace"),
-		RankBy:    map[string]interface{}{},
-		TopK:      0,
+	ns := client.Namespace("ns")
+	_, err := ns.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
+		RankBy: turbopuffer.NewRankByVector("vector", []float64{0}),
+		TopK:   0,
 		Consistency: turbopuffer.NamespaceQueryParamsConsistency{
 			Level: turbopuffer.NamespaceQueryParamsConsistencyLevelStrong,
 		},
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
-		Filters:        map[string]interface{}{},
 		IncludeAttributes: turbopuffer.IncludeAttributesUnionParam{
 			OfBool: turbopuffer.Bool(true),
 		},
@@ -116,7 +113,8 @@ func TestNamespaceRecallWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	_, err := client.Namespaces.Recall(context.TODO(), turbopuffer.NamespaceRecallParams{
+	ns := client.Namespace("ns")
+	_, err := ns.Recall(context.TODO(), turbopuffer.NamespaceRecallParams{
 		Namespace: turbopuffer.String("namespace"),
 		Filters:   map[string]interface{}{},
 		Num:       turbopuffer.Int(0),
@@ -146,8 +144,8 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	_, err := client.Namespaces.UpdateSchema(context.TODO(), turbopuffer.NamespaceUpdateSchemaParams{
-		Namespace: turbopuffer.String("namespace"),
+	ns := client.Namespace("ns")
+	_, err := ns.UpdateSchema(context.TODO(), turbopuffer.NamespaceUpdateSchemaParams{
 		Schema: map[string]turbopuffer.AttributeSchemaParam{
 			"foo": {
 				Filterable: turbopuffer.Bool(true),
@@ -181,9 +179,8 @@ func TestNamespaceWarmCache(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	_, err := client.Namespaces.WarmCache(context.TODO(), turbopuffer.NamespaceWarmCacheParams{
-		Namespace: turbopuffer.String("namespace"),
-	})
+	ns := client.Namespace("ns")
+	_, err := ns.WarmCache(context.TODO(), turbopuffer.NamespaceWarmCacheParams{})
 	if err != nil {
 		var apierr *turbopuffer.Error
 		if errors.As(err, &apierr) {
@@ -207,10 +204,10 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	_, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
-		Namespace:         turbopuffer.String("namespace"),
+	ns := client.Namespace("ns")
+	_, err := ns.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
 		CopyFromNamespace: turbopuffer.String("copy_from_namespace"),
-		DeleteByFilter:    map[string]interface{}{},
+		DeleteByFilter:    turbopuffer.NewFilterEq("id", "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		Deletes: []turbopuffer.IDUnionParam{{
 			OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		}},

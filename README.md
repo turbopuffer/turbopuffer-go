@@ -40,7 +40,8 @@ This library requires Go 1.18+.
 
 ## Usage
 
-The full API of this library can be found in [api.md](api.md).
+The full API of this library can be found at
+<https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go>.
 
 ```go
 package main

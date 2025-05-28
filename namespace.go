@@ -931,7 +931,7 @@ type NamespaceGetSchemaParams struct {
 type NamespaceQueryParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
 	// How to rank the documents in the namespace.
-	RankBy any `json:"rank_by,omitzero,required"`
+	RankBy RankBy `json:"rank_by,omitzero,required"`
 	// The number of results to return.
 	TopK int64 `json:"top_k,required"`
 	// The consistency level for a query.
@@ -942,7 +942,7 @@ type NamespaceQueryParams struct {
 	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
 	// Exact filters for attributes to refine search results for. Think of it as a SQL
 	// WHERE clause.
-	Filters any `json:"filters,omitzero"`
+	Filters Filter `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesUnionParam `json:"include_attributes,omitzero"`
 	// The encoding to use for vectors in the response.
@@ -1039,7 +1039,7 @@ type NamespaceWriteParams struct {
 	// The namespace to copy documents from.
 	CopyFromNamespace param.Opt[string] `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
-	DeleteByFilter any            `json:"delete_by_filter,omitzero"`
+	DeleteByFilter Filter         `json:"delete_by_filter,omitzero"`
 	Deletes        []IDUnionParam `json:"deletes,omitzero" format:"uuid"`
 	// A function used to calculate vector similarity.
 	//
