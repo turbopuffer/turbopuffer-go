@@ -43,8 +43,8 @@ func main() {
 				vector[j] = rand.Float64()
 			}
 			documents = append(documents, turbopuffer.DocumentRowParam{
-				ID:     turbopuffer.IDUnionParam{OfInt: turbopuffer.Int(int64(id))},
-				Vector: turbopuffer.VectorUnionParam{OfFloatArray: vector},
+				ID:     turbopuffer.IDParam{Int: turbopuffer.Int(int64(id))},
+				Vector: turbopuffer.VectorParam{FloatArray: vector},
 			})
 		}
 

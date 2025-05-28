@@ -170,7 +170,7 @@ type AttributeSchema struct {
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
 	// filterable. You can override this by setting `filterable: true`.
-	FullTextSearch FullTextSearchUnion `json:"full_text_search"`
+	FullTextSearch FullTextSearch `json:"full_text_search"`
 	// The data type of the attribute.
 	//
 	// Any of "string", "uint", "uuid", "bool", "datetime", "[]string", "[]uint",
@@ -208,7 +208,7 @@ type AttributeSchemaParam struct {
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
 	// filterable. You can override this by setting `filterable: true`.
-	FullTextSearch FullTextSearchUnionParam `json:"full_text_search,omitzero"`
+	FullTextSearch FullTextSearchParam `json:"full_text_search,omitzero"`
 	// The data type of the attribute.
 	//
 	// Any of "string", "uint", "uuid", "bool", "datetime", "[]string", "[]uint",
@@ -253,10 +253,10 @@ const (
 // The property ID is required.
 type DocumentColumnsParam struct {
 	// The IDs of the documents.
-	ID []IDUnionParam `json:"id,omitzero,required" format:"uuid"`
+	ID []IDParam `json:"id,omitzero,required" format:"uuid"`
 	// The vector embeddings of the documents.
-	Vector      DocumentColumnsVectorUnionParam `json:"vector,omitzero"`
-	ExtraFields map[string][]any                `json:"-"`
+	Vector      DocumentColumnsVectorParam `json:"vector,omitzero"`
+	ExtraFields map[string][]any           `json:"-"`
 	paramObj
 }
 
@@ -275,27 +275,27 @@ func (r *DocumentColumnsParam) UnmarshalJSON(data []byte) error {
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
-type DocumentColumnsVectorUnionParam struct {
-	OfVectorArray []VectorUnionParam `json:",omitzero,inline"`
-	OfFloatArray  []float64          `json:",omitzero,inline"`
-	OfString      param.Opt[string]  `json:",omitzero,inline"`
+type DocumentColumnsVectorParam struct {
+	VectorArray []VectorParam     `json:",omitzero,inline"`
+	FloatArray  []float64         `json:",omitzero,inline"`
+	String      param.Opt[string] `json:",omitzero,inline"`
 	paramUnion
 }
 
-func (u DocumentColumnsVectorUnionParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[DocumentColumnsVectorUnionParam](u.OfVectorArray, u.OfFloatArray, u.OfString)
+func (u DocumentColumnsVectorParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[DocumentColumnsVectorParam](u.VectorArray, u.FloatArray, u.String)
 }
-func (u *DocumentColumnsVectorUnionParam) UnmarshalJSON(data []byte) error {
+func (u *DocumentColumnsVectorParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
-func (u *DocumentColumnsVectorUnionParam) asAny() any {
-	if !param.IsOmitted(u.OfVectorArray) {
-		return &u.OfVectorArray
-	} else if !param.IsOmitted(u.OfFloatArray) {
-		return &u.OfFloatArray
-	} else if !param.IsOmitted(u.OfString) {
-		return &u.OfString.Value
+func (u *DocumentColumnsVectorParam) asAny() any {
+	if !param.IsOmitted(u.VectorArray) {
+		return &u.VectorArray
+	} else if !param.IsOmitted(u.FloatArray) {
+		return &u.FloatArray
+	} else if !param.IsOmitted(u.String) {
+		return &u.String.Value
 	}
 	return nil
 }
@@ -303,9 +303,9 @@ func (u *DocumentColumnsVectorUnionParam) asAny() any {
 // A single document, in a row-based format.
 type DocumentRow struct {
 	// An identifier for a document.
-	ID IDUnion `json:"id,required" format:"uuid"`
+	ID ID `json:"id,required" format:"uuid"`
 	// A vector embedding associated with a document.
-	Vector      VectorUnion    `json:"vector"`
+	Vector      Vector         `json:"vector"`
 	ExtraFields map[string]any `json:",extras"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -336,10 +336,10 @@ func (r DocumentRow) ToParam() DocumentRowParam {
 // The property ID is required.
 type DocumentRowParam struct {
 	// An identifier for a document.
-	ID IDUnionParam `json:"id,omitzero,required" format:"uuid"`
+	ID IDParam `json:"id,omitzero,required" format:"uuid"`
 	// A vector embedding associated with a document.
-	Vector      VectorUnionParam `json:"vector,omitzero"`
-	ExtraFields map[string]any   `json:"-"`
+	Vector      VectorParam    `json:"vector,omitzero"`
+	ExtraFields map[string]any `json:"-"`
 	paramObj
 }
 
@@ -351,16 +351,16 @@ func (r *DocumentRowParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// FullTextSearchUnion contains all possible properties and values from [bool],
+// FullTextSearch contains all possible properties and values from [bool],
 // [FullTextSearchConfig].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
-// will be valid: OfBool]
-type FullTextSearchUnion struct {
+// will be valid: Bool]
+type FullTextSearch struct {
 	// This field will be present if the value is a [bool] instead of an object.
-	OfBool bool `json:",inline"`
+	Bool bool `json:",inline"`
 	// This field is from variant [FullTextSearchConfig].
 	CaseSensitive bool `json:"case_sensitive"`
 	// This field is from variant [FullTextSearchConfig].
@@ -369,63 +369,66 @@ type FullTextSearchUnion struct {
 	RemoveStopwords bool `json:"remove_stopwords"`
 	// This field is from variant [FullTextSearchConfig].
 	Stemming bool `json:"stemming"`
-	JSON     struct {
-		OfBool          respjson.Field
+	// This field is from variant [FullTextSearchConfig].
+	Tokenizer Tokenizer `json:"tokenizer"`
+	JSON      struct {
+		Bool            respjson.Field
 		CaseSensitive   respjson.Field
 		Language        respjson.Field
 		RemoveStopwords respjson.Field
 		Stemming        respjson.Field
+		Tokenizer       respjson.Field
 		raw             string
 	} `json:"-"`
 }
 
-func (u FullTextSearchUnion) AsBool() (v bool) {
+func (u FullTextSearch) AsBool() (v bool) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u FullTextSearchUnion) AsFullTextSearchConfig() (v FullTextSearchConfig) {
+func (u FullTextSearch) AsFullTextSearchConfig() (v FullTextSearchConfig) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
 // Returns the unmodified JSON received from the API
-func (u FullTextSearchUnion) RawJSON() string { return u.JSON.raw }
+func (u FullTextSearch) RawJSON() string { return u.JSON.raw }
 
-func (r *FullTextSearchUnion) UnmarshalJSON(data []byte) error {
+func (r *FullTextSearch) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// ToParam converts this FullTextSearchUnion to a FullTextSearchUnionParam.
+// ToParam converts this FullTextSearch to a FullTextSearchParam.
 //
 // Warning: the fields of the param type will not be present. ToParam should only
 // be used at the last possible moment before sending a request. Test for this with
-// FullTextSearchUnionParam.Overrides()
-func (r FullTextSearchUnion) ToParam() FullTextSearchUnionParam {
-	return param.Override[FullTextSearchUnionParam](r.RawJSON())
+// FullTextSearchParam.Overrides()
+func (r FullTextSearch) ToParam() FullTextSearchParam {
+	return param.Override[FullTextSearchParam](r.RawJSON())
 }
 
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
-type FullTextSearchUnionParam struct {
-	OfBool                 param.Opt[bool]            `json:",omitzero,inline"`
-	OfFullTextSearchConfig *FullTextSearchConfigParam `json:",omitzero,inline"`
+type FullTextSearchParam struct {
+	Bool                 param.Opt[bool]            `json:",omitzero,inline"`
+	FullTextSearchConfig *FullTextSearchConfigParam `json:",omitzero,inline"`
 	paramUnion
 }
 
-func (u FullTextSearchUnionParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[FullTextSearchUnionParam](u.OfBool, u.OfFullTextSearchConfig)
+func (u FullTextSearchParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[FullTextSearchParam](u.Bool, u.FullTextSearchConfig)
 }
-func (u *FullTextSearchUnionParam) UnmarshalJSON(data []byte) error {
+func (u *FullTextSearchParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
-func (u *FullTextSearchUnionParam) asAny() any {
-	if !param.IsOmitted(u.OfBool) {
-		return &u.OfBool.Value
-	} else if !param.IsOmitted(u.OfFullTextSearchConfig) {
-		return u.OfFullTextSearchConfig
+func (u *FullTextSearchParam) asAny() any {
+	if !param.IsOmitted(u.Bool) {
+		return &u.Bool.Value
+	} else if !param.IsOmitted(u.FullTextSearchConfig) {
+		return u.FullTextSearchConfig
 	}
 	return nil
 }
@@ -447,12 +450,17 @@ type FullTextSearchConfig struct {
 	// Language-specific stemming for the text. Defaults to `false` (i.e., do not
 	// stem).
 	Stemming bool `json:"stemming"`
+	// The tokenizer to use for full-text search on an attribute.
+	//
+	// Any of "pre_tokenized_array", "word_v0", "word_v1".
+	Tokenizer Tokenizer `json:"tokenizer"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		CaseSensitive   respjson.Field
 		Language        respjson.Field
 		RemoveStopwords respjson.Field
 		Stemming        respjson.Field
+		Tokenizer       respjson.Field
 		ExtraFields     map[string]respjson.Field
 		raw             string
 	} `json:"-"`
@@ -490,6 +498,10 @@ type FullTextSearchConfigParam struct {
 	// "greek", "hungarian", "italian", "norwegian", "portuguese", "romanian",
 	// "russian", "spanish", "swedish", "tamil", "turkish".
 	Language Language `json:"language,omitzero"`
+	// The tokenizer to use for full-text search on an attribute.
+	//
+	// Any of "pre_tokenized_array", "word_v0", "word_v1".
+	Tokenizer Tokenizer `json:"tokenizer,omitzero"`
 	paramObj
 }
 
@@ -501,71 +513,71 @@ func (r *FullTextSearchConfigParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// IDUnion contains all possible properties and values from [string], [int64].
+// ID contains all possible properties and values from [string], [int64].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
-// will be valid: OfString OfInt]
-type IDUnion struct {
+// will be valid: String Int]
+type ID struct {
 	// This field will be present if the value is a [string] instead of an object.
-	OfString string `json:",inline"`
+	String string `json:",inline"`
 	// This field will be present if the value is a [int64] instead of an object.
-	OfInt int64 `json:",inline"`
-	JSON  struct {
-		OfString respjson.Field
-		OfInt    respjson.Field
-		raw      string
+	Int  int64 `json:",inline"`
+	JSON struct {
+		String respjson.Field
+		Int    respjson.Field
+		raw    string
 	} `json:"-"`
 }
 
-func (u IDUnion) AsString() (v string) {
+func (u ID) AsString() (v string) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u IDUnion) AsInt() (v int64) {
+func (u ID) AsInt() (v int64) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
 // Returns the unmodified JSON received from the API
-func (u IDUnion) RawJSON() string { return u.JSON.raw }
+func (u ID) RawJSON() string { return u.JSON.raw }
 
-func (r *IDUnion) UnmarshalJSON(data []byte) error {
+func (r *ID) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// ToParam converts this IDUnion to a IDUnionParam.
+// ToParam converts this ID to a IDParam.
 //
 // Warning: the fields of the param type will not be present. ToParam should only
 // be used at the last possible moment before sending a request. Test for this with
-// IDUnionParam.Overrides()
-func (r IDUnion) ToParam() IDUnionParam {
-	return param.Override[IDUnionParam](r.RawJSON())
+// IDParam.Overrides()
+func (r ID) ToParam() IDParam {
+	return param.Override[IDParam](r.RawJSON())
 }
 
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
-type IDUnionParam struct {
-	OfString param.Opt[string] `json:",omitzero,inline"`
-	OfInt    param.Opt[int64]  `json:",omitzero,inline"`
+type IDParam struct {
+	String param.Opt[string] `json:",omitzero,inline"`
+	Int    param.Opt[int64]  `json:",omitzero,inline"`
 	paramUnion
 }
 
-func (u IDUnionParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[IDUnionParam](u.OfString, u.OfInt)
+func (u IDParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[IDParam](u.String, u.Int)
 }
-func (u *IDUnionParam) UnmarshalJSON(data []byte) error {
+func (u *IDParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
-func (u *IDUnionParam) asAny() any {
-	if !param.IsOmitted(u.OfString) {
-		return &u.OfString.Value
-	} else if !param.IsOmitted(u.OfInt) {
-		return &u.OfInt.Value
+func (u *IDParam) asAny() any {
+	if !param.IsOmitted(u.String) {
+		return &u.String.Value
+	} else if !param.IsOmitted(u.Int) {
+		return &u.Int.Value
 	}
 	return nil
 }
@@ -573,24 +585,24 @@ func (u *IDUnionParam) asAny() any {
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
-type IncludeAttributesUnionParam struct {
-	OfBool        param.Opt[bool] `json:",omitzero,inline"`
-	OfStringArray []string        `json:",omitzero,inline"`
+type IncludeAttributesParam struct {
+	Bool        param.Opt[bool] `json:",omitzero,inline"`
+	StringArray []string        `json:",omitzero,inline"`
 	paramUnion
 }
 
-func (u IncludeAttributesUnionParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[IncludeAttributesUnionParam](u.OfBool, u.OfStringArray)
+func (u IncludeAttributesParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[IncludeAttributesParam](u.Bool, u.StringArray)
 }
-func (u *IncludeAttributesUnionParam) UnmarshalJSON(data []byte) error {
+func (u *IncludeAttributesParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
-func (u *IncludeAttributesUnionParam) asAny() any {
-	if !param.IsOmitted(u.OfBool) {
-		return &u.OfBool.Value
-	} else if !param.IsOmitted(u.OfStringArray) {
-		return &u.OfStringArray
+func (u *IncludeAttributesParam) asAny() any {
+	if !param.IsOmitted(u.Bool) {
+		return &u.Bool.Value
+	} else if !param.IsOmitted(u.StringArray) {
+		return &u.StringArray
 	}
 	return nil
 }
@@ -619,72 +631,80 @@ const (
 	LanguageTurkish    Language = "turkish"
 )
 
-// VectorUnion contains all possible properties and values from [[]float64],
-// [string].
+// The tokenizer to use for full-text search on an attribute.
+type Tokenizer string
+
+const (
+	TokenizerPreTokenizedArray Tokenizer = "pre_tokenized_array"
+	TokenizerWordV0            Tokenizer = "word_v0"
+	TokenizerWordV1            Tokenizer = "word_v1"
+)
+
+// Vector contains all possible properties and values from [[]float64], [string].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
-// will be valid: OfFloatArray OfString]
-type VectorUnion struct {
+// will be valid: FloatArray String]
+type Vector struct {
 	// This field will be present if the value is a [[]float64] instead of an object.
-	OfFloatArray []float64 `json:",inline"`
+	FloatArray []float64 `json:",inline"`
 	// This field will be present if the value is a [string] instead of an object.
-	OfString string `json:",inline"`
-	JSON     struct {
-		OfFloatArray respjson.Field
-		OfString     respjson.Field
-		raw          string
+	String string `json:",inline"`
+	JSON   struct {
+		FloatArray respjson.Field
+		String     respjson.Field
+		raw        string
 	} `json:"-"`
 }
 
-func (u VectorUnion) AsFloatArray() (v []float64) {
+func (u Vector) AsFloatArray() (v []float64) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u VectorUnion) AsString() (v string) {
+func (u Vector) AsString() (v string) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
 // Returns the unmodified JSON received from the API
-func (u VectorUnion) RawJSON() string { return u.JSON.raw }
+func (u Vector) RawJSON() string { return u.JSON.raw }
 
-func (r *VectorUnion) UnmarshalJSON(data []byte) error {
+func (r *Vector) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// ToParam converts this VectorUnion to a VectorUnionParam.
+// ToParam converts this Vector to a VectorParam.
 //
 // Warning: the fields of the param type will not be present. ToParam should only
 // be used at the last possible moment before sending a request. Test for this with
-// VectorUnionParam.Overrides()
-func (r VectorUnion) ToParam() VectorUnionParam {
-	return param.Override[VectorUnionParam](r.RawJSON())
+// VectorParam.Overrides()
+func (r Vector) ToParam() VectorParam {
+	return param.Override[VectorParam](r.RawJSON())
 }
 
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
-type VectorUnionParam struct {
-	OfFloatArray []float64         `json:",omitzero,inline"`
-	OfString     param.Opt[string] `json:",omitzero,inline"`
+type VectorParam struct {
+	FloatArray []float64         `json:",omitzero,inline"`
+	String     param.Opt[string] `json:",omitzero,inline"`
 	paramUnion
 }
 
-func (u VectorUnionParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[VectorUnionParam](u.OfFloatArray, u.OfString)
+func (u VectorParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[VectorParam](u.FloatArray, u.String)
 }
-func (u *VectorUnionParam) UnmarshalJSON(data []byte) error {
+func (u *VectorParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
-func (u *VectorUnionParam) asAny() any {
-	if !param.IsOmitted(u.OfFloatArray) {
-		return &u.OfFloatArray
-	} else if !param.IsOmitted(u.OfString) {
-		return &u.OfString.Value
+func (u *VectorParam) asAny() any {
+	if !param.IsOmitted(u.FloatArray) {
+		return &u.FloatArray
+	} else if !param.IsOmitted(u.String) {
+		return &u.String.Value
 	}
 	return nil
 }
@@ -930,7 +950,7 @@ type NamespaceQueryParams struct {
 	// WHERE clause.
 	Filters Filter `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
-	IncludeAttributes IncludeAttributesUnionParam `json:"include_attributes,omitzero"`
+	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
 	// The encoding to use for vectors in the response.
 	//
 	// Any of "float", "base64".
@@ -1026,7 +1046,7 @@ type NamespaceWriteParams struct {
 	CopyFromNamespace param.Opt[string] `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
 	DeleteByFilter Filter         `json:"delete_by_filter,omitzero"`
-	Deletes        []IDUnionParam `json:"deletes,omitzero" format:"uuid"`
+	Deletes        []IDParam `json:"deletes,omitzero" format:"uuid"`
 	// A function used to calculate vector similarity.
 	//
 	// Any of "cosine_distance", "euclidean_squared".
