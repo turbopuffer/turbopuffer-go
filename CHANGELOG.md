@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.0-alpha.3 (2025-05-28)
+
+Full Changelog: [v0.1.0-alpha.2...v0.1.0-alpha.3](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.2...v0.1.0-alpha.3)
+
+### Features
+
+* **api:** api update ([63183a1](https://github.com/turbopuffer/turbopuffer-go/commit/63183a1497a670fc17c4593a0c533b36ad1b386f))
+
+
+### Bug Fixes
+
+* **readme:** correct capitalization ([6449434](https://github.com/turbopuffer/turbopuffer-go/commit/6449434a8883a3fff60a24f58b44e51d818949b7))
+* **readme:** fix puffy image ([62b7f8d](https://github.com/turbopuffer/turbopuffer-go/commit/62b7f8d3d3e41389824a0299f6b0deb574853a1b))
+
 ## 0.1.0-alpha.2 (2025-05-28)
 
 Full Changelog: [v0.1.0-alpha.1...v0.1.0-alpha.2](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.1...v0.1.0-alpha.2)
