@@ -631,6 +631,62 @@ const (
 	LanguageTurkish    Language = "turkish"
 )
 
+// The billing information for a query.
+type QueryBilling struct {
+	// The number of billable logical bytes queried from the namespace.
+	BillableLogicalBytesQueried int64 `json:"billable_logical_bytes_queried,required"`
+	// The number of billable logical bytes returned from the query.
+	BillableLogicalBytesReturned int64 `json:"billable_logical_bytes_returned,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		BillableLogicalBytesQueried  respjson.Field
+		BillableLogicalBytesReturned respjson.Field
+		ExtraFields                  map[string]respjson.Field
+		raw                          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r QueryBilling) RawJSON() string { return r.JSON.raw }
+func (r *QueryBilling) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The performance information for a query.
+type QueryPerformance struct {
+	// the approximate number of documents in the namespace.
+	ApproxNamespaceSize int64 `json:"approx_namespace_size,required"`
+	// The ratio of cache hits to total cache lookups.
+	CacheHitRatio float64 `json:"cache_hit_ratio,required"`
+	// A qualitative description of the cache hit ratio (`hot`, `warm`, or `cold`).
+	CacheTemperature string `json:"cache_temperature,required"`
+	// The number of unindexed documents processed by the query.
+	ExhaustiveSearchCount int64 `json:"exhaustive_search_count,required"`
+	// Request time measured on the server, excluding time spent waiting due to the
+	// namespace concurrency limit.
+	QueryExecutionMs int64 `json:"query_execution_ms,required"`
+	// Request time measured on the server, including time spent waiting for other
+	// queries to complete if the namespace was at its concurrency limit.
+	ServerTotalMs int64 `json:"server_total_ms,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ApproxNamespaceSize   respjson.Field
+		CacheHitRatio         respjson.Field
+		CacheTemperature      respjson.Field
+		ExhaustiveSearchCount respjson.Field
+		QueryExecutionMs      respjson.Field
+		ServerTotalMs         respjson.Field
+		ExtraFields           map[string]respjson.Field
+		raw                   string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r QueryPerformance) RawJSON() string { return r.JSON.raw }
+func (r *QueryPerformance) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // The tokenizer to use for full-text search on an attribute.
 type Tokenizer string
 
@@ -709,6 +765,27 @@ func (u *VectorParam) asAny() any {
 	return nil
 }
 
+// The billing information for a write request.
+type WriteBilling struct {
+	// The number of billable logical bytes written to the namespace.
+	BillableLogicalBytesWritten int64 `json:"billable_logical_bytes_written,required"`
+	// The billing information for a query.
+	Query QueryBilling `json:"query"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		BillableLogicalBytesWritten respjson.Field
+		Query                       respjson.Field
+		ExtraFields                 map[string]respjson.Field
+		raw                         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r WriteBilling) RawJSON() string { return r.JSON.raw }
+func (r *WriteBilling) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // The response to a successful namespace deletion request.
 type NamespaceDeleteAllResponse struct {
 	// The status of the request.
@@ -752,11 +829,11 @@ func (r *NamespaceHintCacheWarmResponse) UnmarshalJSON(data []byte) error {
 // The result of a query.
 type NamespaceQueryResponse struct {
 	// The billing information for a query.
-	Billing NamespaceQueryResponseBilling `json:"billing,required"`
+	Billing QueryBilling `json:"billing,required"`
 	// The performance information for a query.
-	Performance  NamespaceQueryResponsePerformance `json:"performance,required"`
-	Aggregations []map[string]any                  `json:"aggregations"`
-	Rows         []DocumentRow                     `json:"rows"`
+	Performance  QueryPerformance `json:"performance,required"`
+	Aggregations []map[string]any `json:"aggregations"`
+	Rows         []DocumentRow    `json:"rows"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Billing      respjson.Field
@@ -771,62 +848,6 @@ type NamespaceQueryResponse struct {
 // Returns the unmodified JSON received from the API
 func (r NamespaceQueryResponse) RawJSON() string { return r.JSON.raw }
 func (r *NamespaceQueryResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// The billing information for a query.
-type NamespaceQueryResponseBilling struct {
-	// The number of billable logical bytes queried from the namespace.
-	BillableLogicalBytesQueried int64 `json:"billable_logical_bytes_queried,required"`
-	// The number of billable logical bytes returned from the query.
-	BillableLogicalBytesReturned int64 `json:"billable_logical_bytes_returned,required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		BillableLogicalBytesQueried  respjson.Field
-		BillableLogicalBytesReturned respjson.Field
-		ExtraFields                  map[string]respjson.Field
-		raw                          string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r NamespaceQueryResponseBilling) RawJSON() string { return r.JSON.raw }
-func (r *NamespaceQueryResponseBilling) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// The performance information for a query.
-type NamespaceQueryResponsePerformance struct {
-	// the approximate number of documents in the namespace.
-	ApproxNamespaceSize int64 `json:"approx_namespace_size,required"`
-	// The ratio of cache hits to total cache lookups.
-	CacheHitRatio float64 `json:"cache_hit_ratio,required"`
-	// A qualitative description of the cache hit ratio (`hot`, `warm`, or `cold`).
-	CacheTemperature string `json:"cache_temperature,required"`
-	// The number of unindexed documents processed by the query.
-	ExhaustiveSearchCount int64 `json:"exhaustive_search_count,required"`
-	// Request time measured on the server, excluding time spent waiting due to the
-	// namespace concurrency limit.
-	QueryExecutionMs int64 `json:"query_execution_ms,required"`
-	// Request time measured on the server, including time spent waiting for other
-	// queries to complete if the namespace was at its concurrency limit.
-	ServerTotalMs int64 `json:"server_total_ms,required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ApproxNamespaceSize   respjson.Field
-		CacheHitRatio         respjson.Field
-		CacheTemperature      respjson.Field
-		ExhaustiveSearchCount respjson.Field
-		QueryExecutionMs      respjson.Field
-		ServerTotalMs         respjson.Field
-		ExtraFields           map[string]respjson.Field
-		raw                   string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r NamespaceQueryResponsePerformance) RawJSON() string { return r.JSON.raw }
-func (r *NamespaceQueryResponsePerformance) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -859,7 +880,8 @@ type NamespaceUpdateSchemaResponse map[string]AttributeSchema
 
 // The response to a successful write request.
 type NamespaceWriteResponse struct {
-	Billing NamespaceWriteResponseBilling `json:"billing,required"`
+	// The billing information for a write request.
+	Billing WriteBilling `json:"billing,required"`
 	// A message describing the result of the write request.
 	Message string `json:"message,required"`
 	// The number of rows affected by the write request.
@@ -880,47 +902,6 @@ type NamespaceWriteResponse struct {
 // Returns the unmodified JSON received from the API
 func (r NamespaceWriteResponse) RawJSON() string { return r.JSON.raw }
 func (r *NamespaceWriteResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type NamespaceWriteResponseBilling struct {
-	// The number of billable logical bytes written to the namespace.
-	BillableLogicalBytesWritten int64 `json:"billable_logical_bytes_written,required"`
-	// The billing information for a query.
-	Query NamespaceWriteResponseBillingQuery `json:"query"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		BillableLogicalBytesWritten respjson.Field
-		Query                       respjson.Field
-		ExtraFields                 map[string]respjson.Field
-		raw                         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r NamespaceWriteResponseBilling) RawJSON() string { return r.JSON.raw }
-func (r *NamespaceWriteResponseBilling) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// The billing information for a query.
-type NamespaceWriteResponseBillingQuery struct {
-	// The number of billable logical bytes queried from the namespace.
-	BillableLogicalBytesQueried int64 `json:"billable_logical_bytes_queried,required"`
-	// The number of billable logical bytes returned from the query.
-	BillableLogicalBytesReturned int64 `json:"billable_logical_bytes_returned,required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		BillableLogicalBytesQueried  respjson.Field
-		BillableLogicalBytesReturned respjson.Field
-		ExtraFields                  map[string]respjson.Field
-		raw                          string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r NamespaceWriteResponseBillingQuery) RawJSON() string { return r.JSON.raw }
-func (r *NamespaceWriteResponseBillingQuery) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
