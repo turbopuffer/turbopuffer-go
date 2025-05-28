@@ -57,11 +57,11 @@ func main() {
 		Namespace:      turbopuffer.String("products"),
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
 		UpsertRows: []turbopuffer.DocumentRowParam{{
-			ID: turbopuffer.IDUnionParam{
-				OfString: turbopuffer.String("2108ed60-6851-49a0-9016-8325434f3845"),
+			ID: turbopuffer.IDParam{
+				String: turbopuffer.String("2108ed60-6851-49a0-9016-8325434f3845"),
 			},
-			Vector: turbopuffer.VectorUnionParam{
-				OfFloatArray: []float64{0.1, 0.2},
+			Vector: turbopuffer.VectorParam{
+				FloatArray: []float64{0.1, 0.2},
 			},
 		}},
 	})

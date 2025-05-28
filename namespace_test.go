@@ -88,8 +88,8 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		},
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
 		Filters:        map[string]interface{}{},
-		IncludeAttributes: turbopuffer.IncludeAttributesUnionParam{
-			OfBool: turbopuffer.Bool(true),
+		IncludeAttributes: turbopuffer.IncludeAttributesParam{
+			Bool: turbopuffer.Bool(true),
 		},
 		VectorEncoding: turbopuffer.NamespaceQueryParamsVectorEncodingFloat,
 	})
@@ -151,8 +151,8 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 		Schema: map[string]turbopuffer.AttributeSchemaParam{
 			"foo": {
 				Filterable: turbopuffer.Bool(true),
-				FullTextSearch: turbopuffer.FullTextSearchUnionParam{
-					OfBool: turbopuffer.Bool(true),
+				FullTextSearch: turbopuffer.FullTextSearchParam{
+					Bool: turbopuffer.Bool(true),
 				},
 				Type: turbopuffer.AttributeTypeString,
 			},
@@ -211,53 +211,53 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		Namespace:         turbopuffer.String("namespace"),
 		CopyFromNamespace: turbopuffer.String("copy_from_namespace"),
 		DeleteByFilter:    map[string]interface{}{},
-		Deletes: []turbopuffer.IDUnionParam{{
-			OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		Deletes: []turbopuffer.IDParam{{
+			String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		}},
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
 		PatchColumns: turbopuffer.DocumentColumnsParam{
-			ID: []turbopuffer.IDUnionParam{{
-				OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ID: []turbopuffer.IDParam{{
+				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			}},
-			Vector: turbopuffer.DocumentColumnsVectorUnionParam{
-				OfVectorArray: []turbopuffer.VectorUnionParam{{
-					OfFloatArray: []float64{0},
+			Vector: turbopuffer.DocumentColumnsVectorParam{
+				VectorArray: []turbopuffer.VectorParam{{
+					FloatArray: []float64{0},
 				}},
 			},
 		},
 		PatchRows: []turbopuffer.DocumentRowParam{{
-			ID: turbopuffer.IDUnionParam{
-				OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ID: turbopuffer.IDParam{
+				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			},
-			Vector: turbopuffer.VectorUnionParam{
-				OfFloatArray: []float64{0},
+			Vector: turbopuffer.VectorParam{
+				FloatArray: []float64{0},
 			},
 		}},
 		Schema: map[string]turbopuffer.AttributeSchemaParam{
 			"foo": {
 				Filterable: turbopuffer.Bool(true),
-				FullTextSearch: turbopuffer.FullTextSearchUnionParam{
-					OfBool: turbopuffer.Bool(true),
+				FullTextSearch: turbopuffer.FullTextSearchParam{
+					Bool: turbopuffer.Bool(true),
 				},
 				Type: turbopuffer.AttributeTypeString,
 			},
 		},
 		UpsertColumns: turbopuffer.DocumentColumnsParam{
-			ID: []turbopuffer.IDUnionParam{{
-				OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ID: []turbopuffer.IDParam{{
+				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			}},
-			Vector: turbopuffer.DocumentColumnsVectorUnionParam{
-				OfVectorArray: []turbopuffer.VectorUnionParam{{
-					OfFloatArray: []float64{0},
+			Vector: turbopuffer.DocumentColumnsVectorParam{
+				VectorArray: []turbopuffer.VectorParam{{
+					FloatArray: []float64{0},
 				}},
 			},
 		},
 		UpsertRows: []turbopuffer.DocumentRowParam{{
-			ID: turbopuffer.IDUnionParam{
-				OfString: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ID: turbopuffer.IDParam{
+				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			},
-			Vector: turbopuffer.VectorUnionParam{
-				OfFloatArray: []float64{0},
+			Vector: turbopuffer.VectorParam{
+				FloatArray: []float64{0},
 			},
 		}},
 	})
