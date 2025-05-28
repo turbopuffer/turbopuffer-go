@@ -753,6 +753,14 @@ func (u *VectorParam) asAny() any {
 	return nil
 }
 
+// The encoding to use for vectors in the response.
+type VectorEncoding string
+
+const (
+	VectorEncodingFloat  VectorEncoding = "float"
+	VectorEncodingBase64 VectorEncoding = "base64"
+)
+
 // The billing information for a write request.
 type WriteBilling struct {
 	// The number of billable logical bytes written to the namespace.
@@ -928,7 +936,7 @@ type NamespaceQueryParams struct {
 	// The encoding to use for vectors in the response.
 	//
 	// Any of "float", "base64".
-	VectorEncoding NamespaceQueryParamsVectorEncoding `json:"vector_encoding,omitzero"`
+	VectorEncoding VectorEncoding `json:"vector_encoding,omitzero"`
 	paramObj
 }
 
@@ -963,14 +971,6 @@ type NamespaceQueryParamsConsistencyLevel string
 const (
 	NamespaceQueryParamsConsistencyLevelStrong   NamespaceQueryParamsConsistencyLevel = "strong"
 	NamespaceQueryParamsConsistencyLevelEventual NamespaceQueryParamsConsistencyLevel = "eventual"
-)
-
-// The encoding to use for vectors in the response.
-type NamespaceQueryParamsVectorEncoding string
-
-const (
-	NamespaceQueryParamsVectorEncodingFloat  NamespaceQueryParamsVectorEncoding = "float"
-	NamespaceQueryParamsVectorEncodingBase64 NamespaceQueryParamsVectorEncoding = "base64"
 )
 
 type NamespaceRecallParams struct {

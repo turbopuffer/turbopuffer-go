@@ -117,7 +117,7 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		IncludeAttributes: turbopuffer.IncludeAttributesParam{
 			Bool: turbopuffer.Bool(true),
 		},
-		VectorEncoding: turbopuffer.NamespaceQueryParamsVectorEncodingFloat,
+		VectorEncoding: turbopuffer.VectorEncodingFloat,
 	})
 	if err != nil {
 		var apierr *turbopuffer.Error
