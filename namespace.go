@@ -340,7 +340,7 @@ func (r *DocumentRowParam) UnmarshalJSON(data []byte) error {
 }
 
 // FullTextSearchConfigUnion contains all possible properties and values from
-// [bool], [FullTextSearchConfigObject].
+// [bool], [FullTextSearchConfigFullTextSearchDetailedConfig].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
@@ -349,13 +349,13 @@ func (r *DocumentRowParam) UnmarshalJSON(data []byte) error {
 type FullTextSearchConfigUnion struct {
 	// This field will be present if the value is a [bool] instead of an object.
 	OfBool bool `json:",inline"`
-	// This field is from variant [FullTextSearchConfigObject].
+	// This field is from variant [FullTextSearchConfigFullTextSearchDetailedConfig].
 	CaseSensitive bool `json:"case_sensitive"`
-	// This field is from variant [FullTextSearchConfigObject].
-	Language FullTextSearchConfigObjectLanguage `json:"language"`
-	// This field is from variant [FullTextSearchConfigObject].
+	// This field is from variant [FullTextSearchConfigFullTextSearchDetailedConfig].
+	Language FullTextSearchConfigFullTextSearchDetailedConfigLanguage `json:"language"`
+	// This field is from variant [FullTextSearchConfigFullTextSearchDetailedConfig].
 	RemoveStopwords bool `json:"remove_stopwords"`
-	// This field is from variant [FullTextSearchConfigObject].
+	// This field is from variant [FullTextSearchConfigFullTextSearchDetailedConfig].
 	Stemming bool `json:"stemming"`
 	JSON     struct {
 		OfBool          respjson.Field
@@ -372,7 +372,7 @@ func (u FullTextSearchConfigUnion) AsBool() (v bool) {
 	return
 }
 
-func (u FullTextSearchConfigUnion) AsFullTextSearchConfigObject() (v FullTextSearchConfigObject) {
+func (u FullTextSearchConfigUnion) AsFullTextSearchDetailedConfig() (v FullTextSearchConfigFullTextSearchDetailedConfig) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -394,7 +394,7 @@ func (r FullTextSearchConfigUnion) ToParam() FullTextSearchConfigUnionParam {
 	return param.Override[FullTextSearchConfigUnionParam](r.RawJSON())
 }
 
-type FullTextSearchConfigObject struct {
+type FullTextSearchConfigFullTextSearchDetailedConfig struct {
 	// Whether searching is case-sensitive. Defaults to `false` (i.e.
 	// case-insensitive).
 	CaseSensitive bool `json:"case_sensitive"`
@@ -403,7 +403,7 @@ type FullTextSearchConfigObject struct {
 	// Any of "arabic", "danish", "dutch", "english", "finnish", "french", "german",
 	// "greek", "hungarian", "italian", "norwegian", "portuguese", "romanian",
 	// "russian", "spanish", "swedish", "tamil", "turkish".
-	Language FullTextSearchConfigObjectLanguage `json:"language"`
+	Language FullTextSearchConfigFullTextSearchDetailedConfigLanguage `json:"language"`
 	// Removes common words from the text based on language. Defaults to `true` (i.e.
 	// remove common words).
 	RemoveStopwords bool `json:"remove_stopwords"`
@@ -422,33 +422,33 @@ type FullTextSearchConfigObject struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r FullTextSearchConfigObject) RawJSON() string { return r.JSON.raw }
-func (r *FullTextSearchConfigObject) UnmarshalJSON(data []byte) error {
+func (r FullTextSearchConfigFullTextSearchDetailedConfig) RawJSON() string { return r.JSON.raw }
+func (r *FullTextSearchConfigFullTextSearchDetailedConfig) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // The language of the text. Defaults to `english`.
-type FullTextSearchConfigObjectLanguage string
+type FullTextSearchConfigFullTextSearchDetailedConfigLanguage string
 
 const (
-	FullTextSearchConfigObjectLanguageArabic     FullTextSearchConfigObjectLanguage = "arabic"
-	FullTextSearchConfigObjectLanguageDanish     FullTextSearchConfigObjectLanguage = "danish"
-	FullTextSearchConfigObjectLanguageDutch      FullTextSearchConfigObjectLanguage = "dutch"
-	FullTextSearchConfigObjectLanguageEnglish    FullTextSearchConfigObjectLanguage = "english"
-	FullTextSearchConfigObjectLanguageFinnish    FullTextSearchConfigObjectLanguage = "finnish"
-	FullTextSearchConfigObjectLanguageFrench     FullTextSearchConfigObjectLanguage = "french"
-	FullTextSearchConfigObjectLanguageGerman     FullTextSearchConfigObjectLanguage = "german"
-	FullTextSearchConfigObjectLanguageGreek      FullTextSearchConfigObjectLanguage = "greek"
-	FullTextSearchConfigObjectLanguageHungarian  FullTextSearchConfigObjectLanguage = "hungarian"
-	FullTextSearchConfigObjectLanguageItalian    FullTextSearchConfigObjectLanguage = "italian"
-	FullTextSearchConfigObjectLanguageNorwegian  FullTextSearchConfigObjectLanguage = "norwegian"
-	FullTextSearchConfigObjectLanguagePortuguese FullTextSearchConfigObjectLanguage = "portuguese"
-	FullTextSearchConfigObjectLanguageRomanian   FullTextSearchConfigObjectLanguage = "romanian"
-	FullTextSearchConfigObjectLanguageRussian    FullTextSearchConfigObjectLanguage = "russian"
-	FullTextSearchConfigObjectLanguageSpanish    FullTextSearchConfigObjectLanguage = "spanish"
-	FullTextSearchConfigObjectLanguageSwedish    FullTextSearchConfigObjectLanguage = "swedish"
-	FullTextSearchConfigObjectLanguageTamil      FullTextSearchConfigObjectLanguage = "tamil"
-	FullTextSearchConfigObjectLanguageTurkish    FullTextSearchConfigObjectLanguage = "turkish"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageArabic     FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "arabic"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageDanish     FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "danish"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageDutch      FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "dutch"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageEnglish    FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "english"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageFinnish    FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "finnish"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageFrench     FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "french"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageGerman     FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "german"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageGreek      FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "greek"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageHungarian  FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "hungarian"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageItalian    FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "italian"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageNorwegian  FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "norwegian"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguagePortuguese FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "portuguese"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageRomanian   FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "romanian"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageRussian    FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "russian"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageSpanish    FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "spanish"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageSwedish    FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "swedish"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageTamil      FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "tamil"
+	FullTextSearchConfigFullTextSearchDetailedConfigLanguageTurkish    FullTextSearchConfigFullTextSearchDetailedConfigLanguage = "turkish"
 )
 
 // The language of the text. Defaults to `english`.
@@ -479,13 +479,13 @@ const (
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type FullTextSearchConfigUnionParam struct {
-	OfBool                       param.Opt[bool]                  `json:",omitzero,inline"`
-	OfFullTextSearchConfigObject *FullTextSearchConfigObjectParam `json:",omitzero,inline"`
+	OfBool                         param.Opt[bool]                                        `json:",omitzero,inline"`
+	OfFullTextSearchDetailedConfig *FullTextSearchConfigFullTextSearchDetailedConfigParam `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u FullTextSearchConfigUnionParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[FullTextSearchConfigUnionParam](u.OfBool, u.OfFullTextSearchConfigObject)
+	return param.MarshalUnion[FullTextSearchConfigUnionParam](u.OfBool, u.OfFullTextSearchDetailedConfig)
 }
 func (u *FullTextSearchConfigUnionParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -494,13 +494,13 @@ func (u *FullTextSearchConfigUnionParam) UnmarshalJSON(data []byte) error {
 func (u *FullTextSearchConfigUnionParam) asAny() any {
 	if !param.IsOmitted(u.OfBool) {
 		return &u.OfBool.Value
-	} else if !param.IsOmitted(u.OfFullTextSearchConfigObject) {
-		return u.OfFullTextSearchConfigObject
+	} else if !param.IsOmitted(u.OfFullTextSearchDetailedConfig) {
+		return u.OfFullTextSearchDetailedConfig
 	}
 	return nil
 }
 
-type FullTextSearchConfigObjectParam struct {
+type FullTextSearchConfigFullTextSearchDetailedConfigParam struct {
 	// Whether searching is case-sensitive. Defaults to `false` (i.e.
 	// case-insensitive).
 	CaseSensitive param.Opt[bool] `json:"case_sensitive,omitzero"`
@@ -515,15 +515,15 @@ type FullTextSearchConfigObjectParam struct {
 	// Any of "arabic", "danish", "dutch", "english", "finnish", "french", "german",
 	// "greek", "hungarian", "italian", "norwegian", "portuguese", "romanian",
 	// "russian", "spanish", "swedish", "tamil", "turkish".
-	Language FullTextSearchConfigObjectLanguage `json:"language,omitzero"`
+	Language FullTextSearchConfigFullTextSearchDetailedConfigLanguage `json:"language,omitzero"`
 	paramObj
 }
 
-func (r FullTextSearchConfigObjectParam) MarshalJSON() (data []byte, err error) {
-	type shadow FullTextSearchConfigObjectParam
+func (r FullTextSearchConfigFullTextSearchDetailedConfigParam) MarshalJSON() (data []byte, err error) {
+	type shadow FullTextSearchConfigFullTextSearchDetailedConfigParam
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *FullTextSearchConfigObjectParam) UnmarshalJSON(data []byte) error {
+func (r *FullTextSearchConfigFullTextSearchDetailedConfigParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
