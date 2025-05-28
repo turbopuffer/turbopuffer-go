@@ -151,11 +151,8 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 		Schema: map[string]turbopuffer.AttributeSchemaParam{
 			"foo": {
 				Filterable: turbopuffer.Bool(true),
-				FullTextSearch: turbopuffer.FullTextSearchConfigParam{
-					CaseSensitive:   turbopuffer.Bool(true),
-					Language:        turbopuffer.LanguageArabic,
-					RemoveStopwords: turbopuffer.Bool(true),
-					Stemming:        turbopuffer.Bool(true),
+				FullTextSearch: turbopuffer.FullTextSearchUnionParam{
+					OfBool: turbopuffer.Bool(true),
 				},
 				Type: turbopuffer.AttributeTypeString,
 			},
@@ -239,11 +236,8 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		Schema: map[string]turbopuffer.AttributeSchemaParam{
 			"foo": {
 				Filterable: turbopuffer.Bool(true),
-				FullTextSearch: turbopuffer.FullTextSearchConfigParam{
-					CaseSensitive:   turbopuffer.Bool(true),
-					Language:        turbopuffer.LanguageArabic,
-					RemoveStopwords: turbopuffer.Bool(true),
-					Stemming:        turbopuffer.Bool(true),
+				FullTextSearch: turbopuffer.FullTextSearchUnionParam{
+					OfBool: turbopuffer.Bool(true),
 				},
 				Type: turbopuffer.AttributeTypeString,
 			},
