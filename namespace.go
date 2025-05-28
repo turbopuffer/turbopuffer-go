@@ -167,8 +167,10 @@ func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParam
 type AttributeSchema struct {
 	// Whether or not the attributes can be used in filters/WHERE clauses.
 	Filterable bool `json:"filterable"`
-	// Configuration options for full-text search.
-	FullTextSearch FullTextSearchConfig `json:"full_text_search"`
+	// Whether this attribute can be used as part of a BM25 full-text search. Requires
+	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
+	// filterable. You can override this by setting `filterable: true`.
+	FullTextSearch FullTextSearchUnion `json:"full_text_search"`
 	// The data type of the attribute.
 	//
 	// Any of "string", "uint", "uuid", "bool", "datetime", "[]string", "[]uint",
@@ -203,8 +205,10 @@ func (r AttributeSchema) ToParam() AttributeSchemaParam {
 type AttributeSchemaParam struct {
 	// Whether or not the attributes can be used in filters/WHERE clauses.
 	Filterable param.Opt[bool] `json:"filterable,omitzero"`
-	// Configuration options for full-text search.
-	FullTextSearch FullTextSearchConfigParam `json:"full_text_search,omitzero"`
+	// Whether this attribute can be used as part of a BM25 full-text search. Requires
+	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
+	// filterable. You can override this by setting `filterable: true`.
+	FullTextSearch FullTextSearchUnionParam `json:"full_text_search,omitzero"`
 	// The data type of the attribute.
 	//
 	// Any of "string", "uint", "uuid", "bool", "datetime", "[]string", "[]uint",
@@ -345,6 +349,85 @@ func (r DocumentRowParam) MarshalJSON() (data []byte, err error) {
 }
 func (r *DocumentRowParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+// FullTextSearchUnion contains all possible properties and values from [bool],
+// [FullTextSearchConfig].
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+//
+// If the underlying value is not a json object, one of the following properties
+// will be valid: OfBool]
+type FullTextSearchUnion struct {
+	// This field will be present if the value is a [bool] instead of an object.
+	OfBool bool `json:",inline"`
+	// This field is from variant [FullTextSearchConfig].
+	CaseSensitive bool `json:"case_sensitive"`
+	// This field is from variant [FullTextSearchConfig].
+	Language Language `json:"language"`
+	// This field is from variant [FullTextSearchConfig].
+	RemoveStopwords bool `json:"remove_stopwords"`
+	// This field is from variant [FullTextSearchConfig].
+	Stemming bool `json:"stemming"`
+	JSON     struct {
+		OfBool          respjson.Field
+		CaseSensitive   respjson.Field
+		Language        respjson.Field
+		RemoveStopwords respjson.Field
+		Stemming        respjson.Field
+		raw             string
+	} `json:"-"`
+}
+
+func (u FullTextSearchUnion) AsBool() (v bool) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u FullTextSearchUnion) AsFullTextSearchConfig() (v FullTextSearchConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u FullTextSearchUnion) RawJSON() string { return u.JSON.raw }
+
+func (r *FullTextSearchUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// ToParam converts this FullTextSearchUnion to a FullTextSearchUnionParam.
+//
+// Warning: the fields of the param type will not be present. ToParam should only
+// be used at the last possible moment before sending a request. Test for this with
+// FullTextSearchUnionParam.Overrides()
+func (r FullTextSearchUnion) ToParam() FullTextSearchUnionParam {
+	return param.Override[FullTextSearchUnionParam](r.RawJSON())
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type FullTextSearchUnionParam struct {
+	OfBool                 param.Opt[bool]            `json:",omitzero,inline"`
+	OfFullTextSearchConfig *FullTextSearchConfigParam `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u FullTextSearchUnionParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[FullTextSearchUnionParam](u.OfBool, u.OfFullTextSearchConfig)
+}
+func (u *FullTextSearchUnionParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *FullTextSearchUnionParam) asAny() any {
+	if !param.IsOmitted(u.OfBool) {
+		return &u.OfBool.Value
+	} else if !param.IsOmitted(u.OfFullTextSearchConfig) {
+		return u.OfFullTextSearchConfig
+	}
+	return nil
 }
 
 // Configuration options for full-text search.
