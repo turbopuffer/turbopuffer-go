@@ -950,6 +950,9 @@ type NamespaceQueryParams struct {
 	RankBy RankBy `json:"rank_by,omitzero,required"`
 	// The number of results to return.
 	TopK int64 `json:"top_k,required"`
+	// Aggregations to compute over all documents in the namespace that match the
+	// filters.
+	AggregateBy any `json:"aggregate_by,omitzero"`
 	// The consistency level for a query.
 	Consistency NamespaceQueryParamsConsistency `json:"consistency,omitzero"`
 	// A function used to calculate vector similarity.
