@@ -933,10 +933,8 @@ type NamespaceHintCacheWarmParams struct {
 
 type NamespaceQueryParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
-	// How to rank the documents in the namespace.
-	RankBy any `json:"rank_by,omitzero,required"`
 	// The number of results to return.
-	TopK int64 `json:"top_k,required"`
+	TopK param.Opt[int64] `json:"top_k,omitzero"`
 	// Aggregations to compute over all documents in the namespace that match the
 	// filters.
 	AggregateBy map[string]any `json:"aggregate_by,omitzero"`
@@ -951,6 +949,8 @@ type NamespaceQueryParams struct {
 	Filters any `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
+	// How to rank the documents in the namespace.
+	RankBy any `json:"rank_by,omitzero"`
 	// The encoding to use for vectors in the response.
 	//
 	// Any of "float", "base64".
