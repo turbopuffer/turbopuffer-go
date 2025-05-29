@@ -163,8 +163,236 @@ func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParam
 	return
 }
 
-// The schema for an attribute attached to a document.
+// AttributeSchema contains all possible properties and values from
+// [constant.String], [constant.Uint], [constant.Uuid], [constant.Bool],
+// [constant.Datetime], [constant.String], [constant.Uint], [constant.Uuid],
+// [constant.Datetime], [string], [AttributeSchemaConfig].
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+//
+// If the underlying value is not a json object, one of the following properties
+// will be valid: StringArray UintArray UuidArray Bool DatetimeArray Vector]
 type AttributeSchema struct {
+	// This field will be present if the value is a [constant.String] instead of an
+	// object.
+	StringArray constant.String `json:",inline"`
+	// This field will be present if the value is a [constant.Uint] instead of an
+	// object.
+	UintArray constant.Uint `json:",inline"`
+	// This field will be present if the value is a [constant.Uuid] instead of an
+	// object.
+	UuidArray constant.Uuid `json:",inline"`
+	// This field will be present if the value is a [constant.Bool] instead of an
+	// object.
+	Bool constant.Bool `json:",inline"`
+	// This field will be present if the value is a [constant.Datetime] instead of an
+	// object.
+	DatetimeArray constant.Datetime `json:",inline"`
+	// This field will be present if the value is a [string] instead of an object.
+	Vector string `json:",inline"`
+	// This field is from variant [AttributeSchemaConfig].
+	Ann bool `json:"ann"`
+	// This field is from variant [AttributeSchemaConfig].
+	Filterable bool `json:"filterable"`
+	// This field is from variant [AttributeSchemaConfig].
+	FullTextSearch FullTextSearch `json:"full_text_search"`
+	// This field is from variant [AttributeSchemaConfig].
+	Type AttributeType `json:"type"`
+	JSON struct {
+		StringArray    respjson.Field
+		UintArray      respjson.Field
+		UuidArray      respjson.Field
+		Bool           respjson.Field
+		DatetimeArray  respjson.Field
+		Vector         respjson.Field
+		Ann            respjson.Field
+		Filterable     respjson.Field
+		FullTextSearch respjson.Field
+		Type           respjson.Field
+		raw            string
+	} `json:"-"`
+}
+
+func (u AttributeSchema) AsString() (v constant.String) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsUint() (v constant.Uint) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsUuid() (v constant.Uuid) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsBool() (v constant.Bool) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsDatetime() (v constant.Datetime) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsStringArray() (v constant.String) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsUintArray() (v constant.Uint) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsUuidArray() (v constant.Uuid) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsDatetimeArray() (v constant.Datetime) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsVector() (v string) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsAttributeSchemaConfig() (v AttributeSchemaConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u AttributeSchema) RawJSON() string { return u.JSON.raw }
+
+func (r *AttributeSchema) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// ToParam converts this AttributeSchema to a AttributeSchemaParam.
+//
+// Warning: the fields of the param type will not be present. ToParam should only
+// be used at the last possible moment before sending a request. Test for this with
+// AttributeSchemaParam.Overrides()
+func (r AttributeSchema) ToParam() AttributeSchemaParam {
+	return param.Override[AttributeSchemaParam](r.RawJSON())
+}
+
+func AttributeSchemaParamString() AttributeSchemaParam {
+	return AttributeSchemaParam{String: constant.ValueOf[constant.String]()}
+}
+
+func AttributeSchemaParamUint() AttributeSchemaParam {
+	return AttributeSchemaParam{Uint: constant.ValueOf[constant.Uint]()}
+}
+
+func AttributeSchemaParamUuid() AttributeSchemaParam {
+	return AttributeSchemaParam{Uuid: constant.ValueOf[constant.Uuid]()}
+}
+
+func AttributeSchemaParamBool() AttributeSchemaParam {
+	return AttributeSchemaParam{Bool: constant.ValueOf[constant.Bool]()}
+}
+
+func AttributeSchemaParamDatetime() AttributeSchemaParam {
+	return AttributeSchemaParam{Datetime: constant.ValueOf[constant.Datetime]()}
+}
+
+func AttributeSchemaParamStringArray() AttributeSchemaParam {
+	return AttributeSchemaParam{StringArray: constant.ValueOf[constant.String]()}
+}
+
+func AttributeSchemaParamUintArray() AttributeSchemaParam {
+	return AttributeSchemaParam{UintArray: constant.ValueOf[constant.Uint]()}
+}
+
+func AttributeSchemaParamUuidArray() AttributeSchemaParam {
+	return AttributeSchemaParam{UuidArray: constant.ValueOf[constant.Uuid]()}
+}
+
+func AttributeSchemaParamDatetimeArray() AttributeSchemaParam {
+	return AttributeSchemaParam{DatetimeArray: constant.ValueOf[constant.Datetime]()}
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type AttributeSchemaParam struct {
+	// Construct this variant with constant.ValueOf[constant.String]()
+	String constant.String `json:",omitzero,inline"`
+	// Construct this variant with constant.ValueOf[constant.Uint]()
+	Uint constant.Uint `json:",omitzero,inline"`
+	// Construct this variant with constant.ValueOf[constant.Uuid]()
+	Uuid constant.Uuid `json:",omitzero,inline"`
+	// Construct this variant with constant.ValueOf[constant.Bool]()
+	Bool constant.Bool `json:",omitzero,inline"`
+	// Construct this variant with constant.ValueOf[constant.Datetime]()
+	Datetime constant.Datetime `json:",omitzero,inline"`
+	// Construct this variant with constant.ValueOf[constant.String]()
+	StringArray constant.String `json:",omitzero,inline"`
+	// Construct this variant with constant.ValueOf[constant.Uint]()
+	UintArray constant.Uint `json:",omitzero,inline"`
+	// Construct this variant with constant.ValueOf[constant.Uuid]()
+	UuidArray constant.Uuid `json:",omitzero,inline"`
+	// Construct this variant with constant.ValueOf[constant.Datetime]()
+	DatetimeArray         constant.Datetime           `json:",omitzero,inline"`
+	Vector                param.Opt[string]           `json:",omitzero,inline"`
+	AttributeSchemaConfig *AttributeSchemaConfigParam `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u AttributeSchemaParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[AttributeSchemaParam](u.String,
+		u.Uint,
+		u.Uuid,
+		u.Bool,
+		u.Datetime,
+		u.StringArray,
+		u.UintArray,
+		u.UuidArray,
+		u.DatetimeArray,
+		u.Vector,
+		u.AttributeSchemaConfig)
+}
+func (u *AttributeSchemaParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *AttributeSchemaParam) asAny() any {
+	if !param.IsOmitted(u.String) {
+		return &u.String
+	} else if !param.IsOmitted(u.Uint) {
+		return &u.Uint
+	} else if !param.IsOmitted(u.Uuid) {
+		return &u.Uuid
+	} else if !param.IsOmitted(u.Bool) {
+		return &u.Bool
+	} else if !param.IsOmitted(u.Datetime) {
+		return &u.Datetime
+	} else if !param.IsOmitted(u.StringArray) {
+		return &u.StringArray
+	} else if !param.IsOmitted(u.UintArray) {
+		return &u.UintArray
+	} else if !param.IsOmitted(u.UuidArray) {
+		return &u.UuidArray
+	} else if !param.IsOmitted(u.DatetimeArray) {
+		return &u.DatetimeArray
+	} else if !param.IsOmitted(u.Vector) {
+		return &u.Vector.Value
+	} else if !param.IsOmitted(u.AttributeSchemaConfig) {
+		return u.AttributeSchemaConfig
+	}
+	return nil
+}
+
+// Detailed configuration for an attribute attached to a document.
+type AttributeSchemaConfig struct {
 	// Whether to create an approximate nearest neighbor index for the attribute.
 	Ann bool `json:"ann"`
 	// Whether or not the attributes can be used in filters.
@@ -187,22 +415,22 @@ type AttributeSchema struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r AttributeSchema) RawJSON() string { return r.JSON.raw }
-func (r *AttributeSchema) UnmarshalJSON(data []byte) error {
+func (r AttributeSchemaConfig) RawJSON() string { return r.JSON.raw }
+func (r *AttributeSchemaConfig) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// ToParam converts this AttributeSchema to a AttributeSchemaParam.
+// ToParam converts this AttributeSchemaConfig to a AttributeSchemaConfigParam.
 //
 // Warning: the fields of the param type will not be present. ToParam should only
 // be used at the last possible moment before sending a request. Test for this with
-// AttributeSchemaParam.Overrides()
-func (r AttributeSchema) ToParam() AttributeSchemaParam {
-	return param.Override[AttributeSchemaParam](r.RawJSON())
+// AttributeSchemaConfigParam.Overrides()
+func (r AttributeSchemaConfig) ToParam() AttributeSchemaConfigParam {
+	return param.Override[AttributeSchemaConfigParam](r.RawJSON())
 }
 
-// The schema for an attribute attached to a document.
-type AttributeSchemaParam struct {
+// Detailed configuration for an attribute attached to a document.
+type AttributeSchemaConfigParam struct {
 	// Whether to create an approximate nearest neighbor index for the attribute.
 	Ann param.Opt[bool] `json:"ann,omitzero"`
 	// Whether or not the attributes can be used in filters.
@@ -216,11 +444,11 @@ type AttributeSchemaParam struct {
 	paramObj
 }
 
-func (r AttributeSchemaParam) MarshalJSON() (data []byte, err error) {
-	type shadow AttributeSchemaParam
+func (r AttributeSchemaConfigParam) MarshalJSON() (data []byte, err error) {
+	type shadow AttributeSchemaConfigParam
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *AttributeSchemaParam) UnmarshalJSON(data []byte) error {
+func (r *AttributeSchemaConfigParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -827,7 +1055,7 @@ func (r *NamespaceDeleteAllResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type NamespaceGetSchemaResponse map[string]AttributeSchema
+type NamespaceGetSchemaResponse map[string]AttributeSchemaConfig
 
 // The response to a successful cache warm request.
 type NamespaceHintCacheWarmResponse struct {
@@ -855,7 +1083,7 @@ type NamespaceQueryResponse struct {
 	Billing QueryBilling `json:"billing,required"`
 	// The performance information for a query.
 	Performance  QueryPerformance `json:"performance,required"`
-	Aggregations []map[string]any `json:"aggregations"`
+	Aggregations map[string]any   `json:"aggregations"`
 	Rows         []DocumentRow    `json:"rows"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {

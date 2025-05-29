@@ -11,6 +11,7 @@ import (
 	"github.com/turbopuffer/turbopuffer-go"
 	"github.com/turbopuffer/turbopuffer-go/internal/testutil"
 	"github.com/turbopuffer/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go/shared/constant"
 )
 
 func TestNamespaceDeleteAll(t *testing.T) {
@@ -174,12 +175,7 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 	_, err := ns.UpdateSchema(context.TODO(), turbopuffer.NamespaceUpdateSchemaParams{
 		Schema: map[string]turbopuffer.AttributeSchemaParam{
 			"foo": {
-				Ann:        turbopuffer.Bool(true),
-				Filterable: turbopuffer.Bool(true),
-				FullTextSearch: turbopuffer.FullTextSearchParam{
-					Bool: turbopuffer.Bool(true),
-				},
-				Type: turbopuffer.AttributeTypeString,
+				String: constant.ValueOf[constant.String](),
 			},
 		},
 	})
@@ -239,12 +235,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		}},
 		Schema: map[string]turbopuffer.AttributeSchemaParam{
 			"foo": {
-				Ann:        turbopuffer.Bool(true),
-				Filterable: turbopuffer.Bool(true),
-				FullTextSearch: turbopuffer.FullTextSearchParam{
-					Bool: turbopuffer.Bool(true),
-				},
-				Type: turbopuffer.AttributeTypeString,
+				String: constant.ValueOf[constant.String](),
 			},
 		},
 		UpsertColumns: turbopuffer.DocumentColumnsParam{
