@@ -63,6 +63,31 @@ func TestNamespaceGetSchema(t *testing.T) {
 	}
 }
 
+func TestNamespaceHintCacheWarm(t *testing.T) {
+	t.Skip("skipped: tests are disabled for the time being")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := turbopuffer.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
+	)
+	ns := client.Namespace("ns")
+	_, err := ns.HintCacheWarm(context.TODO(), turbopuffer.NamespaceHintCacheWarmParams{})
+	if err != nil {
+		var apierr *turbopuffer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
 func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 	t.Skip("skipped: tests are disabled for the time being")
 	baseURL := "http://localhost:4010"
@@ -88,7 +113,7 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		IncludeAttributes: turbopuffer.IncludeAttributesParam{
 			Bool: turbopuffer.Bool(true),
 		},
-		VectorEncoding: turbopuffer.NamespaceQueryParamsVectorEncodingFloat,
+		VectorEncoding: turbopuffer.VectorEncodingFloat,
 	})
 	if err != nil {
 		var apierr *turbopuffer.Error
@@ -165,31 +190,6 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestNamespaceWarmCache(t *testing.T) {
-	t.Skip("skipped: tests are disabled for the time being")
-	baseURL := "http://localhost:4010"
-	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
-		baseURL = envURL
-	}
-	if !testutil.CheckTestServer(t, baseURL) {
-		return
-	}
-	client := turbopuffer.NewClient(
-		option.WithBaseURL(baseURL),
-		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
-	)
-	ns := client.Namespace("ns")
-	_, err := ns.WarmCache(context.TODO(), turbopuffer.NamespaceWarmCacheParams{})
-	if err != nil {
-		var apierr *turbopuffer.Error
-		if errors.As(err, &apierr) {
-			t.Log(string(apierr.DumpRequest(true)))
-		}
-		t.Fatalf("err should be nil: %s", err.Error())
-	}
-}
-
 func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 	t.Skip("skipped: tests are disabled for the time being")
 	baseURL := "http://localhost:4010"
@@ -212,6 +212,11 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 			String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		}},
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+		Encryption: turbopuffer.NamespaceWriteParamsEncryption{
+			Cmek: turbopuffer.NamespaceWriteParamsEncryptionCmek{
+				KeyName: "key_name",
+			},
+		},
 		PatchColumns: turbopuffer.DocumentColumnsParam{
 			ID: []turbopuffer.IDParam{{
 				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),

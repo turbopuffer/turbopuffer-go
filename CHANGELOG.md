@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.1.0-alpha.7 (2025-05-29)
+
+Full Changelog: [v0.1.0-alpha.6...v0.1.0-alpha.7](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.6...v0.1.0-alpha.7)
+
+### Features
+
+* **api:** api update ([75f7317](https://github.com/turbopuffer/turbopuffer-go/commit/75f73170701793c5c34a2e0c84da2db4120b1418))
+* **api:** api update ([f697124](https://github.com/turbopuffer/turbopuffer-go/commit/f69712441c0ea357fc00943e6465f7cc82f3e12c))
+* **api:** api update ([7321103](https://github.com/turbopuffer/turbopuffer-go/commit/732110375feeb50c45ae563f47c49579f0b0b631))
+* **api:** api update ([5db66fe](https://github.com/turbopuffer/turbopuffer-go/commit/5db66fe4f7d993df87910487ff3ffb6e97e48da6))
+* **api:** api update ([1729afc](https://github.com/turbopuffer/turbopuffer-go/commit/1729afcc1b8d4b9cf7254fbe8d967eb4b41d2e35))
+* **api:** api update ([814d9a0](https://github.com/turbopuffer/turbopuffer-go/commit/814d9a0d76432df2b5823652e055071e370b5247))
+* **api:** api update ([bffb7fc](https://github.com/turbopuffer/turbopuffer-go/commit/bffb7fc3963a458cbf9306ac96fd92b153e4d35f))
+* **api:** api update ([b42f578](https://github.com/turbopuffer/turbopuffer-go/commit/b42f578ccc119fcb7f8d638d954567a6242c4c47))
+* **api:** api update ([f1d9aba](https://github.com/turbopuffer/turbopuffer-go/commit/f1d9abad327a5e565db4c442997c412eaf6cc67b))
+* **api:** api update ([4d865b6](https://github.com/turbopuffer/turbopuffer-go/commit/4d865b62b7af57756fb9d3df422a0cea2cce0ed2))
+
+
+### Chores
+
+* fix union naming in readme ([f3ab2f2](https://github.com/turbopuffer/turbopuffer-go/commit/f3ab2f23671357575673794ed8f28597dace0fe2))
+
 ## 0.1.0-alpha.6 (2025-05-28)
 
 Full Changelog: [v0.1.0-alpha.5...v0.1.0-alpha.6](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.5...v0.1.0-alpha.6)

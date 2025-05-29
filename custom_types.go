@@ -4,13 +4,35 @@ package turbopuffer
 
 import shimjson "github.com/turbopuffer/turbopuffer-go/internal/encoding/json"
 
+type AggregateBy interface {
+    sealed_AggregateBy()
+}
+func (v AggregateByCount) sealed_AggregateBy() {}
+
+type AggregateByCount struct {
+    attr string
+}
+func NewAggregateByCount(
+    attr string,
+) AggregateByCount {
+    return AggregateByCount {
+        attr,
+    }
+}
+func (v AggregateByCount) MarshalJSON() ([]byte, error) {
+    return shimjson.Marshal([]any{
+        "Count",
+        v.attr,
+    })
+}
+
 type ContainsAllTokensArray struct {
     attr string
     value []string
 }
 func NewContainsAllTokensArray(
-    attr string, 
-    value []string, 
+    attr string,
+    value []string,
 ) ContainsAllTokensArray {
     return ContainsAllTokensArray {
         attr,
@@ -50,7 +72,7 @@ type FilterAnd struct {
     filters []Filter
 }
 func NewFilterAnd(
-    filters []Filter, 
+    filters []Filter,
 ) FilterAnd {
     return FilterAnd {
         filters,
@@ -68,8 +90,8 @@ type FilterContainsAllTokens struct {
     value string
 }
 func NewFilterContainsAllTokens(
-    attr string, 
-    value string, 
+    attr string,
+    value string,
 ) FilterContainsAllTokens {
     return FilterContainsAllTokens {
         attr,
@@ -89,8 +111,8 @@ type FilterEq struct {
     value any
 }
 func NewFilterEq(
-    attr string, 
-    value any, 
+    attr string,
+    value any,
 ) FilterEq {
     return FilterEq {
         attr,
@@ -110,8 +132,8 @@ type FilterGlob struct {
     value string
 }
 func NewFilterGlob(
-    attr string, 
-    value string, 
+    attr string,
+    value string,
 ) FilterGlob {
     return FilterGlob {
         attr,
@@ -131,8 +153,8 @@ type FilterGt struct {
     value any
 }
 func NewFilterGt(
-    attr string, 
-    value any, 
+    attr string,
+    value any,
 ) FilterGt {
     return FilterGt {
         attr,
@@ -152,8 +174,8 @@ type FilterGte struct {
     value any
 }
 func NewFilterGte(
-    attr string, 
-    value any, 
+    attr string,
+    value any,
 ) FilterGte {
     return FilterGte {
         attr,
@@ -173,8 +195,8 @@ type FilterIGlob struct {
     value string
 }
 func NewFilterIGlob(
-    attr string, 
-    value string, 
+    attr string,
+    value string,
 ) FilterIGlob {
     return FilterIGlob {
         attr,
@@ -194,8 +216,8 @@ type FilterIn struct {
     value any
 }
 func NewFilterIn(
-    attr string, 
-    value any, 
+    attr string,
+    value any,
 ) FilterIn {
     return FilterIn {
         attr,
@@ -215,8 +237,8 @@ type FilterLt struct {
     value any
 }
 func NewFilterLt(
-    attr string, 
-    value any, 
+    attr string,
+    value any,
 ) FilterLt {
     return FilterLt {
         attr,
@@ -236,8 +258,8 @@ type FilterLte struct {
     value any
 }
 func NewFilterLte(
-    attr string, 
-    value any, 
+    attr string,
+    value any,
 ) FilterLte {
     return FilterLte {
         attr,
@@ -256,7 +278,7 @@ type FilterNot struct {
     filter Filter
 }
 func NewFilterNot(
-    filter Filter, 
+    filter Filter,
 ) FilterNot {
     return FilterNot {
         filter,
@@ -274,8 +296,8 @@ type FilterNotEq struct {
     value any
 }
 func NewFilterNotEq(
-    attr string, 
-    value any, 
+    attr string,
+    value any,
 ) FilterNotEq {
     return FilterNotEq {
         attr,
@@ -295,8 +317,8 @@ type FilterNotGlob struct {
     value string
 }
 func NewFilterNotGlob(
-    attr string, 
-    value string, 
+    attr string,
+    value string,
 ) FilterNotGlob {
     return FilterNotGlob {
         attr,
@@ -316,8 +338,8 @@ type FilterNotIGlob struct {
     value string
 }
 func NewFilterNotIGlob(
-    attr string, 
-    value string, 
+    attr string,
+    value string,
 ) FilterNotIGlob {
     return FilterNotIGlob {
         attr,
@@ -337,8 +359,8 @@ type FilterNotIn struct {
     value any
 }
 func NewFilterNotIn(
-    attr string, 
-    value any, 
+    attr string,
+    value any,
 ) FilterNotIn {
     return FilterNotIn {
         attr,
@@ -357,7 +379,7 @@ type FilterOr struct {
     filters []Filter
 }
 func NewFilterOr(
-    filters []Filter, 
+    filters []Filter,
 ) FilterOr {
     return FilterOr {
         filters,
@@ -386,8 +408,8 @@ type RankByAttribute struct {
     order RankByAttributeOrder
 }
 func NewRankByAttribute(
-    attr string, 
-    order RankByAttributeOrder, 
+    attr string,
+    order RankByAttributeOrder,
 ) RankByAttribute {
     return RankByAttribute {
         attr,
@@ -421,8 +443,8 @@ type RankByTextBM25 struct {
     value string
 }
 func NewRankByTextBM25(
-    attr string, 
-    value string, 
+    attr string,
+    value string,
 ) RankByTextBM25 {
     return RankByTextBM25 {
         attr,
@@ -442,8 +464,8 @@ type RankByTextBM25Array struct {
     value []string
 }
 func NewRankByTextBM25Array(
-    attr string, 
-    value []string, 
+    attr string,
+    value []string,
 ) RankByTextBM25Array {
     return RankByTextBM25Array {
         attr,
@@ -462,7 +484,7 @@ type RankByTextMax struct {
     subqueries []RankByText
 }
 func NewRankByTextMax(
-    subqueries []RankByText, 
+    subqueries []RankByText,
 ) RankByTextMax {
     return RankByTextMax {
         subqueries,
@@ -480,8 +502,8 @@ type RankByTextProduct struct {
     subquery RankByText
 }
 func NewRankByTextProduct(
-    weight float64, 
-    subquery RankByText, 
+    weight float64,
+    subquery RankByText,
 ) RankByTextProduct {
     return RankByTextProduct {
         weight,
@@ -502,7 +524,7 @@ type RankByTextSum struct {
     subqueries []RankByText
 }
 func NewRankByTextSum(
-    subqueries []RankByText, 
+    subqueries []RankByText,
 ) RankByTextSum {
     return RankByTextSum {
         subqueries,
@@ -520,8 +542,8 @@ type RankByVector struct {
     value []float64
 }
 func NewRankByVector(
-    attr string, 
-    value []float64, 
+    attr string,
+    value []float64,
 ) RankByVector {
     return RankByVector {
         attr,
