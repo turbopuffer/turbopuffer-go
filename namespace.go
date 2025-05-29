@@ -155,6 +155,127 @@ func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParam
 	return
 }
 
+// AttributeSchema contains all possible properties and values from
+// [constant.String], [constant.Uint], [constant.Uuid], [constant.Bool],
+// [constant.Datetime], [constant.String], [constant.Uint], [constant.Uuid],
+// [constant.Datetime], [string], [AttributeSchemaConfig].
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+//
+// If the underlying value is not a json object, one of the following properties
+// will be valid: StringArray UintArray UuidArray Bool DatetimeArray Vector]
+type AttributeSchema struct {
+	// This field will be present if the value is a [constant.String] instead of an
+	// object.
+	StringArray constant.String `json:",inline"`
+	// This field will be present if the value is a [constant.Uint] instead of an
+	// object.
+	UintArray constant.Uint `json:",inline"`
+	// This field will be present if the value is a [constant.Uuid] instead of an
+	// object.
+	UuidArray constant.Uuid `json:",inline"`
+	// This field will be present if the value is a [constant.Bool] instead of an
+	// object.
+	Bool constant.Bool `json:",inline"`
+	// This field will be present if the value is a [constant.Datetime] instead of an
+	// object.
+	DatetimeArray constant.Datetime `json:",inline"`
+	// This field will be present if the value is a [string] instead of an object.
+	Vector string `json:",inline"`
+	// This field is from variant [AttributeSchemaConfig].
+	Ann bool `json:"ann"`
+	// This field is from variant [AttributeSchemaConfig].
+	Filterable bool `json:"filterable"`
+	// This field is from variant [AttributeSchemaConfig].
+	FullTextSearch FullTextSearch `json:"full_text_search"`
+	// This field is from variant [AttributeSchemaConfig].
+	Type AttributeType `json:"type"`
+	JSON struct {
+		StringArray    respjson.Field
+		UintArray      respjson.Field
+		UuidArray      respjson.Field
+		Bool           respjson.Field
+		DatetimeArray  respjson.Field
+		Vector         respjson.Field
+		Ann            respjson.Field
+		Filterable     respjson.Field
+		FullTextSearch respjson.Field
+		Type           respjson.Field
+		raw            string
+	} `json:"-"`
+}
+
+func (u AttributeSchema) AsString() (v constant.String) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsUint() (v constant.Uint) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsUuid() (v constant.Uuid) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsBool() (v constant.Bool) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsDatetime() (v constant.Datetime) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsStringArray() (v constant.String) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsUintArray() (v constant.Uint) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsUuidArray() (v constant.Uuid) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsDatetimeArray() (v constant.Datetime) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsVector() (v string) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u AttributeSchema) AsAttributeSchemaConfig() (v AttributeSchemaConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u AttributeSchema) RawJSON() string { return u.JSON.raw }
+
+func (r *AttributeSchema) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// ToParam converts this AttributeSchema to a AttributeSchemaParam.
+//
+// Warning: the fields of the param type will not be present. ToParam should only
+// be used at the last possible moment before sending a request. Test for this with
+// AttributeSchemaParam.Overrides()
+func (r AttributeSchema) ToParam() AttributeSchemaParam {
+	return param.Override[AttributeSchemaParam](r.RawJSON())
+}
+
 func AttributeSchemaParamString() AttributeSchemaParam {
 	return AttributeSchemaParam{String: constant.ValueOf[constant.String]()}
 }
@@ -994,7 +1115,7 @@ func (r *NamespaceRecallResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type NamespaceUpdateSchemaResponse map[string]AttributeSchemaConfig
+type NamespaceUpdateSchemaResponse map[string]AttributeSchema
 
 // The response to a successful write request.
 type NamespaceWriteResponse struct {
