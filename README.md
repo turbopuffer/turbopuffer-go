@@ -139,7 +139,7 @@ custom := param.Override[turbopuffer.FooParams](12)
 
 ### Request unions
 
-Unions are represented as a struct with fields prefixed by "Of" for each of it's variants,
+Unions are represented as a struct with fields for each of it's variants,
 only one field can be non-zero. The non-zero field will be serialized.
 
 Sub-properties of the union can be accessed via methods on the union struct.
@@ -147,13 +147,13 @@ These methods return a mutable pointer to the underlying data, if present.
 
 ```go
 // Only one field can be non-zero, use param.IsOmitted() to check if a field is set
-type AnimalUnionParam struct {
-	OfCat *Cat `json:",omitzero,inline`
-	OfDog *Dog `json:",omitzero,inline`
+type AnimalParam struct {
+	Cat *Cat `json:",omitzero,inline`
+	Dog *Dog `json:",omitzero,inline`
 }
 
-animal := AnimalUnionParam{
-	OfCat: &Cat{
+animal := AnimalParam{
+	Cat: &Cat{
 		Name: "Whiskers",
 		Owner: PersonParam{
 			Address: AddressParam{Street: "3333 Coyote Hill Rd", Zip: 0},
@@ -238,7 +238,7 @@ If a response value union contains primitive values, primitive fields will be al
 the properties but prefixed with `Of` and feature the tag `json:"...,inline"`.
 
 ```go
-type AnimalUnion struct {
+type Animal struct {
 	// From variants [Dog], [Cat]
 	Owner Person `json:"owner"`
 	// From variant [Dog]
