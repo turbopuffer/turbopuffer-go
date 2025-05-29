@@ -159,7 +159,7 @@ func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParam
 type AttributeSchema struct {
 	// Whether to create an approximate nearest neighbor index for the attribute.
 	Ann bool `json:"ann"`
-	// Whether or not the attributes can be used in filters/WHERE clauses.
+	// Whether or not the attributes can be used in filters.
 	Filterable bool `json:"filterable"`
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
@@ -197,7 +197,7 @@ func (r AttributeSchema) ToParam() AttributeSchemaParam {
 type AttributeSchemaParam struct {
 	// Whether to create an approximate nearest neighbor index for the attribute.
 	Ann param.Opt[bool] `json:"ann,omitzero"`
-	// Whether or not the attributes can be used in filters/WHERE clauses.
+	// Whether or not the attributes can be used in filters.
 	Filterable param.Opt[bool] `json:"filterable,omitzero"`
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
