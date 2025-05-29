@@ -105,9 +105,11 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 	)
 	ns := client.Namespace("ns")
 	_, err := ns.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
-		RankBy:   turbopuffer.NewRankByVector("vector", []float64{0}),
+		RankBy: turbopuffer.NewRankByVector("vector", []float64{0}),
 		TopK:   0,
-		AggregateBy: map[string]interface{}{},
+		AggregateBy: map[string]turbopuffer.Aggregation{
+			"foo": {map[string]interface{}{}},
+		},
 		Consistency: turbopuffer.NamespaceQueryParamsConsistency{
 			Level: turbopuffer.NamespaceQueryParamsConsistencyLevelStrong,
 		},
