@@ -18,11 +18,38 @@ func ValueOf[T Constant[T]]() T {
 	return t.Default()
 }
 
-type Ok string // Always "OK"
+type Datetime string // Always "[]datetime"
+type String string   // Always "[]string"
+type Uint string     // Always "[]uint"
+type Uuid string     // Always "[]uuid"
+type Bool string     // Always "bool"
+type Datetime string // Always "datetime"
+type Ok string       // Always "OK"
+type String string   // Always "string"
+type Uint string     // Always "uint"
+type Uuid string     // Always "uuid"
 
-func (c Ok) Default() Ok { return "OK" }
+func (c Datetime) Default() Datetime { return "[]datetime" }
+func (c String) Default() String     { return "[]string" }
+func (c Uint) Default() Uint         { return "[]uint" }
+func (c Uuid) Default() Uuid         { return "[]uuid" }
+func (c Bool) Default() Bool         { return "bool" }
+func (c Datetime) Default() Datetime { return "datetime" }
+func (c Ok) Default() Ok             { return "OK" }
+func (c String) Default() String     { return "string" }
+func (c Uint) Default() Uint         { return "uint" }
+func (c Uuid) Default() Uuid         { return "uuid" }
 
-func (c Ok) MarshalJSON() ([]byte, error) { return marshalString(c) }
+func (c Datetime) MarshalJSON() ([]byte, error) { return marshalString(c) }
+func (c String) MarshalJSON() ([]byte, error)   { return marshalString(c) }
+func (c Uint) MarshalJSON() ([]byte, error)     { return marshalString(c) }
+func (c Uuid) MarshalJSON() ([]byte, error)     { return marshalString(c) }
+func (c Bool) MarshalJSON() ([]byte, error)     { return marshalString(c) }
+func (c Datetime) MarshalJSON() ([]byte, error) { return marshalString(c) }
+func (c Ok) MarshalJSON() ([]byte, error)       { return marshalString(c) }
+func (c String) MarshalJSON() ([]byte, error)   { return marshalString(c) }
+func (c Uint) MarshalJSON() ([]byte, error)     { return marshalString(c) }
+func (c Uuid) MarshalJSON() ([]byte, error)     { return marshalString(c) }
 
 type constant[T any] interface {
 	Constant[T]
