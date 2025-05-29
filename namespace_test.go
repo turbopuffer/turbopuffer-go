@@ -77,9 +77,8 @@ func TestNamespaceHintCacheWarm(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	_, err := client.Namespaces.HintCacheWarm(context.TODO(), turbopuffer.NamespaceHintCacheWarmParams{
-		Namespace: turbopuffer.String("namespace"),
-	})
+	ns := client.Namespace("ns")
+	_, err := ns.HintCacheWarm(context.TODO(), turbopuffer.NamespaceHintCacheWarmParams{})
 	if err != nil {
 		var apierr *turbopuffer.Error
 		if errors.As(err, &apierr) {
@@ -107,9 +106,6 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 	_, err := ns.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
 		RankBy: turbopuffer.NewRankByVector("vector", []float64{0}),
 		TopK:   0,
-		AggregateBy: map[string]any{
-			"foo": "bar",
-		},
 		Consistency: turbopuffer.NamespaceQueryParamsConsistency{
 			Level: turbopuffer.NamespaceQueryParamsConsistencyLevelStrong,
 		},
@@ -185,31 +181,6 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 			},
 		},
 	})
-	if err != nil {
-		var apierr *turbopuffer.Error
-		if errors.As(err, &apierr) {
-			t.Log(string(apierr.DumpRequest(true)))
-		}
-		t.Fatalf("err should be nil: %s", err.Error())
-	}
-}
-
-func TestNamespaceWarmCache(t *testing.T) {
-	t.Skip("skipped: tests are disabled for the time being")
-	baseURL := "http://localhost:4010"
-	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
-		baseURL = envURL
-	}
-	if !testutil.CheckTestServer(t, baseURL) {
-		return
-	}
-	client := turbopuffer.NewClient(
-		option.WithBaseURL(baseURL),
-		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
-	)
-	ns := client.Namespace("ns")
-	_, err := ns.WarmCache(context.TODO(), turbopuffer.NamespaceWarmCacheParams{})
 	if err != nil {
 		var apierr *turbopuffer.Error
 		if errors.As(err, &apierr) {
