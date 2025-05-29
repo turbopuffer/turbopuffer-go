@@ -179,6 +179,7 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 		Namespace: turbopuffer.String("namespace"),
 		Schema: map[string]turbopuffer.AttributeSchemaParam{
 			"foo": {
+				Ann:        turbopuffer.Bool(true),
 				Filterable: turbopuffer.Bool(true),
 				FullTextSearch: turbopuffer.FullTextSearchParam{
 					Bool: turbopuffer.Bool(true),
@@ -243,6 +244,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		}},
 		Schema: map[string]turbopuffer.AttributeSchemaParam{
 			"foo": {
+				Ann:        turbopuffer.Bool(true),
 				Filterable: turbopuffer.Bool(true),
 				FullTextSearch: turbopuffer.FullTextSearchParam{
 					Bool: turbopuffer.Bool(true),

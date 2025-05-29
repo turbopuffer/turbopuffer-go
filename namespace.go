@@ -157,6 +157,8 @@ func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParam
 
 // The schema for an attribute attached to a document.
 type AttributeSchema struct {
+	// Whether to create an approximate nearest neighbor index for the attribute.
+	Ann bool `json:"ann"`
 	// Whether or not the attributes can be used in filters/WHERE clauses.
 	Filterable bool `json:"filterable"`
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
@@ -167,6 +169,7 @@ type AttributeSchema struct {
 	Type AttributeType `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
+		Ann            respjson.Field
 		Filterable     respjson.Field
 		FullTextSearch respjson.Field
 		Type           respjson.Field
@@ -192,6 +195,8 @@ func (r AttributeSchema) ToParam() AttributeSchemaParam {
 
 // The schema for an attribute attached to a document.
 type AttributeSchemaParam struct {
+	// Whether to create an approximate nearest neighbor index for the attribute.
+	Ann param.Opt[bool] `json:"ann,omitzero"`
 	// Whether or not the attributes can be used in filters/WHERE clauses.
 	Filterable param.Opt[bool] `json:"filterable,omitzero"`
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
