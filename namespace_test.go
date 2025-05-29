@@ -109,8 +109,8 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		Namespace: turbopuffer.String("namespace"),
 		RankBy:    map[string]interface{}{},
 		TopK:      0,
-		AggregateBy: map[string]turbopuffer.Aggregate{
-			"foo": {map[string]interface{}{}},
+		AggregateBy: map[string]any{
+			"foo": "bar",
 		},
 		Consistency: turbopuffer.NamespaceQueryParamsConsistency{
 			Level: turbopuffer.NamespaceQueryParamsConsistencyLevelStrong,

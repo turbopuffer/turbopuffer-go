@@ -12,7 +12,6 @@ Methods:
 
 Params Types:
 
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#Aggregate">Aggregate</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#AttributeSchemaParam">AttributeSchemaParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#AttributeType">AttributeType</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#DistanceMetric">DistanceMetric</a>
