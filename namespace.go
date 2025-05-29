@@ -362,7 +362,11 @@ type FullTextSearch struct {
 	// This field will be present if the value is a [bool] instead of an object.
 	Bool bool `json:",inline"`
 	// This field is from variant [FullTextSearchConfig].
+	B float64 `json:"b"`
+	// This field is from variant [FullTextSearchConfig].
 	CaseSensitive bool `json:"case_sensitive"`
+	// This field is from variant [FullTextSearchConfig].
+	K1 float64 `json:"k1"`
 	// This field is from variant [FullTextSearchConfig].
 	Language Language `json:"language"`
 	// This field is from variant [FullTextSearchConfig].
@@ -373,7 +377,9 @@ type FullTextSearch struct {
 	Tokenizer Tokenizer `json:"tokenizer"`
 	JSON      struct {
 		Bool            respjson.Field
+		B               respjson.Field
 		CaseSensitive   respjson.Field
+		K1              respjson.Field
 		Language        respjson.Field
 		RemoveStopwords respjson.Field
 		Stemming        respjson.Field
@@ -435,9 +441,13 @@ func (u *FullTextSearchParam) asAny() any {
 
 // Configuration options for full-text search.
 type FullTextSearchConfig struct {
+	// The `b` document length normalization parameter for BM25. Defaults to `0.75`.
+	B float64 `json:"b"`
 	// Whether searching is case-sensitive. Defaults to `false` (i.e.
 	// case-insensitive).
 	CaseSensitive bool `json:"case_sensitive"`
+	// The `k1` term saturation parameter for BM25. Defaults to `1.2`.
+	K1 float64 `json:"k1"`
 	// Describes the language of a text attribute. Defaults to `english`.
 	//
 	// Any of "arabic", "danish", "dutch", "english", "finnish", "french", "german",
@@ -456,7 +466,9 @@ type FullTextSearchConfig struct {
 	Tokenizer Tokenizer `json:"tokenizer"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
+		B               respjson.Field
 		CaseSensitive   respjson.Field
+		K1              respjson.Field
 		Language        respjson.Field
 		RemoveStopwords respjson.Field
 		Stemming        respjson.Field
@@ -483,9 +495,13 @@ func (r FullTextSearchConfig) ToParam() FullTextSearchConfigParam {
 
 // Configuration options for full-text search.
 type FullTextSearchConfigParam struct {
+	// The `b` document length normalization parameter for BM25. Defaults to `0.75`.
+	B param.Opt[float64] `json:"b,omitzero"`
 	// Whether searching is case-sensitive. Defaults to `false` (i.e.
 	// case-insensitive).
 	CaseSensitive param.Opt[bool] `json:"case_sensitive,omitzero"`
+	// The `k1` term saturation parameter for BM25. Defaults to `1.2`.
+	K1 param.Opt[float64] `json:"k1,omitzero"`
 	// Removes common words from the text based on language. Defaults to `true` (i.e.
 	// remove common words).
 	RemoveStopwords param.Opt[bool] `json:"remove_stopwords,omitzero"`
