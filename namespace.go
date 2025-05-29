@@ -167,7 +167,7 @@ func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParam
 type AttributeSchema struct {
 	// Whether to create an approximate nearest neighbor index for the attribute.
 	Ann bool `json:"ann"`
-	// Whether or not the attributes can be used in filters/WHERE clauses.
+	// Whether or not the attributes can be used in filters.
 	Filterable bool `json:"filterable"`
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
@@ -205,7 +205,7 @@ func (r AttributeSchema) ToParam() AttributeSchemaParam {
 type AttributeSchemaParam struct {
 	// Whether to create an approximate nearest neighbor index for the attribute.
 	Ann param.Opt[bool] `json:"ann,omitzero"`
-	// Whether or not the attributes can be used in filters/WHERE clauses.
+	// Whether or not the attributes can be used in filters.
 	Filterable param.Opt[bool] `json:"filterable,omitzero"`
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
@@ -945,10 +945,8 @@ type NamespaceHintCacheWarmParams struct {
 
 type NamespaceQueryParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
-	// How to rank the documents in the namespace.
-	RankBy RankBy `json:"rank_by,omitzero,required"`
 	// The number of results to return.
-	TopK int64 `json:"top_k,required"`
+	TopK param.Opt[int64] `json:"top_k,omitzero"`
 	// Aggregations to compute over all documents in the namespace that match the
 	// filters.
 	AggregateBy AggregateBy `json:"aggregate_by,omitzero"`
@@ -963,6 +961,8 @@ type NamespaceQueryParams struct {
 	Filters Filter `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
+	// How to rank the documents in the namespace.
+	RankBy RankBy `json:"rank_by,omitzero"`
 	// The encoding to use for vectors in the response.
 	//
 	// Any of "float", "base64".
@@ -1044,7 +1044,7 @@ type NamespaceWriteParams struct {
 	// The namespace to copy documents from.
 	CopyFromNamespace param.Opt[string] `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
-	DeleteByFilter Filter         `json:"delete_by_filter,omitzero"`
+	DeleteByFilter Filter    `json:"delete_by_filter,omitzero"`
 	Deletes        []IDParam `json:"deletes,omitzero" format:"uuid"`
 	// A function used to calculate vector similarity.
 	//

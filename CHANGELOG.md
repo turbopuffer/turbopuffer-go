@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.10 (2025-05-29)
+
+Full Changelog: [v0.1.0-alpha.9...v0.1.0-alpha.10](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.9...v0.1.0-alpha.10)
+
+### Features
+
+* **api:** api update ([f732735](https://github.com/turbopuffer/turbopuffer-go/commit/f732735eb07d96c4e8415b5f790d018e254be6dc))
+
 ## 0.1.0-alpha.9 (2025-05-29)
 
 Full Changelog: [v0.1.0-alpha.8...v0.1.0-alpha.9](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.8...v0.1.0-alpha.9)
