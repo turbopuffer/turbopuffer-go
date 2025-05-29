@@ -30,18 +30,10 @@ type NamespaceService struct {
 // NewNamespaceService generates a new service that applies the given options to
 // each request. These options are applied after the parent client's options (if
 // there is one), and before any request-specific options.
-func newNamespaceService(opts ...option.RequestOption) (r NamespaceService) {
+func NewNamespaceService(opts ...option.RequestOption) (r NamespaceService) {
 	r = NamespaceService{}
 	r.Options = opts
 	return
-}
-
-func (r *NamespaceService) ID() string {
-	requestConfig, err := requestconfig.NewRequestConfig(context.Background(), "GET", "/", nil, nil, r.Options...)
-	if err != nil {
-		panic(fmt.Errorf("failed to create request config: %w", err))
-	}
-	return *requestConfig.DefaultNamespace
 }
 
 // Delete namespace.
@@ -368,11 +360,7 @@ type DocumentColumnsParam struct {
 
 func (r DocumentColumnsParam) MarshalJSON() (data []byte, err error) {
 	type shadow DocumentColumnsParam
-	extraFields := make(map[string]any)
-	for fieldName, fieldValue := range r.ExtraFields {
-		extraFields[fieldName] = fieldValue
-	}
-	return param.MarshalWithExtras(r, (*shadow)(&r), extraFields)
+	return param.MarshalWithExtras(r, (*shadow)(&r), r.ExtraFields)
 }
 func (r *DocumentColumnsParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
@@ -1056,7 +1044,7 @@ type NamespaceQueryParams struct {
 	TopK param.Opt[int64] `json:"top_k,omitzero"`
 	// Aggregations to compute over all documents in the namespace that match the
 	// filters.
-	AggregateBy AggregateBy `json:"aggregate_by,omitzero"`
+	AggregateBy map[string]any `json:"aggregate_by,omitzero"`
 	// The consistency level for a query.
 	Consistency NamespaceQueryParamsConsistency `json:"consistency,omitzero"`
 	// A function used to calculate vector similarity.
@@ -1065,11 +1053,11 @@ type NamespaceQueryParams struct {
 	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
 	// Exact filters for attributes to refine search results for. Think of it as a SQL
 	// WHERE clause.
-	Filters Filter `json:"filters,omitzero"`
+	Filters any `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
 	// How to rank the documents in the namespace.
-	RankBy RankBy `json:"rank_by,omitzero"`
+	RankBy any `json:"rank_by,omitzero"`
 	// The encoding to use for vectors in the response.
 	//
 	// Any of "float", "base64".
@@ -1143,7 +1131,7 @@ func (r NamespaceUpdateSchemaParams) MarshalJSON() (data []byte, err error) {
 	return json.Marshal(r.Schema)
 }
 func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
+	return r.Schema.UnmarshalJSON(data)
 }
 
 type NamespaceWriteParams struct {
@@ -1151,7 +1139,7 @@ type NamespaceWriteParams struct {
 	// The namespace to copy documents from.
 	CopyFromNamespace param.Opt[string] `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
-	DeleteByFilter Filter    `json:"delete_by_filter,omitzero"`
+	DeleteByFilter any       `json:"delete_by_filter,omitzero"`
 	Deletes        []IDParam `json:"deletes,omitzero" format:"uuid"`
 	// A function used to calculate vector similarity.
 	//
