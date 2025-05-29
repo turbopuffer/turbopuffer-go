@@ -69,7 +69,7 @@ func main() {
 	{
 		res, err := namespace.Query(ctx, turbopuffer.NamespaceQueryParams{
 			RankBy:            turbopuffer.NewRankByVector("vector", []float64{3.0, 4.0, 5.0}),
-			TopK:              10,
+			TopK:              turbopuffer.Int(10),
 			IncludeAttributes: turbopuffer.IncludeAttributesParam{Bool: turbopuffer.Bool(true)},
 			Filters: turbopuffer.NewFilterAnd([]turbopuffer.Filter{
 				turbopuffer.NewFilterGt("age", 30),
@@ -117,7 +117,7 @@ func main() {
 	{
 		res, err := namespace.Query(ctx, turbopuffer.NamespaceQueryParams{
 			RankBy:            turbopuffer.NewRankByAttribute("id", "asc"),
-			TopK:              10,
+			TopK:              turbopuffer.Int(10),
 			IncludeAttributes: turbopuffer.IncludeAttributesParam{Bool: turbopuffer.Bool(true)},
 		})
 		if err != nil {
