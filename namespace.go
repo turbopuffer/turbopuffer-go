@@ -163,8 +163,6 @@ func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParam
 	return
 }
 
-type Aggregate []any
-
 // The schema for an attribute attached to a document.
 type AttributeSchema struct {
 	// Whether or not the attributes can be used in filters/WHERE clauses.
@@ -954,7 +952,7 @@ type NamespaceQueryParams struct {
 	TopK int64 `json:"top_k,required"`
 	// Aggregations to compute over all documents in the namespace that match the
 	// filters.
-	AggregateBy map[string]Aggregate `json:"aggregate_by,omitzero"`
+	AggregateBy map[string]any `json:"aggregate_by,omitzero"`
 	// The consistency level for a query.
 	Consistency NamespaceQueryParamsConsistency `json:"consistency,omitzero"`
 	// A function used to calculate vector similarity.
