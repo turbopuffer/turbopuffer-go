@@ -106,10 +106,12 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		option.WithRegion("gcp-us-central1"),
 	)
 	_, err := client.Namespaces.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
-		Namespace:   turbopuffer.String("namespace"),
-		RankBy:      map[string]interface{}{},
-		TopK:        0,
-		AggregateBy: map[string]interface{}{},
+		Namespace: turbopuffer.String("namespace"),
+		RankBy:    map[string]interface{}{},
+		TopK:      0,
+		AggregateBy: map[string]turbopuffer.Aggregation{
+			"foo": {map[string]interface{}{}},
+		},
 		Consistency: turbopuffer.NamespaceQueryParamsConsistency{
 			Level: turbopuffer.NamespaceQueryParamsConsistencyLevelStrong,
 		},
