@@ -164,9 +164,6 @@ type AttributeSchema struct {
 	// filterable. You can override this by setting `filterable: true`.
 	FullTextSearch FullTextSearch `json:"full_text_search"`
 	// The data type of the attribute.
-	//
-	// Any of "string", "uint", "uuid", "bool", "datetime", "[]string", "[]uint",
-	// "[]uuid", "[]datetime".
 	Type AttributeType `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -202,9 +199,6 @@ type AttributeSchemaParam struct {
 	// filterable. You can override this by setting `filterable: true`.
 	FullTextSearch FullTextSearchParam `json:"full_text_search,omitzero"`
 	// The data type of the attribute.
-	//
-	// Any of "string", "uint", "uuid", "bool", "datetime", "[]string", "[]uint",
-	// "[]uuid", "[]datetime".
 	Type AttributeType `json:"type,omitzero"`
 	paramObj
 }
