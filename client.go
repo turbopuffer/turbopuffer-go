@@ -9,6 +9,7 @@ import (
 
 	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
 	"github.com/turbopuffer/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go/packages/pagination"
 )
 
 // Client creates a struct with services and top level methods that help with
@@ -120,9 +121,24 @@ func (r *Client) Delete(ctx context.Context, path string, params any, res any, o
 }
 
 // List namespaces.
-func (r *Client) ListNamespaces(ctx context.Context, query ListNamespacesParams, opts ...option.RequestOption) (res *ListNamespacesResponse, err error) {
+func (r *Client) ListNamespaces(ctx context.Context, query ListNamespacesParams, opts ...option.RequestOption) (res *pagination.NamespacePage[NamespaceSummary], err error) {
+	var raw *http.Response
 	opts = append(r.Options[:], opts...)
+	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "v1/namespaces"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
-	return
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
+	if err != nil {
+		return nil, err
+	}
+	err = cfg.Execute()
+	if err != nil {
+		return nil, err
+	}
+	res.SetPageConfig(cfg, raw)
+	return res, nil
+}
+
+// List namespaces.
+func (r *Client) ListNamespacesAutoPaging(ctx context.Context, query ListNamespacesParams, opts ...option.RequestOption) *pagination.NamespacePageAutoPager[NamespaceSummary] {
+	return pagination.NewNamespacePageAutoPager(r.ListNamespaces(ctx, query, opts...))
 }

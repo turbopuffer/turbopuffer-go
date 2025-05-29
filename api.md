@@ -3,11 +3,10 @@
 Response Types:
 
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#NamespaceSummary">NamespaceSummary</a>
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#ListNamespacesResponse">ListNamespacesResponse</a>
 
 Methods:
 
-- <code title="get /v1/namespaces">client.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#TurbopufferService.ListNamespaces">ListNamespaces</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#ListNamespacesParams">ListNamespacesParams</a>) (<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#ListNamespacesResponse">ListNamespacesResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="get /v1/namespaces">client.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#TurbopufferService.ListNamespaces">ListNamespaces</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#ListNamespacesParams">ListNamespacesParams</a>) (<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/packages/pagination">pagination</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/packages/pagination#NamespacePage">NamespacePage</a>[<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#NamespaceSummary">NamespaceSummary</a>], <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
 # Namespaces
 

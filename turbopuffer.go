@@ -29,26 +29,6 @@ func (r *NamespaceSummary) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type ListNamespacesResponse struct {
-	// The list of namespaces.
-	Namespaces []NamespaceSummary `json:"namespaces"`
-	// The cursor to use to retrieve the next page of results.
-	NextCursor string `json:"next_cursor"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Namespaces  respjson.Field
-		NextCursor  respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ListNamespacesResponse) RawJSON() string { return r.JSON.raw }
-func (r *ListNamespacesResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
 type ListNamespacesParams struct {
 	// Retrieve the next page of results.
 	Cursor param.Opt[string] `query:"cursor,omitzero" json:"-"`
