@@ -1,16 +1,11 @@
-# turbopuffer Go API Library <a href="https://turbopuffer.com"><img src="https://github.com/user-attachments/assets/8d6cca4c-10b7-4d3a-9782-696053baf44e" align="right"></a>
+# Turbopuffer Go API Library
 
-<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go"><img src="https://pkg.go.dev/badge/github.com/turbopuffer/turbopuffer-go.svg" alt="Go Reference" align="right"></a>
+<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go"><img src="https://pkg.go.dev/badge/github.com/turbopuffer/turbopuffer-go.svg" alt="Go Reference"></a>
 
-The turbopuffer Go library provides convenient access to the [turbopuffer REST API](https://turbopuffer.com/docs)
+The Turbopuffer Go library provides convenient access to the [Turbopuffer REST API](https://turbopuffer.com/docs)
 from applications written in Go.
 
 It is generated with [Stainless](https://www.stainless.com/).
-
-> [!WARNING]
-> **The turbopuffer Go client is in alpha.**
->
-> You may encounter bugs or performance issues. APIs are subject to change.
 
 ## Installation
 
@@ -40,8 +35,7 @@ This library requires Go 1.18+.
 
 ## Usage
 
-The full API of this library can be found at
-<https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go>.
+The full API of this library can be found in [api.md](api.md).
 
 ```go
 package main
@@ -59,8 +53,8 @@ func main() {
 		option.WithAPIKey("tpuf_A1..."),      // defaults to os.LookupEnv("TURBOPUFFER_API_KEY")
 		option.WithRegion("gcp-us-central1"), // defaults to os.LookupEnv("TURBOPUFFER_REGION")
 	)
-	namespace := client.Namespace("products")
-	response, err := client.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
+	response, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
+		Namespace:      turbopuffer.String("products"),
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
 		UpsertRows: []turbopuffer.DocumentRowParam{{
 			ID: turbopuffer.IDParam{

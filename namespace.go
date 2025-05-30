@@ -30,18 +30,10 @@ type NamespaceService struct {
 // NewNamespaceService generates a new service that applies the given options to
 // each request. These options are applied after the parent client's options (if
 // there is one), and before any request-specific options.
-func newNamespaceService(opts ...option.RequestOption) (r NamespaceService) {
+func NewNamespaceService(opts ...option.RequestOption) (r NamespaceService) {
 	r = NamespaceService{}
 	r.Options = opts
 	return
-}
-
-func (r *NamespaceService) ID() string {
-	requestConfig, err := requestconfig.NewRequestConfig(context.Background(), "GET", "/", nil, nil, r.Options...)
-	if err != nil {
-		panic(fmt.Errorf("failed to create request config: %w", err))
-	}
-	return *requestConfig.DefaultNamespace
 }
 
 // Delete namespace.
@@ -163,8 +155,33 @@ func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParam
 	return
 }
 
-// The schema for an attribute attached to a document.
-type AttributeSchema struct {
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type AttributeSchemaParam struct {
+	String                param.Opt[AttributeType]    `json:",omitzero,inline"`
+	AttributeSchemaConfig *AttributeSchemaConfigParam `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u AttributeSchemaParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[AttributeSchemaParam](u.String, u.AttributeSchemaConfig)
+}
+func (u *AttributeSchemaParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *AttributeSchemaParam) asAny() any {
+	if !param.IsOmitted(u.String) {
+		return &u.String.Value
+	} else if !param.IsOmitted(u.AttributeSchemaConfig) {
+		return u.AttributeSchemaConfig
+	}
+	return nil
+}
+
+// Detailed configuration for an attribute attached to a document.
+type AttributeSchemaConfig struct {
 	// Whether to create an approximate nearest neighbor index for the attribute.
 	Ann bool `json:"ann"`
 	// Whether or not the attributes can be used in filters.
@@ -173,7 +190,8 @@ type AttributeSchema struct {
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
 	// filterable. You can override this by setting `filterable: true`.
 	FullTextSearch FullTextSearch `json:"full_text_search"`
-	// The data type of the attribute.
+	// The data type of the attribute. Valid values: string, int, uint, uuid, datetime,
+	// bool, []string, []int, []uint, []uuid, []datetime, [DIMS]f16, [DIMS]f32.
 	Type AttributeType `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -187,57 +205,45 @@ type AttributeSchema struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r AttributeSchema) RawJSON() string { return r.JSON.raw }
-func (r *AttributeSchema) UnmarshalJSON(data []byte) error {
+func (r AttributeSchemaConfig) RawJSON() string { return r.JSON.raw }
+func (r *AttributeSchemaConfig) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// ToParam converts this AttributeSchema to a AttributeSchemaParam.
+// ToParam converts this AttributeSchemaConfig to a AttributeSchemaConfigParam.
 //
 // Warning: the fields of the param type will not be present. ToParam should only
 // be used at the last possible moment before sending a request. Test for this with
-// AttributeSchemaParam.Overrides()
-func (r AttributeSchema) ToParam() AttributeSchemaParam {
-	return param.Override[AttributeSchemaParam](r.RawJSON())
+// AttributeSchemaConfigParam.Overrides()
+func (r AttributeSchemaConfig) ToParam() AttributeSchemaConfigParam {
+	return param.Override[AttributeSchemaConfigParam](r.RawJSON())
 }
 
-// The schema for an attribute attached to a document.
-type AttributeSchemaParam struct {
+// Detailed configuration for an attribute attached to a document.
+type AttributeSchemaConfigParam struct {
 	// Whether to create an approximate nearest neighbor index for the attribute.
 	Ann param.Opt[bool] `json:"ann,omitzero"`
 	// Whether or not the attributes can be used in filters.
 	Filterable param.Opt[bool] `json:"filterable,omitzero"`
+	// The data type of the attribute. Valid values: string, int, uint, uuid, datetime,
+	// bool, []string, []int, []uint, []uuid, []datetime, [DIMS]f16, [DIMS]f32.
+	Type param.Opt[AttributeType] `json:"type,omitzero"`
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
 	// filterable. You can override this by setting `filterable: true`.
 	FullTextSearch FullTextSearchParam `json:"full_text_search,omitzero"`
-	// The data type of the attribute.
-	Type AttributeType `json:"type,omitzero"`
 	paramObj
 }
 
-func (r AttributeSchemaParam) MarshalJSON() (data []byte, err error) {
-	type shadow AttributeSchemaParam
+func (r AttributeSchemaConfigParam) MarshalJSON() (data []byte, err error) {
+	type shadow AttributeSchemaConfigParam
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *AttributeSchemaParam) UnmarshalJSON(data []byte) error {
+func (r *AttributeSchemaConfigParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// The data type of the attribute.
-type AttributeType string
-
-const (
-	AttributeTypeString        AttributeType = "string"
-	AttributeTypeUint          AttributeType = "uint"
-	AttributeTypeUuid          AttributeType = "uuid"
-	AttributeTypeBool          AttributeType = "bool"
-	AttributeTypeDatetime      AttributeType = "datetime"
-	AttributeTypeStringArray   AttributeType = "[]string"
-	AttributeTypeUintArray     AttributeType = "[]uint"
-	AttributeTypeUuidArray     AttributeType = "[]uuid"
-	AttributeTypeDatetimeArray AttributeType = "[]datetime"
-)
+type AttributeType = string
 
 // A function used to calculate vector similarity.
 type DistanceMetric string
@@ -261,11 +267,7 @@ type DocumentColumnsParam struct {
 
 func (r DocumentColumnsParam) MarshalJSON() (data []byte, err error) {
 	type shadow DocumentColumnsParam
-	extraFields := make(map[string]any)
-	for fieldName, fieldValue := range r.ExtraFields {
-		extraFields[fieldName] = fieldValue
-	}
-	return param.MarshalWithExtras(r, (*shadow)(&r), extraFields)
+	return param.MarshalWithExtras(r, (*shadow)(&r), r.ExtraFields)
 }
 func (r *DocumentColumnsParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
@@ -827,7 +829,7 @@ func (r *NamespaceDeleteAllResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type NamespaceGetSchemaResponse map[string]AttributeSchema
+type NamespaceGetSchemaResponse map[string]AttributeSchemaConfig
 
 // The response to a successful cache warm request.
 type NamespaceHintCacheWarmResponse struct {
@@ -855,7 +857,7 @@ type NamespaceQueryResponse struct {
 	Billing QueryBilling `json:"billing,required"`
 	// The performance information for a query.
 	Performance  QueryPerformance `json:"performance,required"`
-	Aggregations []map[string]any `json:"aggregations"`
+	Aggregations map[string]any   `json:"aggregations"`
 	Rows         []DocumentRow    `json:"rows"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -899,7 +901,7 @@ func (r *NamespaceRecallResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type NamespaceUpdateSchemaResponse map[string]AttributeSchema
+type NamespaceUpdateSchemaResponse map[string]AttributeSchemaConfig
 
 // The response to a successful write request.
 type NamespaceWriteResponse struct {
@@ -949,7 +951,7 @@ type NamespaceQueryParams struct {
 	TopK param.Opt[int64] `json:"top_k,omitzero"`
 	// Aggregations to compute over all documents in the namespace that match the
 	// filters.
-	AggregateBy AggregateBy `json:"aggregate_by,omitzero"`
+	AggregateBy map[string]any `json:"aggregate_by,omitzero"`
 	// The consistency level for a query.
 	Consistency NamespaceQueryParamsConsistency `json:"consistency,omitzero"`
 	// A function used to calculate vector similarity.
@@ -958,11 +960,11 @@ type NamespaceQueryParams struct {
 	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
 	// Exact filters for attributes to refine search results for. Think of it as a SQL
 	// WHERE clause.
-	Filters Filter `json:"filters,omitzero"`
+	Filters any `json:"filters,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
 	// How to rank the documents in the namespace.
-	RankBy RankBy `json:"rank_by,omitzero"`
+	RankBy any `json:"rank_by,omitzero"`
 	// The encoding to use for vectors in the response.
 	//
 	// Any of "float", "base64".
@@ -1036,7 +1038,7 @@ func (r NamespaceUpdateSchemaParams) MarshalJSON() (data []byte, err error) {
 	return json.Marshal(r.Schema)
 }
 func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
+	return r.Schema.UnmarshalJSON(data)
 }
 
 type NamespaceWriteParams struct {
@@ -1044,7 +1046,7 @@ type NamespaceWriteParams struct {
 	// The namespace to copy documents from.
 	CopyFromNamespace param.Opt[string] `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
-	DeleteByFilter Filter    `json:"delete_by_filter,omitzero"`
+	DeleteByFilter any       `json:"delete_by_filter,omitzero"`
 	Deletes        []IDParam `json:"deletes,omitzero" format:"uuid"`
 	// A function used to calculate vector similarity.
 	//
