@@ -16,7 +16,7 @@ func main() {
 	ctx := context.Background()
 	client := turbopuffer.NewClient(option.WithRegion("gcp-us-central1"))
 
-	namespaces := client.ListNamespacesAutoPaging(ctx, turbopuffer.ListNamespacesParams{})
+	namespaces := client.NamespacesAutoPaging(ctx, turbopuffer.NamespacesParams{})
 	for namespaces.Next() {
 		namespace := namespaces.Current()
 		fmt.Printf("namespace: %s\n", namespace.ID)

@@ -94,7 +94,7 @@ func main() {
 
 	// Print the schema.
 	{
-		res, err := namespace.GetSchema(ctx, turbopuffer.NamespaceGetSchemaParams{})
+		res, err := namespace.Schema(ctx, turbopuffer.NamespaceSchemaParams{})
 		if err != nil {
 			panic(err)
 		}
