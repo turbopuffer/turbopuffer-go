@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.13 (2025-05-30)
+
+Full Changelog: [v0.1.0-alpha.12...v0.1.0-alpha.13](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.12...v0.1.0-alpha.13)
+
+### Bug Fixes
+
+* correct unmarshalling of root body params ([d9a9efe](https://github.com/turbopuffer/turbopuffer-go/commit/d9a9efe49289498e807cf810ce5d5e5baf5629bd))
+
 ## 0.1.0-alpha.12 (2025-05-30)
 
 Full Changelog: [v0.1.0-alpha.11...v0.1.0-alpha.12](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.11...v0.1.0-alpha.12)
