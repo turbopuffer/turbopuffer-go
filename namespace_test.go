@@ -38,31 +38,6 @@ func TestNamespaceDeleteAll(t *testing.T) {
 	}
 }
 
-func TestNamespaceGetSchema(t *testing.T) {
-	t.Skip("skipped: tests are disabled for the time being")
-	baseURL := "http://localhost:4010"
-	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
-		baseURL = envURL
-	}
-	if !testutil.CheckTestServer(t, baseURL) {
-		return
-	}
-	client := turbopuffer.NewClient(
-		option.WithBaseURL(baseURL),
-		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
-	)
-	ns := client.Namespace("ns")
-	_, err := ns.GetSchema(context.TODO(), turbopuffer.NamespaceGetSchemaParams{})
-	if err != nil {
-		var apierr *turbopuffer.Error
-		if errors.As(err, &apierr) {
-			t.Log(string(apierr.DumpRequest(true)))
-		}
-		t.Fatalf("err should be nil: %s", err.Error())
-	}
-}
-
 func TestNamespaceHintCacheWarm(t *testing.T) {
 	t.Skip("skipped: tests are disabled for the time being")
 	baseURL := "http://localhost:4010"
@@ -147,6 +122,31 @@ func TestNamespaceRecallWithOptionalParams(t *testing.T) {
 		Queries:   []float64{0},
 		TopK:      turbopuffer.Int(0),
 	})
+	if err != nil {
+		var apierr *turbopuffer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestNamespaceSchema(t *testing.T) {
+	t.Skip("skipped: tests are disabled for the time being")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := turbopuffer.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
+	)
+	ns := client.Namespace("ns")
+	_, err := ns.Schema(context.TODO(), turbopuffer.NamespaceSchemaParams{})
 	if err != nil {
 		var apierr *turbopuffer.Error
 		if errors.As(err, &apierr) {

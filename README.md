@@ -29,7 +29,7 @@ Or to pin the version:
 <!-- x-release-please-start-version -->
 
 ```sh
-go get -u 'github.com/turbopuffer/turbopuffer-go@v0.1.0-alpha.11'
+go get -u 'github.com/turbopuffer/turbopuffer-go@v0.1.0-alpha.12'
 ```
 
 <!-- x-release-please-end -->
@@ -280,7 +280,7 @@ client := turbopuffer.NewClient(
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
 
-client.ListNamespaces(context.TODO(), ...,
+client.Namespaces(context.TODO(), ...,
 	// Override the header
 	option.WithHeader("X-Some-Header", "some_other_custom_header_info"),
 	// Add an undocumented field to the request body, using sjson syntax
@@ -297,7 +297,7 @@ This library provides some conveniences for working with paginated list endpoint
 You can use `.ListAutoPaging()` methods to iterate through items across all pages:
 
 ```go
-iter := client.ListNamespacesAutoPaging(context.TODO(), turbopuffer.ListNamespacesParams{
+iter := client.NamespacesAutoPaging(context.TODO(), turbopuffer.NamespacesParams{
 	Prefix: turbopuffer.String("products"),
 })
 // Automatically fetches more pages as needed.
@@ -314,7 +314,7 @@ Or you can use simple `.List()` methods to fetch a single page and receive a sta
 with additional helper methods like `.GetNextPage()`, e.g.:
 
 ```go
-page, err := client.ListNamespaces(context.TODO(), turbopuffer.ListNamespacesParams{
+page, err := client.Namespaces(context.TODO(), turbopuffer.NamespacesParams{
 	Prefix: turbopuffer.String("products"),
 })
 for page != nil {
@@ -338,7 +338,7 @@ When the API returns a non-success status code, we return an error with type
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.ListNamespaces(context.TODO(), turbopuffer.ListNamespacesParams{
+_, err := client.Namespaces(context.TODO(), turbopuffer.NamespacesParams{
 	Prefix: turbopuffer.String("foo"),
 })
 if err != nil {
@@ -365,9 +365,9 @@ To set a per-retry timeout, use `option.WithRequestTimeout()`.
 // This sets the timeout for the request, including all the retries.
 ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
-client.ListNamespaces(
+client.Namespaces(
 	ctx,
-	turbopuffer.ListNamespacesParams{
+	turbopuffer.NamespacesParams{
 		Prefix: turbopuffer.String("foo"),
 	},
 	// This sets the per-retry timeout
@@ -403,9 +403,9 @@ client := turbopuffer.NewClient(
 )
 
 // Override per-request:
-client.ListNamespaces(
+client.Namespaces(
 	context.TODO(),
-	turbopuffer.ListNamespacesParams{
+	turbopuffer.NamespacesParams{
 		Prefix: turbopuffer.String("foo"),
 	},
 	option.WithMaxRetries(5),
@@ -420,9 +420,9 @@ you need to examine response headers, status codes, or other details.
 ```go
 // Create a variable to store the HTTP response
 var response *http.Response
-namespaces, err := client.ListNamespaces(
+namespaces, err := client.Namespaces(
 	context.TODO(),
-	turbopuffer.ListNamespacesParams{
+	turbopuffer.NamespacesParams{
 		Prefix: turbopuffer.String("foo"),
 	},
 	option.WithResponseInto(&response),
