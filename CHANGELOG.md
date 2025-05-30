@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.0-alpha.14 (2025-05-30)
+
+Full Changelog: [v0.1.0-alpha.13...v0.1.0-alpha.14](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.13...v0.1.0-alpha.14)
+
+### Chores
+
+* **internal:** codegen related update ([c26d21a](https://github.com/turbopuffer/turbopuffer-go/commit/c26d21af7ed99655dfc0b384b7ee021ac0623759))
+* **internal:** version bump ([e9eee78](https://github.com/turbopuffer/turbopuffer-go/commit/e9eee7878716dadcb6c84975202be57a43d60eef))
+
 ## 0.1.0-alpha.13 (2025-05-30)
 
 Full Changelog: [v0.1.0-alpha.12...v0.1.0-alpha.13](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.12...v0.1.0-alpha.13)
