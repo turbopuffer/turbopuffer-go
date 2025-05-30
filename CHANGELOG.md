@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.0-alpha.11 (2025-05-30)
+
+Full Changelog: [v0.1.0-alpha.10...v0.1.0-alpha.11](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.10...v0.1.0-alpha.11)
+
+### Bug Fixes
+
+* fix error ([44d1215](https://github.com/turbopuffer/turbopuffer-go/commit/44d1215d7904d35d0d5349826edc93b862d57ea0))
+
+
+### Chores
+
+* **internal:** codegen related update ([95f9dd8](https://github.com/turbopuffer/turbopuffer-go/commit/95f9dd8bd652fc97382f9d54d4e9ece6765083d5))
+* **stainless:** unstick codegen ([8274970](https://github.com/turbopuffer/turbopuffer-go/commit/82749708b040548e3f06d255b1f4c96c232fc8c8))
+
 ## 0.1.0-alpha.10 (2025-05-29)
 
 Full Changelog: [v0.1.0-alpha.9...v0.1.0-alpha.10](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.9...v0.1.0-alpha.10)

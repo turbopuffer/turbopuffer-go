@@ -163,8 +163,33 @@ func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParam
 	return
 }
 
-// The schema for an attribute attached to a document.
-type AttributeSchema struct {
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type AttributeSchemaParam struct {
+	String                param.Opt[AttributeType]    `json:",omitzero,inline"`
+	AttributeSchemaConfig *AttributeSchemaConfigParam `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u AttributeSchemaParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[AttributeSchemaParam](u.String, u.AttributeSchemaConfig)
+}
+func (u *AttributeSchemaParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *AttributeSchemaParam) asAny() any {
+	if !param.IsOmitted(u.String) {
+		return &u.String.Value
+	} else if !param.IsOmitted(u.AttributeSchemaConfig) {
+		return u.AttributeSchemaConfig
+	}
+	return nil
+}
+
+// Detailed configuration for an attribute attached to a document.
+type AttributeSchemaConfig struct {
 	// Whether to create an approximate nearest neighbor index for the attribute.
 	Ann bool `json:"ann"`
 	// Whether or not the attributes can be used in filters.
@@ -173,7 +198,8 @@ type AttributeSchema struct {
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
 	// filterable. You can override this by setting `filterable: true`.
 	FullTextSearch FullTextSearch `json:"full_text_search"`
-	// The data type of the attribute.
+	// The data type of the attribute. Valid values: string, int, uint, uuid, datetime,
+	// bool, []string, []int, []uint, []uuid, []datetime, [DIMS]f16, [DIMS]f32.
 	Type AttributeType `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -187,57 +213,45 @@ type AttributeSchema struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r AttributeSchema) RawJSON() string { return r.JSON.raw }
-func (r *AttributeSchema) UnmarshalJSON(data []byte) error {
+func (r AttributeSchemaConfig) RawJSON() string { return r.JSON.raw }
+func (r *AttributeSchemaConfig) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// ToParam converts this AttributeSchema to a AttributeSchemaParam.
+// ToParam converts this AttributeSchemaConfig to a AttributeSchemaConfigParam.
 //
 // Warning: the fields of the param type will not be present. ToParam should only
 // be used at the last possible moment before sending a request. Test for this with
-// AttributeSchemaParam.Overrides()
-func (r AttributeSchema) ToParam() AttributeSchemaParam {
-	return param.Override[AttributeSchemaParam](r.RawJSON())
+// AttributeSchemaConfigParam.Overrides()
+func (r AttributeSchemaConfig) ToParam() AttributeSchemaConfigParam {
+	return param.Override[AttributeSchemaConfigParam](r.RawJSON())
 }
 
-// The schema for an attribute attached to a document.
-type AttributeSchemaParam struct {
+// Detailed configuration for an attribute attached to a document.
+type AttributeSchemaConfigParam struct {
 	// Whether to create an approximate nearest neighbor index for the attribute.
 	Ann param.Opt[bool] `json:"ann,omitzero"`
 	// Whether or not the attributes can be used in filters.
 	Filterable param.Opt[bool] `json:"filterable,omitzero"`
+	// The data type of the attribute. Valid values: string, int, uint, uuid, datetime,
+	// bool, []string, []int, []uint, []uuid, []datetime, [DIMS]f16, [DIMS]f32.
+	Type param.Opt[AttributeType] `json:"type,omitzero"`
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
 	// filterable. You can override this by setting `filterable: true`.
 	FullTextSearch FullTextSearchParam `json:"full_text_search,omitzero"`
-	// The data type of the attribute.
-	Type AttributeType `json:"type,omitzero"`
 	paramObj
 }
 
-func (r AttributeSchemaParam) MarshalJSON() (data []byte, err error) {
-	type shadow AttributeSchemaParam
+func (r AttributeSchemaConfigParam) MarshalJSON() (data []byte, err error) {
+	type shadow AttributeSchemaConfigParam
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *AttributeSchemaParam) UnmarshalJSON(data []byte) error {
+func (r *AttributeSchemaConfigParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// The data type of the attribute.
-type AttributeType string
-
-const (
-	AttributeTypeString        AttributeType = "string"
-	AttributeTypeUint          AttributeType = "uint"
-	AttributeTypeUuid          AttributeType = "uuid"
-	AttributeTypeBool          AttributeType = "bool"
-	AttributeTypeDatetime      AttributeType = "datetime"
-	AttributeTypeStringArray   AttributeType = "[]string"
-	AttributeTypeUintArray     AttributeType = "[]uint"
-	AttributeTypeUuidArray     AttributeType = "[]uuid"
-	AttributeTypeDatetimeArray AttributeType = "[]datetime"
-)
+type AttributeType = string
 
 // A function used to calculate vector similarity.
 type DistanceMetric string
@@ -827,7 +841,7 @@ func (r *NamespaceDeleteAllResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type NamespaceGetSchemaResponse map[string]AttributeSchema
+type NamespaceGetSchemaResponse map[string]AttributeSchemaConfig
 
 // The response to a successful cache warm request.
 type NamespaceHintCacheWarmResponse struct {
@@ -855,7 +869,7 @@ type NamespaceQueryResponse struct {
 	Billing QueryBilling `json:"billing,required"`
 	// The performance information for a query.
 	Performance  QueryPerformance `json:"performance,required"`
-	Aggregations []map[string]any `json:"aggregations"`
+	Aggregations map[string]any   `json:"aggregations"`
 	Rows         []DocumentRow    `json:"rows"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -899,7 +913,7 @@ func (r *NamespaceRecallResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type NamespaceUpdateSchemaResponse map[string]AttributeSchema
+type NamespaceUpdateSchemaResponse map[string]AttributeSchemaConfig
 
 // The response to a successful write request.
 type NamespaceWriteResponse struct {

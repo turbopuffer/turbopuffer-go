@@ -18,7 +18,7 @@ type paramUnion = param.APIUnion
 // aliased to make [param.APIObject] private when embedding
 type paramObj = param.APIObject
 
-type ListNamespaces[T any] struct {
+type NamespacePage[T any] struct {
 	Namespaces []T    `json:"namespaces"`
 	NextCursor string `json:"next_cursor"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -33,15 +33,15 @@ type ListNamespaces[T any] struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r ListNamespaces[T]) RawJSON() string { return r.JSON.raw }
-func (r *ListNamespaces[T]) UnmarshalJSON(data []byte) error {
+func (r NamespacePage[T]) RawJSON() string { return r.JSON.raw }
+func (r *NamespacePage[T]) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // GetNextPage returns the next page as defined by this pagination style. When
 // there is no next page, this function will return a 'nil' for the page value, but
 // will not return an error
-func (r *ListNamespaces[T]) GetNextPage() (res *ListNamespaces[T], err error) {
+func (r *NamespacePage[T]) GetNextPage() (res *NamespacePage[T], err error) {
 	next := r.NextCursor
 	if len(next) == 0 {
 		return nil, nil
@@ -62,16 +62,16 @@ func (r *ListNamespaces[T]) GetNextPage() (res *ListNamespaces[T], err error) {
 	return res, nil
 }
 
-func (r *ListNamespaces[T]) SetPageConfig(cfg *requestconfig.RequestConfig, res *http.Response) {
+func (r *NamespacePage[T]) SetPageConfig(cfg *requestconfig.RequestConfig, res *http.Response) {
 	if r == nil {
-		r = &ListNamespaces[T]{}
+		r = &NamespacePage[T]{}
 	}
 	r.cfg = cfg
 	r.res = res
 }
 
-type ListNamespacesAutoPager[T any] struct {
-	page *ListNamespaces[T]
+type NamespacePageAutoPager[T any] struct {
+	page *NamespacePage[T]
 	cur  T
 	idx  int
 	run  int
@@ -79,14 +79,14 @@ type ListNamespacesAutoPager[T any] struct {
 	paramObj
 }
 
-func NewListNamespacesAutoPager[T any](page *ListNamespaces[T], err error) *ListNamespacesAutoPager[T] {
-	return &ListNamespacesAutoPager[T]{
+func NewNamespacePageAutoPager[T any](page *NamespacePage[T], err error) *NamespacePageAutoPager[T] {
+	return &NamespacePageAutoPager[T]{
 		page: page,
 		err:  err,
 	}
 }
 
-func (r *ListNamespacesAutoPager[T]) Next() bool {
+func (r *NamespacePageAutoPager[T]) Next() bool {
 	if r.page == nil || len(r.page.Namespaces) == 0 {
 		return false
 	}
@@ -103,14 +103,14 @@ func (r *ListNamespacesAutoPager[T]) Next() bool {
 	return true
 }
 
-func (r *ListNamespacesAutoPager[T]) Current() T {
+func (r *NamespacePageAutoPager[T]) Current() T {
 	return r.cur
 }
 
-func (r *ListNamespacesAutoPager[T]) Err() error {
+func (r *NamespacePageAutoPager[T]) Err() error {
 	return r.err
 }
 
-func (r *ListNamespacesAutoPager[T]) Index() int {
+func (r *NamespacePageAutoPager[T]) Index() int {
 	return r.run
 }

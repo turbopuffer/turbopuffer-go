@@ -174,12 +174,7 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 	_, err := ns.UpdateSchema(context.TODO(), turbopuffer.NamespaceUpdateSchemaParams{
 		Schema: map[string]turbopuffer.AttributeSchemaParam{
 			"foo": {
-				Ann:        turbopuffer.Bool(true),
-				Filterable: turbopuffer.Bool(true),
-				FullTextSearch: turbopuffer.FullTextSearchParam{
-					Bool: turbopuffer.Bool(true),
-				},
-				Type: turbopuffer.AttributeTypeString,
+				String: turbopuffer.String("string"),
 			},
 		},
 	})
@@ -239,12 +234,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		}},
 		Schema: map[string]turbopuffer.AttributeSchemaParam{
 			"foo": {
-				Ann:        turbopuffer.Bool(true),
-				Filterable: turbopuffer.Bool(true),
-				FullTextSearch: turbopuffer.FullTextSearchParam{
-					Bool: turbopuffer.Bool(true),
-				},
-				Type: turbopuffer.AttributeTypeString,
+				String: turbopuffer.String("string"),
 			},
 		},
 		UpsertColumns: turbopuffer.DocumentColumnsParam{

@@ -123,7 +123,7 @@ func (r *Client) Delete(ctx context.Context, path string, params any, res any, o
 }
 
 // List namespaces.
-func (r *Client) ListNamespaces(ctx context.Context, query ListNamespacesParams, opts ...option.RequestOption) (res *pagination.ListNamespaces[NamespaceSummary], err error) {
+func (r *Client) ListNamespaces(ctx context.Context, query ListNamespacesParams, opts ...option.RequestOption) (res *pagination.NamespacePage[NamespaceSummary], err error) {
 	var raw *http.Response
 	opts = append(r.Options[:], opts...)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
@@ -141,6 +141,6 @@ func (r *Client) ListNamespaces(ctx context.Context, query ListNamespacesParams,
 }
 
 // List namespaces.
-func (r *Client) ListNamespacesAutoPaging(ctx context.Context, query ListNamespacesParams, opts ...option.RequestOption) *pagination.ListNamespacesAutoPager[NamespaceSummary] {
-	return pagination.NewListNamespacesAutoPager(r.ListNamespaces(ctx, query, opts...))
+func (r *Client) ListNamespacesAutoPaging(ctx context.Context, query ListNamespacesParams, opts ...option.RequestOption) *pagination.NamespacePageAutoPager[NamespaceSummary] {
+	return pagination.NewNamespacePageAutoPager(r.ListNamespaces(ctx, query, opts...))
 }
