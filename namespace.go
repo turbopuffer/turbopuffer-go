@@ -1050,7 +1050,7 @@ func (r NamespaceUpdateSchemaParams) MarshalJSON() (data []byte, err error) {
 	return json.Marshal(r.Schema)
 }
 func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
+	return json.Unmarshal(data, &r.Schema)
 }
 
 type NamespaceWriteParams struct {
