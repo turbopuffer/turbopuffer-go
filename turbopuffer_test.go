@@ -13,7 +13,7 @@ import (
 	"github.com/turbopuffer/turbopuffer-go/option"
 )
 
-func TestTurbopufferListNamespacesWithOptionalParams(t *testing.T) {
+func TestTurbopufferNamespacesWithOptionalParams(t *testing.T) {
 	t.Skip("skipped: tests are disabled for the time being")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -27,7 +27,7 @@ func TestTurbopufferListNamespacesWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	_, err := client.ListNamespaces(context.TODO(), turbopuffer.ListNamespacesParams{
+	_, err := client.Namespaces(context.TODO(), turbopuffer.NamespacesParams{
 		Cursor:   turbopuffer.String("cursor"),
 		PageSize: turbopuffer.Int(1),
 		Prefix:   turbopuffer.String("prefix"),

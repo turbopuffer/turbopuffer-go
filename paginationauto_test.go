@@ -25,7 +25,7 @@ func TestAutoPagination(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	iter := client.ListNamespacesAutoPaging(context.TODO(), turbopuffer.ListNamespacesParams{
+	iter := client.NamespacesAutoPaging(context.TODO(), turbopuffer.NamespacesParams{
 		Prefix: turbopuffer.String("products"),
 	})
 	// Prism mock isn't going to give us real pagination
