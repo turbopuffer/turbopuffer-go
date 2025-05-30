@@ -53,23 +53,6 @@ func (r *NamespaceService) DeleteAll(ctx context.Context, body NamespaceDeleteAl
 	return
 }
 
-// Get namespace schema.
-func (r *NamespaceService) GetSchema(ctx context.Context, query NamespaceGetSchemaParams, opts ...option.RequestOption) (res *NamespaceGetSchemaResponse, err error) {
-	opts = append(r.Options[:], opts...)
-	precfg, err := requestconfig.PreRequestOptions(opts...)
-	if err != nil {
-		return
-	}
-	requestconfig.UseDefaultParam(&query.Namespace, precfg.DefaultNamespace)
-	if query.Namespace.Value == "" {
-		err = errors.New("missing required namespace parameter")
-		return
-	}
-	path := fmt.Sprintf("v1/namespaces/%s/schema", query.Namespace.Value)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
-	return
-}
-
 // Warm the cache for a namespace.
 func (r *NamespaceService) HintCacheWarm(ctx context.Context, query NamespaceHintCacheWarmParams, opts ...option.RequestOption) (res *NamespaceHintCacheWarmResponse, err error) {
 	opts = append(r.Options[:], opts...)
@@ -118,6 +101,23 @@ func (r *NamespaceService) Recall(ctx context.Context, params NamespaceRecallPar
 	}
 	path := fmt.Sprintf("v1/namespaces/%s/_debug/recall", params.Namespace.Value)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	return
+}
+
+// Get namespace schema.
+func (r *NamespaceService) Schema(ctx context.Context, query NamespaceSchemaParams, opts ...option.RequestOption) (res *NamespaceSchemaResponse, err error) {
+	opts = append(r.Options[:], opts...)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&query.Namespace, precfg.DefaultNamespace)
+	if query.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return
+	}
+	path := fmt.Sprintf("v1/namespaces/%s/schema", query.Namespace.Value)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
 }
 
@@ -829,8 +829,6 @@ func (r *NamespaceDeleteAllResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type NamespaceGetSchemaResponse map[string]AttributeSchemaConfig
-
 // The response to a successful cache warm request.
 type NamespaceHintCacheWarmResponse struct {
 	// The status of the request.
@@ -901,6 +899,8 @@ func (r *NamespaceRecallResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+type NamespaceSchemaResponse map[string]AttributeSchemaConfig
+
 type NamespaceUpdateSchemaResponse map[string]AttributeSchemaConfig
 
 // The response to a successful write request.
@@ -931,11 +931,6 @@ func (r *NamespaceWriteResponse) UnmarshalJSON(data []byte) error {
 }
 
 type NamespaceDeleteAllParams struct {
-	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
-	paramObj
-}
-
-type NamespaceGetSchemaParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
 	paramObj
 }
@@ -1025,6 +1020,11 @@ func (r NamespaceRecallParams) MarshalJSON() (data []byte, err error) {
 }
 func (r *NamespaceRecallParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+type NamespaceSchemaParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	paramObj
 }
 
 type NamespaceUpdateSchemaParams struct {

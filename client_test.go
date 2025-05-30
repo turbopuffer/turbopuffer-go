@@ -39,7 +39,7 @@ func TestUserAgentHeader(t *testing.T) {
 			},
 		}),
 	)
-	client.ListNamespaces(context.Background(), turbopuffer.ListNamespacesParams{
+	client.Namespaces(context.Background(), turbopuffer.NamespacesParams{
 		Prefix: turbopuffer.String("foo"),
 	})
 	if userAgent != fmt.Sprintf("Turbopuffer/Go %s", internal.PackageVersion) {
@@ -66,7 +66,7 @@ func TestRetryAfter(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.ListNamespaces(context.Background(), turbopuffer.ListNamespacesParams{
+	_, err := client.Namespaces(context.Background(), turbopuffer.NamespacesParams{
 		Prefix: turbopuffer.String("foo"),
 	})
 	if err == nil {
@@ -104,7 +104,7 @@ func TestDeleteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeaderDel("X-Stainless-Retry-Count"),
 	)
-	_, err := client.ListNamespaces(context.Background(), turbopuffer.ListNamespacesParams{
+	_, err := client.Namespaces(context.Background(), turbopuffer.NamespacesParams{
 		Prefix: turbopuffer.String("foo"),
 	})
 	if err == nil {
@@ -137,7 +137,7 @@ func TestOverwriteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeader("X-Stainless-Retry-Count", "42"),
 	)
-	_, err := client.ListNamespaces(context.Background(), turbopuffer.ListNamespacesParams{
+	_, err := client.Namespaces(context.Background(), turbopuffer.NamespacesParams{
 		Prefix: turbopuffer.String("foo"),
 	})
 	if err == nil {
@@ -169,7 +169,7 @@ func TestRetryAfterMs(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.ListNamespaces(context.Background(), turbopuffer.ListNamespacesParams{
+	_, err := client.Namespaces(context.Background(), turbopuffer.NamespacesParams{
 		Prefix: turbopuffer.String("foo"),
 	})
 	if err == nil {
@@ -195,7 +195,7 @@ func TestContextCancel(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithCancel(context.Background())
 	cancel()
-	_, err := client.ListNamespaces(cancelCtx, turbopuffer.ListNamespacesParams{
+	_, err := client.Namespaces(cancelCtx, turbopuffer.NamespacesParams{
 		Prefix: turbopuffer.String("foo"),
 	})
 	if err == nil {
@@ -218,7 +218,7 @@ func TestContextCancelDelay(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithTimeout(context.Background(), 2*time.Millisecond)
 	defer cancel()
-	_, err := client.ListNamespaces(cancelCtx, turbopuffer.ListNamespacesParams{
+	_, err := client.Namespaces(cancelCtx, turbopuffer.NamespacesParams{
 		Prefix: turbopuffer.String("foo"),
 	})
 	if err == nil {
@@ -247,7 +247,7 @@ func TestContextDeadline(t *testing.T) {
 				},
 			}),
 		)
-		_, err := client.ListNamespaces(deadlineCtx, turbopuffer.ListNamespacesParams{
+		_, err := client.Namespaces(deadlineCtx, turbopuffer.NamespacesParams{
 			Prefix: turbopuffer.String("foo"),
 		})
 		if err == nil {

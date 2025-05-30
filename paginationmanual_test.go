@@ -25,7 +25,7 @@ func TestManualPagination(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	page, err := client.ListNamespaces(context.TODO(), turbopuffer.ListNamespacesParams{
+	page, err := client.Namespaces(context.TODO(), turbopuffer.NamespacesParams{
 		Prefix: turbopuffer.String("products"),
 	})
 	if err != nil {

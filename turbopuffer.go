@@ -29,7 +29,7 @@ func (r *NamespaceSummary) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type ListNamespacesParams struct {
+type NamespacesParams struct {
 	// Retrieve the next page of results.
 	Cursor param.Opt[string] `query:"cursor,omitzero" json:"-"`
 	// Limit the number of results per page.
@@ -39,8 +39,8 @@ type ListNamespacesParams struct {
 	paramObj
 }
 
-// URLQuery serializes [ListNamespacesParams]'s query parameters as `url.Values`.
-func (r ListNamespacesParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [NamespacesParams]'s query parameters as `url.Values`.
+func (r NamespacesParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatComma,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
