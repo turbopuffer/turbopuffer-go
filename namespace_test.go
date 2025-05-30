@@ -27,8 +27,9 @@ func TestNamespaceDeleteAll(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	ns := client.Namespace("ns")
-	_, err := ns.DeleteAll(context.TODO(), turbopuffer.NamespaceDeleteAllParams{})
+	_, err := client.Namespaces.DeleteAll(context.TODO(), turbopuffer.NamespaceDeleteAllParams{
+		Namespace: turbopuffer.String("namespace"),
+	})
 	if err != nil {
 		var apierr *turbopuffer.Error
 		if errors.As(err, &apierr) {
@@ -52,8 +53,9 @@ func TestNamespaceGetSchema(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	ns := client.Namespace("ns")
-	_, err := ns.GetSchema(context.TODO(), turbopuffer.NamespaceGetSchemaParams{})
+	_, err := client.Namespaces.GetSchema(context.TODO(), turbopuffer.NamespaceGetSchemaParams{
+		Namespace: turbopuffer.String("namespace"),
+	})
 	if err != nil {
 		var apierr *turbopuffer.Error
 		if errors.As(err, &apierr) {
@@ -77,8 +79,9 @@ func TestNamespaceHintCacheWarm(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	ns := client.Namespace("ns")
-	_, err := ns.HintCacheWarm(context.TODO(), turbopuffer.NamespaceHintCacheWarmParams{})
+	_, err := client.Namespaces.HintCacheWarm(context.TODO(), turbopuffer.NamespaceHintCacheWarmParams{
+		Namespace: turbopuffer.String("namespace"),
+	})
 	if err != nil {
 		var apierr *turbopuffer.Error
 		if errors.As(err, &apierr) {
@@ -102,17 +105,20 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	ns := client.Namespace("ns")
-	_, err := ns.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
+	_, err := client.Namespaces.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("namespace"),
+		AggregateBy: map[string]any{
+			"foo": "bar",
+		},
 		Consistency: turbopuffer.NamespaceQueryParamsConsistency{
 			Level: turbopuffer.NamespaceQueryParamsConsistencyLevelStrong,
 		},
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+		Filters:        map[string]interface{}{},
 		IncludeAttributes: turbopuffer.IncludeAttributesParam{
 			Bool: turbopuffer.Bool(true),
 		},
-		RankBy:         turbopuffer.NewRankByVector("vector", []float64{0}),
+		RankBy:         map[string]interface{}{},
 		TopK:           turbopuffer.Int(0),
 		VectorEncoding: turbopuffer.VectorEncodingFloat,
 	})
@@ -139,8 +145,7 @@ func TestNamespaceRecallWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	ns := client.Namespace("ns")
-	_, err := ns.Recall(context.TODO(), turbopuffer.NamespaceRecallParams{
+	_, err := client.Namespaces.Recall(context.TODO(), turbopuffer.NamespaceRecallParams{
 		Namespace: turbopuffer.String("namespace"),
 		Filters:   map[string]interface{}{},
 		Num:       turbopuffer.Int(0),
@@ -170,16 +175,11 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	ns := client.Namespace("ns")
-	_, err := ns.UpdateSchema(context.TODO(), turbopuffer.NamespaceUpdateSchemaParams{
+	_, err := client.Namespaces.UpdateSchema(context.TODO(), turbopuffer.NamespaceUpdateSchemaParams{
+		Namespace: turbopuffer.String("namespace"),
 		Schema: map[string]turbopuffer.AttributeSchemaParam{
 			"foo": {
-				Ann:        turbopuffer.Bool(true),
-				Filterable: turbopuffer.Bool(true),
-				FullTextSearch: turbopuffer.FullTextSearchParam{
-					Bool: turbopuffer.Bool(true),
-				},
-				Type: turbopuffer.AttributeTypeString,
+				String: turbopuffer.String("string"),
 			},
 		},
 	})
@@ -206,10 +206,10 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	ns := client.Namespace("ns")
-	_, err := ns.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
+	_, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
+		Namespace:         turbopuffer.String("namespace"),
 		CopyFromNamespace: turbopuffer.String("copy_from_namespace"),
-		DeleteByFilter:    turbopuffer.NewFilterEq("id", "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		DeleteByFilter:    map[string]interface{}{},
 		Deletes: []turbopuffer.IDParam{{
 			String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		}},
@@ -239,12 +239,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		}},
 		Schema: map[string]turbopuffer.AttributeSchemaParam{
 			"foo": {
-				Ann:        turbopuffer.Bool(true),
-				Filterable: turbopuffer.Bool(true),
-				FullTextSearch: turbopuffer.FullTextSearchParam{
-					Bool: turbopuffer.Bool(true),
-				},
-				Type: turbopuffer.AttributeTypeString,
+				String: turbopuffer.String("string"),
 			},
 		},
 		UpsertColumns: turbopuffer.DocumentColumnsParam{
