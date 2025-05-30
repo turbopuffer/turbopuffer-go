@@ -16,8 +16,7 @@ import (
 // interacting with the turbopuffer API. You should not instantiate this client
 // directly, and instead use the [NewClient] method instead.
 type Client struct {
-	Options    []option.RequestOption
-	Namespaces NamespaceService
+	Options []option.RequestOption
 }
 
 // DefaultClientOptions read from the environment (TURBOPUFFER_API_KEY,
@@ -46,9 +45,12 @@ func NewClient(opts ...option.RequestOption) (r Client) {
 
 	r = Client{Options: opts}
 
-	r.Namespaces = NewNamespaceService(opts...)
-
 	return
+}
+
+func (r *Client) Namespace(namespace string) NamespaceService {
+	opts := append(r.Options, option.WithDefaultNamespace(namespace))
+	return newNamespaceService(opts...)
 }
 
 // Execute makes a request with the given context, method, URL, request params,
