@@ -91,7 +91,7 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Printf("Schema:\n%+v\n", res)
+		fmt.Printf("Schema:\n%s\n", turbopuffer.PrettyPrint(res))
 	}
 
 	// Patch one document.
