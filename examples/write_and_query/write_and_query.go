@@ -52,17 +52,10 @@ func main() {
 					},
 				},
 			},
-			Schema: map[string]turbopuffer.AttributeSchemaParam{
-				"id": {AttributeSchemaConfig: &turbopuffer.AttributeSchemaConfigParam{
-					Type: turbopuffer.String("uuid"),
-				}},
-				"name": {AttributeSchemaConfig: &turbopuffer.AttributeSchemaConfigParam{
-					Type:       turbopuffer.String("string"),
-					Filterable: turbopuffer.Bool(true),
-				}},
-				"age": {AttributeSchemaConfig: &turbopuffer.AttributeSchemaConfigParam{
-					Type: turbopuffer.String("uint"),
-				}},
+			Schema: map[string]turbopuffer.AttributeSchemaConfigParam{
+				"id":   {Type: turbopuffer.String("uuid")},
+				"name": {Type: turbopuffer.String("string"), Filterable: turbopuffer.Bool(true)},
+				"age":  {Type: turbopuffer.String("uint")},
 			},
 			DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
 		})
