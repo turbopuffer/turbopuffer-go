@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.0-alpha.18 (2025-06-03)
+
+Full Changelog: [v0.1.0-alpha.17...v0.1.0-alpha.18](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.17...v0.1.0-alpha.18)
+
+### Features
+
+* **api:** allow enabling FTS using defaults only ([dc14ac2](https://github.com/turbopuffer/turbopuffer-go/commit/dc14ac229210418d11fbbad694174011d2f905a6))
+* **api:** allow enabling FTS using defaults only ([a4b3522](https://github.com/turbopuffer/turbopuffer-go/commit/a4b3522b7543ed0b54efa9b444f13ca867e3f0ee))
+
 ## 0.1.0-alpha.17 (2025-06-03)
 
 Full Changelog: [v0.1.0-alpha.16...v0.1.0-alpha.17](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.16...v0.1.0-alpha.17)
