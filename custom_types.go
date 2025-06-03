@@ -539,11 +539,11 @@ func (v RankByTextSum) MarshalJSON() ([]byte, error) {
 
 type RankByVector struct {
     attr string
-    value []float64
+    value []float32
 }
 func NewRankByVector(
     attr string,
-    value []float64,
+    value []float32,
 ) RankByVector {
     return RankByVector {
         attr,
