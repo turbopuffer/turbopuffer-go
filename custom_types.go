@@ -7,15 +7,17 @@ import shimjson "github.com/turbopuffer/turbopuffer-go/internal/encoding/json"
 type AggregateBy interface {
 	sealed_AggregateBy()
 }
+
 func (v AggregateByCount) sealed_AggregateBy() {}
 
 type AggregateByCount struct {
 	attr string
 }
+
 func NewAggregateByCount(
 	attr string,
 ) AggregateByCount {
-	return AggregateByCount {
+	return AggregateByCount{
 		attr,
 	}
 }
@@ -27,14 +29,15 @@ func (v AggregateByCount) MarshalJSON() ([]byte, error) {
 }
 
 type ContainsAllTokensArray struct {
-	attr string
+	attr  string
 	value []string
 }
+
 func NewContainsAllTokensArray(
 	attr string,
 	value []string,
 ) ContainsAllTokensArray {
-	return ContainsAllTokensArray {
+	return ContainsAllTokensArray{
 		attr,
 		value,
 	}
@@ -50,31 +53,33 @@ func (v ContainsAllTokensArray) MarshalJSON() ([]byte, error) {
 type Filter interface {
 	sealed_Filter()
 }
-func (v FilterEq) sealed_Filter() {}
-func (v FilterNotEq) sealed_Filter() {}
-func (v FilterIn) sealed_Filter() {}
-func (v FilterNotIn) sealed_Filter() {}
-func (v FilterLt) sealed_Filter() {}
-func (v FilterLte) sealed_Filter() {}
-func (v FilterGt) sealed_Filter() {}
-func (v FilterGte) sealed_Filter() {}
-func (v FilterGlob) sealed_Filter() {}
-func (v FilterNotGlob) sealed_Filter() {}
-func (v FilterIGlob) sealed_Filter() {}
-func (v FilterNotIGlob) sealed_Filter() {}
+
+func (v FilterEq) sealed_Filter()                {}
+func (v FilterNotEq) sealed_Filter()             {}
+func (v FilterIn) sealed_Filter()                {}
+func (v FilterNotIn) sealed_Filter()             {}
+func (v FilterLt) sealed_Filter()                {}
+func (v FilterLte) sealed_Filter()               {}
+func (v FilterGt) sealed_Filter()                {}
+func (v FilterGte) sealed_Filter()               {}
+func (v FilterGlob) sealed_Filter()              {}
+func (v FilterNotGlob) sealed_Filter()           {}
+func (v FilterIGlob) sealed_Filter()             {}
+func (v FilterNotIGlob) sealed_Filter()          {}
 func (v FilterContainsAllTokens) sealed_Filter() {}
-func (v ContainsAllTokensArray) sealed_Filter() {}
-func (v FilterNot) sealed_Filter() {}
-func (v FilterAnd) sealed_Filter() {}
-func (v FilterOr) sealed_Filter() {}
+func (v ContainsAllTokensArray) sealed_Filter()  {}
+func (v FilterNot) sealed_Filter()               {}
+func (v FilterAnd) sealed_Filter()               {}
+func (v FilterOr) sealed_Filter()                {}
 
 type FilterAnd struct {
 	filters []Filter
 }
+
 func NewFilterAnd(
 	filters []Filter,
 ) FilterAnd {
-	return FilterAnd {
+	return FilterAnd{
 		filters,
 	}
 }
@@ -86,14 +91,15 @@ func (v FilterAnd) MarshalJSON() ([]byte, error) {
 }
 
 type FilterContainsAllTokens struct {
-	attr string
+	attr  string
 	value string
 }
+
 func NewFilterContainsAllTokens(
 	attr string,
 	value string,
 ) FilterContainsAllTokens {
-	return FilterContainsAllTokens {
+	return FilterContainsAllTokens{
 		attr,
 		value,
 	}
@@ -107,14 +113,15 @@ func (v FilterContainsAllTokens) MarshalJSON() ([]byte, error) {
 }
 
 type FilterEq struct {
-	attr string
+	attr  string
 	value any
 }
+
 func NewFilterEq(
 	attr string,
 	value any,
 ) FilterEq {
-	return FilterEq {
+	return FilterEq{
 		attr,
 		value,
 	}
@@ -128,14 +135,15 @@ func (v FilterEq) MarshalJSON() ([]byte, error) {
 }
 
 type FilterGlob struct {
-	attr string
+	attr  string
 	value string
 }
+
 func NewFilterGlob(
 	attr string,
 	value string,
 ) FilterGlob {
-	return FilterGlob {
+	return FilterGlob{
 		attr,
 		value,
 	}
@@ -149,14 +157,15 @@ func (v FilterGlob) MarshalJSON() ([]byte, error) {
 }
 
 type FilterGt struct {
-	attr string
+	attr  string
 	value any
 }
+
 func NewFilterGt(
 	attr string,
 	value any,
 ) FilterGt {
-	return FilterGt {
+	return FilterGt{
 		attr,
 		value,
 	}
@@ -170,14 +179,15 @@ func (v FilterGt) MarshalJSON() ([]byte, error) {
 }
 
 type FilterGte struct {
-	attr string
+	attr  string
 	value any
 }
+
 func NewFilterGte(
 	attr string,
 	value any,
 ) FilterGte {
-	return FilterGte {
+	return FilterGte{
 		attr,
 		value,
 	}
@@ -191,14 +201,15 @@ func (v FilterGte) MarshalJSON() ([]byte, error) {
 }
 
 type FilterIGlob struct {
-	attr string
+	attr  string
 	value string
 }
+
 func NewFilterIGlob(
 	attr string,
 	value string,
 ) FilterIGlob {
-	return FilterIGlob {
+	return FilterIGlob{
 		attr,
 		value,
 	}
@@ -212,14 +223,15 @@ func (v FilterIGlob) MarshalJSON() ([]byte, error) {
 }
 
 type FilterIn struct {
-	attr string
+	attr  string
 	value any
 }
+
 func NewFilterIn(
 	attr string,
 	value any,
 ) FilterIn {
-	return FilterIn {
+	return FilterIn{
 		attr,
 		value,
 	}
@@ -233,14 +245,15 @@ func (v FilterIn) MarshalJSON() ([]byte, error) {
 }
 
 type FilterLt struct {
-	attr string
+	attr  string
 	value any
 }
+
 func NewFilterLt(
 	attr string,
 	value any,
 ) FilterLt {
-	return FilterLt {
+	return FilterLt{
 		attr,
 		value,
 	}
@@ -254,14 +267,15 @@ func (v FilterLt) MarshalJSON() ([]byte, error) {
 }
 
 type FilterLte struct {
-	attr string
+	attr  string
 	value any
 }
+
 func NewFilterLte(
 	attr string,
 	value any,
 ) FilterLte {
-	return FilterLte {
+	return FilterLte{
 		attr,
 		value,
 	}
@@ -277,10 +291,11 @@ func (v FilterLte) MarshalJSON() ([]byte, error) {
 type FilterNot struct {
 	filter Filter
 }
+
 func NewFilterNot(
 	filter Filter,
 ) FilterNot {
-	return FilterNot {
+	return FilterNot{
 		filter,
 	}
 }
@@ -292,14 +307,15 @@ func (v FilterNot) MarshalJSON() ([]byte, error) {
 }
 
 type FilterNotEq struct {
-	attr string
+	attr  string
 	value any
 }
+
 func NewFilterNotEq(
 	attr string,
 	value any,
 ) FilterNotEq {
-	return FilterNotEq {
+	return FilterNotEq{
 		attr,
 		value,
 	}
@@ -313,14 +329,15 @@ func (v FilterNotEq) MarshalJSON() ([]byte, error) {
 }
 
 type FilterNotGlob struct {
-	attr string
+	attr  string
 	value string
 }
+
 func NewFilterNotGlob(
 	attr string,
 	value string,
 ) FilterNotGlob {
-	return FilterNotGlob {
+	return FilterNotGlob{
 		attr,
 		value,
 	}
@@ -334,14 +351,15 @@ func (v FilterNotGlob) MarshalJSON() ([]byte, error) {
 }
 
 type FilterNotIGlob struct {
-	attr string
+	attr  string
 	value string
 }
+
 func NewFilterNotIGlob(
 	attr string,
 	value string,
 ) FilterNotIGlob {
-	return FilterNotIGlob {
+	return FilterNotIGlob{
 		attr,
 		value,
 	}
@@ -355,14 +373,15 @@ func (v FilterNotIGlob) MarshalJSON() ([]byte, error) {
 }
 
 type FilterNotIn struct {
-	attr string
+	attr  string
 	value any
 }
+
 func NewFilterNotIn(
 	attr string,
 	value any,
 ) FilterNotIn {
-	return FilterNotIn {
+	return FilterNotIn{
 		attr,
 		value,
 	}
@@ -378,10 +397,11 @@ func (v FilterNotIn) MarshalJSON() ([]byte, error) {
 type FilterOr struct {
 	filters []Filter
 }
+
 func NewFilterOr(
 	filters []Filter,
 ) FilterOr {
-	return FilterOr {
+	return FilterOr{
 		filters,
 	}
 }
@@ -395,23 +415,25 @@ func (v FilterOr) MarshalJSON() ([]byte, error) {
 type RankBy interface {
 	sealed_RankBy()
 }
-func (v RankByVector) sealed_RankBy() {}
-func (v RankByTextBM25) sealed_RankBy() {}
+
+func (v RankByVector) sealed_RankBy()        {}
+func (v RankByTextBM25) sealed_RankBy()      {}
 func (v RankByTextBM25Array) sealed_RankBy() {}
-func (v RankByTextSum) sealed_RankBy() {}
-func (v RankByTextMax) sealed_RankBy() {}
-func (v RankByTextProduct) sealed_RankBy() {}
-func (v RankByAttribute) sealed_RankBy() {}
+func (v RankByTextSum) sealed_RankBy()       {}
+func (v RankByTextMax) sealed_RankBy()       {}
+func (v RankByTextProduct) sealed_RankBy()   {}
+func (v RankByAttribute) sealed_RankBy()     {}
 
 type RankByAttribute struct {
-	attr string
+	attr  string
 	order RankByAttributeOrder
 }
+
 func NewRankByAttribute(
 	attr string,
 	order RankByAttributeOrder,
 ) RankByAttribute {
-	return RankByAttribute {
+	return RankByAttribute{
 		attr,
 		order,
 	}
@@ -424,29 +446,32 @@ func (v RankByAttribute) MarshalJSON() ([]byte, error) {
 }
 
 type RankByAttributeOrder string
+
 const (
-	RankByAttributeOrderAsc RankByAttributeOrder = "asc"
+	RankByAttributeOrderAsc  RankByAttributeOrder = "asc"
 	RankByAttributeOrderDesc RankByAttributeOrder = "desc"
 )
 
 type RankByText interface {
 	sealed_RankByText()
 }
-func (v RankByTextBM25) sealed_RankByText() {}
+
+func (v RankByTextBM25) sealed_RankByText()      {}
 func (v RankByTextBM25Array) sealed_RankByText() {}
-func (v RankByTextSum) sealed_RankByText() {}
-func (v RankByTextMax) sealed_RankByText() {}
-func (v RankByTextProduct) sealed_RankByText() {}
+func (v RankByTextSum) sealed_RankByText()       {}
+func (v RankByTextMax) sealed_RankByText()       {}
+func (v RankByTextProduct) sealed_RankByText()   {}
 
 type RankByTextBM25 struct {
-	attr string
+	attr  string
 	value string
 }
+
 func NewRankByTextBM25(
 	attr string,
 	value string,
 ) RankByTextBM25 {
-	return RankByTextBM25 {
+	return RankByTextBM25{
 		attr,
 		value,
 	}
@@ -460,14 +485,15 @@ func (v RankByTextBM25) MarshalJSON() ([]byte, error) {
 }
 
 type RankByTextBM25Array struct {
-	attr string
+	attr  string
 	value []string
 }
+
 func NewRankByTextBM25Array(
 	attr string,
 	value []string,
 ) RankByTextBM25Array {
-	return RankByTextBM25Array {
+	return RankByTextBM25Array{
 		attr,
 		value,
 	}
@@ -483,10 +509,11 @@ func (v RankByTextBM25Array) MarshalJSON() ([]byte, error) {
 type RankByTextMax struct {
 	subqueries []RankByText
 }
+
 func NewRankByTextMax(
 	subqueries []RankByText,
 ) RankByTextMax {
-	return RankByTextMax {
+	return RankByTextMax{
 		subqueries,
 	}
 }
@@ -498,14 +525,15 @@ func (v RankByTextMax) MarshalJSON() ([]byte, error) {
 }
 
 type RankByTextProduct struct {
-	weight float64
+	weight   float64
 	subquery RankByText
 }
+
 func NewRankByTextProduct(
 	weight float64,
 	subquery RankByText,
 ) RankByTextProduct {
-	return RankByTextProduct {
+	return RankByTextProduct{
 		weight,
 		subquery,
 	}
@@ -523,10 +551,11 @@ func (v RankByTextProduct) MarshalJSON() ([]byte, error) {
 type RankByTextSum struct {
 	subqueries []RankByText
 }
+
 func NewRankByTextSum(
 	subqueries []RankByText,
 ) RankByTextSum {
-	return RankByTextSum {
+	return RankByTextSum{
 		subqueries,
 	}
 }
@@ -538,14 +567,15 @@ func (v RankByTextSum) MarshalJSON() ([]byte, error) {
 }
 
 type RankByVector struct {
-	attr string
+	attr  string
 	value []float32
 }
+
 func NewRankByVector(
 	attr string,
 	value []float32,
 ) RankByVector {
-	return RankByVector {
+	return RankByVector{
 		attr,
 		value,
 	}
@@ -557,4 +587,3 @@ func (v RankByVector) MarshalJSON() ([]byte, error) {
 		v.value,
 	})
 }
-

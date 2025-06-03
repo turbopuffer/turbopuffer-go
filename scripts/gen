@@ -8,3 +8,4 @@ api_gen_image=ghcr.io/turbopuffer/turbopuffer-apigen:21900adc37f904eca6728878a01
 
 echo "==> Generating code"
 docker run -v "$(pwd):/work" "$api_gen_image" go > custom_types.go
+gofmt -s -w custom_types.go
