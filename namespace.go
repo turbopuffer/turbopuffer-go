@@ -163,31 +163,6 @@ func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParam
 	return
 }
 
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type AttributeSchemaParam struct {
-	String                param.Opt[AttributeType]    `json:",omitzero,inline"`
-	AttributeSchemaConfig *AttributeSchemaConfigParam `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u AttributeSchemaParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[AttributeSchemaParam](u.String, u.AttributeSchemaConfig)
-}
-func (u *AttributeSchemaParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *AttributeSchemaParam) asAny() any {
-	if !param.IsOmitted(u.String) {
-		return &u.String.Value
-	} else if !param.IsOmitted(u.AttributeSchemaConfig) {
-		return u.AttributeSchemaConfig
-	}
-	return nil
-}
-
 // Detailed configuration for an attribute attached to a document.
 type AttributeSchemaConfig struct {
 	// Whether to create an approximate nearest neighbor index for the attribute.
@@ -197,7 +172,7 @@ type AttributeSchemaConfig struct {
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
 	// filterable. You can override this by setting `filterable: true`.
-	FullTextSearch FullTextSearch `json:"full_text_search"`
+	FullTextSearch FullTextSearchConfig `json:"full_text_search"`
 	// The data type of the attribute. Valid values: string, int, uint, uuid, datetime,
 	// bool, []string, []int, []uint, []uuid, []datetime, [DIMS]f16, [DIMS]f32.
 	Type AttributeType `json:"type"`
@@ -239,7 +214,7 @@ type AttributeSchemaConfigParam struct {
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
 	// filterable. You can override this by setting `filterable: true`.
-	FullTextSearch FullTextSearchParam `json:"full_text_search,omitzero"`
+	FullTextSearch FullTextSearchConfigParam `json:"full_text_search,omitzero"`
 	paramObj
 }
 
@@ -309,94 +284,6 @@ const (
 	DistanceMetricCosineDistance   DistanceMetric = "cosine_distance"
 	DistanceMetricEuclideanSquared DistanceMetric = "euclidean_squared"
 )
-
-// FullTextSearch contains all possible properties and values from [bool],
-// [FullTextSearchConfig].
-//
-// Use the methods beginning with 'As' to cast the union to one of its variants.
-//
-// If the underlying value is not a json object, one of the following properties
-// will be valid: Bool]
-type FullTextSearch struct {
-	// This field will be present if the value is a [bool] instead of an object.
-	Bool bool `json:",inline"`
-	// This field is from variant [FullTextSearchConfig].
-	B float64 `json:"b"`
-	// This field is from variant [FullTextSearchConfig].
-	CaseSensitive bool `json:"case_sensitive"`
-	// This field is from variant [FullTextSearchConfig].
-	K1 float64 `json:"k1"`
-	// This field is from variant [FullTextSearchConfig].
-	Language Language `json:"language"`
-	// This field is from variant [FullTextSearchConfig].
-	RemoveStopwords bool `json:"remove_stopwords"`
-	// This field is from variant [FullTextSearchConfig].
-	Stemming bool `json:"stemming"`
-	// This field is from variant [FullTextSearchConfig].
-	Tokenizer Tokenizer `json:"tokenizer"`
-	JSON      struct {
-		Bool            respjson.Field
-		B               respjson.Field
-		CaseSensitive   respjson.Field
-		K1              respjson.Field
-		Language        respjson.Field
-		RemoveStopwords respjson.Field
-		Stemming        respjson.Field
-		Tokenizer       respjson.Field
-		raw             string
-	} `json:"-"`
-}
-
-func (u FullTextSearch) AsBool() (v bool) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u FullTextSearch) AsFullTextSearchConfig() (v FullTextSearchConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-// Returns the unmodified JSON received from the API
-func (u FullTextSearch) RawJSON() string { return u.JSON.raw }
-
-func (r *FullTextSearch) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// ToParam converts this FullTextSearch to a FullTextSearchParam.
-//
-// Warning: the fields of the param type will not be present. ToParam should only
-// be used at the last possible moment before sending a request. Test for this with
-// FullTextSearchParam.Overrides()
-func (r FullTextSearch) ToParam() FullTextSearchParam {
-	return param.Override[FullTextSearchParam](r.RawJSON())
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type FullTextSearchParam struct {
-	Bool                 param.Opt[bool]            `json:",omitzero,inline"`
-	FullTextSearchConfig *FullTextSearchConfigParam `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u FullTextSearchParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[FullTextSearchParam](u.Bool, u.FullTextSearchConfig)
-}
-func (u *FullTextSearchParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *FullTextSearchParam) asAny() any {
-	if !param.IsOmitted(u.Bool) {
-		return &u.Bool.Value
-	} else if !param.IsOmitted(u.FullTextSearchConfig) {
-		return u.FullTextSearchConfig
-	}
-	return nil
-}
 
 // Configuration options for full-text search.
 type FullTextSearchConfig struct {
@@ -1039,7 +926,7 @@ type NamespaceSchemaParams struct {
 type NamespaceUpdateSchemaParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
 	// The desired schema for the namespace.
-	Schema map[string]AttributeSchemaParam
+	Schema map[string]AttributeSchemaConfigParam
 	paramObj
 }
 
@@ -1068,7 +955,7 @@ type NamespaceWriteParams struct {
 	PatchColumns ColumnsParam `json:"patch_columns,omitzero"`
 	PatchRows    []RowParam   `json:"patch_rows,omitzero"`
 	// The schema of the attributes attached to the documents.
-	Schema map[string]AttributeSchemaParam `json:"schema,omitzero"`
+	Schema map[string]AttributeSchemaConfigParam `json:"schema,omitzero"`
 	// A list of documents in columnar format. Each key is a column name, mapped to an
 	// array of values for that column.
 	UpsertColumns ColumnsParam `json:"upsert_columns,omitzero"`
