@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.0-alpha.15 (2025-06-03)
+
+Full Changelog: [v0.1.0-alpha.14...v0.1.0-alpha.15](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.14...v0.1.0-alpha.15)
+
+### Features
+
+* **api:** api update ([0a1c12b](https://github.com/turbopuffer/turbopuffer-go/commit/0a1c12b8a2495039802aac1593081115839ccff7))
+
+
+### Chores
+
+* make go mod tidy continue on error ([e5ebb69](https://github.com/turbopuffer/turbopuffer-go/commit/e5ebb69bf4b5542fc3d5b1d658f719ed28f8da65))
+
 ## 0.1.0-alpha.14 (2025-05-30)
 
 Full Changelog: [v0.1.0-alpha.13...v0.1.0-alpha.14](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.13...v0.1.0-alpha.14)
