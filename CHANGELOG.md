@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.16 (2025-06-03)
+
+Full Changelog: [v0.1.0-alpha.15...v0.1.0-alpha.16](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.15...v0.1.0-alpha.16)
+
+### Bug Fixes
+
+* **api:** fix type for AggregateBy ([691bfbd](https://github.com/turbopuffer/turbopuffer-go/commit/691bfbd599ab5165eb92703e0e3f58fd56e88242))
+
 ## 0.1.0-alpha.15 (2025-06-03)
 
 Full Changelog: [v0.1.0-alpha.14...v0.1.0-alpha.15](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.14...v0.1.0-alpha.15)
