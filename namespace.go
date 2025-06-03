@@ -955,7 +955,7 @@ type NamespaceQueryParams struct {
 	TopK param.Opt[int64] `json:"top_k,omitzero"`
 	// Aggregations to compute over all documents in the namespace that match the
 	// filters.
-	AggregateBy AggregateBy `json:"aggregate_by,omitzero"`
+	AggregateBy map[string]AggregateBy `json:"aggregate_by,omitzero"`
 	// The consistency level for a query.
 	Consistency NamespaceQueryParamsConsistency `json:"consistency,omitzero"`
 	// A function used to calculate vector similarity.
