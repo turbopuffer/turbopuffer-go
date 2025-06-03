@@ -254,7 +254,7 @@ func (r *ColumnsParam) UnmarshalJSON(data []byte) error {
 // Use [param.IsOmitted] to confirm if a field is set.
 type ColumnsVectorParam struct {
 	VectorArray []VectorParam     `json:",omitzero,inline"`
-	FloatArray  []float64         `json:",omitzero,inline"`
+	FloatArray  []float32         `json:",omitzero,inline"`
 	String      param.Opt[string] `json:",omitzero,inline"`
 	paramUnion
 }
@@ -609,15 +609,15 @@ const (
 	TokenizerWordV1            Tokenizer = "word_v1"
 )
 
-// Vector contains all possible properties and values from [[]float64], [string].
+// Vector contains all possible properties and values from [[]float32], [string].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
 // will be valid: FloatArray String]
 type Vector struct {
-	// This field will be present if the value is a [[]float64] instead of an object.
-	FloatArray []float64 `json:",inline"`
+	// This field will be present if the value is a [[]float32] instead of an object.
+	FloatArray []float32 `json:",inline"`
 	// This field will be present if the value is a [string] instead of an object.
 	String string `json:",inline"`
 	JSON   struct {
@@ -627,7 +627,7 @@ type Vector struct {
 	} `json:"-"`
 }
 
-func (u Vector) AsFloatArray() (v []float64) {
+func (u Vector) AsFloatArray() (v []float32) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -657,7 +657,7 @@ func (r Vector) ToParam() VectorParam {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type VectorParam struct {
-	FloatArray []float64         `json:",omitzero,inline"`
+	FloatArray []float32         `json:",omitzero,inline"`
 	String     param.Opt[string] `json:",omitzero,inline"`
 	paramUnion
 }
@@ -906,7 +906,7 @@ type NamespaceRecallParams struct {
 	Filters any `json:"filters,omitzero"`
 	// Use specific query vectors for the measurement. If omitted, sampled from the
 	// index.
-	Queries []float64 `json:"queries,omitzero"`
+	Queries []float32 `json:"queries,omitzero"`
 	paramObj
 }
 
