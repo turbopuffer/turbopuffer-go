@@ -253,23 +253,16 @@ func (r *AttributeSchemaConfigParam) UnmarshalJSON(data []byte) error {
 
 type AttributeType = string
 
-// A function used to calculate vector similarity.
-type DistanceMetric string
-
-const (
-	DistanceMetricCosineDistance   DistanceMetric = "cosine_distance"
-	DistanceMetricEuclideanSquared DistanceMetric = "euclidean_squared"
-)
-
-// A list of documents in columnar format. The keys are the column names.
+// A list of documents in columnar format. Each key is a column name, mapped to an
+// array of values for that column.
 //
 // The property ID is required.
-type DocumentColumnsParam struct {
+type ColumnsParam struct {
 	// The IDs of the documents.
 	ID []IDParam `json:"id,omitzero,required" format:"uuid"`
 	// The vector embeddings of the documents.
-	Vector      DocumentColumnsVectorParam `json:"vector,omitzero"`
-	ExtraFields map[string][]any           `json:"-"`
+	Vector      ColumnsVectorParam `json:"vector,omitzero"`
+	ExtraFields map[string][]any   `json:"-"`
 	paramObj
 }
 
@@ -281,28 +274,33 @@ func (r DocumentColumnsParam) MarshalJSON() (data []byte, err error) {
 	}
 	return param.MarshalWithExtras(r, (*shadow)(&r), extraFields)
 }
-func (r *DocumentColumnsParam) UnmarshalJSON(data []byte) error {
+
+func (r ColumnsParam) MarshalJSON() (data []byte, err error) {
+	type shadow ColumnsParam
+	return param.MarshalWithExtras(r, (*shadow)(&r), r.ExtraFields)
+}
+func (r *ColumnsParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
-type DocumentColumnsVectorParam struct {
+type ColumnsVectorParam struct {
 	VectorArray []VectorParam     `json:",omitzero,inline"`
 	FloatArray  []float64         `json:",omitzero,inline"`
 	String      param.Opt[string] `json:",omitzero,inline"`
 	paramUnion
 }
 
-func (u DocumentColumnsVectorParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[DocumentColumnsVectorParam](u.VectorArray, u.FloatArray, u.String)
+func (u ColumnsVectorParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion[ColumnsVectorParam](u.VectorArray, u.FloatArray, u.String)
 }
-func (u *DocumentColumnsVectorParam) UnmarshalJSON(data []byte) error {
+func (u *ColumnsVectorParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
-func (u *DocumentColumnsVectorParam) asAny() any {
+func (u *ColumnsVectorParam) asAny() any {
 	if !param.IsOmitted(u.VectorArray) {
 		return &u.VectorArray
 	} else if !param.IsOmitted(u.FloatArray) {
@@ -313,56 +311,13 @@ func (u *DocumentColumnsVectorParam) asAny() any {
 	return nil
 }
 
-// A single document, in a row-based format.
-type DocumentRow struct {
-	// An identifier for a document.
-	ID ID `json:"id,required" format:"uuid"`
-	// A vector embedding associated with a document.
-	Vector      Vector         `json:"vector"`
-	ExtraFields map[string]any `json:",extras"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID          respjson.Field
-		Vector      respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
+// A function used to calculate vector similarity.
+type DistanceMetric string
 
-// Returns the unmodified JSON received from the API
-func (r DocumentRow) RawJSON() string { return r.JSON.raw }
-func (r *DocumentRow) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// ToParam converts this DocumentRow to a DocumentRowParam.
-//
-// Warning: the fields of the param type will not be present. ToParam should only
-// be used at the last possible moment before sending a request. Test for this with
-// DocumentRowParam.Overrides()
-func (r DocumentRow) ToParam() DocumentRowParam {
-	return param.Override[DocumentRowParam](r.RawJSON())
-}
-
-// A single document, in a row-based format.
-//
-// The property ID is required.
-type DocumentRowParam struct {
-	// An identifier for a document.
-	ID IDParam `json:"id,omitzero,required" format:"uuid"`
-	// A vector embedding associated with a document.
-	Vector      VectorParam    `json:"vector,omitzero"`
-	ExtraFields map[string]any `json:"-"`
-	paramObj
-}
-
-func (r DocumentRowParam) MarshalJSON() (data []byte, err error) {
-	type shadow DocumentRowParam
-	return param.MarshalWithExtras(r, (*shadow)(&r), r.ExtraFields)
-}
-func (r *DocumentRowParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
+const (
+	DistanceMetricCosineDistance   DistanceMetric = "cosine_distance"
+	DistanceMetricEuclideanSquared DistanceMetric = "euclidean_squared"
+)
 
 // FullTextSearch contains all possible properties and values from [bool],
 // [FullTextSearchConfig].
@@ -716,6 +671,57 @@ func (r *QueryPerformance) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// A single document, in a row-based format.
+type Row struct {
+	// An identifier for a document.
+	ID ID `json:"id,required" format:"uuid"`
+	// A vector embedding associated with a document.
+	Vector      Vector         `json:"vector"`
+	ExtraFields map[string]any `json:",extras"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID          respjson.Field
+		Vector      respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r Row) RawJSON() string { return r.JSON.raw }
+func (r *Row) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// ToParam converts this Row to a RowParam.
+//
+// Warning: the fields of the param type will not be present. ToParam should only
+// be used at the last possible moment before sending a request. Test for this with
+// RowParam.Overrides()
+func (r Row) ToParam() RowParam {
+	return param.Override[RowParam](r.RawJSON())
+}
+
+// A single document, in a row-based format.
+//
+// The property ID is required.
+type RowParam struct {
+	// An identifier for a document.
+	ID IDParam `json:"id,omitzero,required" format:"uuid"`
+	// A vector embedding associated with a document.
+	Vector      VectorParam    `json:"vector,omitzero"`
+	ExtraFields map[string]any `json:"-"`
+	paramObj
+}
+
+func (r RowParam) MarshalJSON() (data []byte, err error) {
+	type shadow RowParam
+	return param.MarshalWithExtras(r, (*shadow)(&r), r.ExtraFields)
+}
+func (r *RowParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // The tokenizer to use for full-text search on an attribute.
 type Tokenizer string
 
@@ -868,7 +874,7 @@ type NamespaceQueryResponse struct {
 	// The performance information for a query.
 	Performance  QueryPerformance `json:"performance,required"`
 	Aggregations map[string]any   `json:"aggregations"`
-	Rows         []DocumentRow    `json:"rows"`
+	Rows         []Row            `json:"rows"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Billing      respjson.Field
@@ -1066,14 +1072,16 @@ type NamespaceWriteParams struct {
 	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
 	// The encryption configuration for a namespace.
 	Encryption NamespaceWriteParamsEncryption `json:"encryption,omitzero"`
-	// A list of documents in columnar format. The keys are the column names.
-	PatchColumns DocumentColumnsParam `json:"patch_columns,omitzero"`
-	PatchRows    []DocumentRowParam   `json:"patch_rows,omitzero"`
+	// A list of documents in columnar format. Each key is a column name, mapped to an
+	// array of values for that column.
+	PatchColumns ColumnsParam `json:"patch_columns,omitzero"`
+	PatchRows    []RowParam   `json:"patch_rows,omitzero"`
 	// The schema of the attributes attached to the documents.
 	Schema map[string]AttributeSchemaParam `json:"schema,omitzero"`
-	// A list of documents in columnar format. The keys are the column names.
-	UpsertColumns DocumentColumnsParam `json:"upsert_columns,omitzero"`
-	UpsertRows    []DocumentRowParam   `json:"upsert_rows,omitzero"`
+	// A list of documents in columnar format. Each key is a column name, mapped to an
+	// array of values for that column.
+	UpsertColumns ColumnsParam `json:"upsert_columns,omitzero"`
+	UpsertRows    []RowParam   `json:"upsert_rows,omitzero"`
 	paramObj
 }
 
