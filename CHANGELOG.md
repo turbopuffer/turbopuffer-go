@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.0-alpha.17 (2025-06-03)
+
+Full Changelog: [v0.1.0-alpha.16...v0.1.0-alpha.17](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.16...v0.1.0-alpha.17)
+
+### Features
+
+* **api:** api update ([20a68c8](https://github.com/turbopuffer/turbopuffer-go/commit/20a68c8dbb12d4402b36aa18202d4f63b0034748))
+* **utils:** add a PrettyPrint utility method ([4a5ffe5](https://github.com/turbopuffer/turbopuffer-go/commit/4a5ffe5d4ed78a7971eda73f9afd247e8a3396fd))
+
+
+### Bug Fixes
+
+* **examples:** update for simpler schema ([9acf5bd](https://github.com/turbopuffer/turbopuffer-go/commit/9acf5bdedd473fd67525cd2123db6d03854d7d49))
+
 ## 0.1.0-alpha.16 (2025-06-03)
 
 Full Changelog: [v0.1.0-alpha.15...v0.1.0-alpha.16](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.15...v0.1.0-alpha.16)
