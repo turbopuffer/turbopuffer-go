@@ -260,7 +260,7 @@ type ColumnsVectorParam struct {
 }
 
 func (u ColumnsVectorParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[ColumnsVectorParam](u.VectorArray, u.FloatArray, u.String)
+	return param.MarshalUnion(u, u.VectorArray, u.FloatArray, u.String)
 }
 func (u *ColumnsVectorParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -429,7 +429,7 @@ type IDParam struct {
 }
 
 func (u IDParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[IDParam](u.String, u.Int)
+	return param.MarshalUnion(u, u.String, u.Int)
 }
 func (u *IDParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -454,7 +454,7 @@ type IncludeAttributesParam struct {
 }
 
 func (u IncludeAttributesParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[IncludeAttributesParam](u.Bool, u.StringArray)
+	return param.MarshalUnion(u, u.Bool, u.StringArray)
 }
 func (u *IncludeAttributesParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -663,7 +663,7 @@ type VectorParam struct {
 }
 
 func (u VectorParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[VectorParam](u.FloatArray, u.String)
+	return param.MarshalUnion(u, u.FloatArray, u.String)
 }
 func (u *VectorParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
