@@ -416,7 +416,9 @@ func (r *ID) UnmarshalJSON(data []byte) error {
 // be used at the last possible moment before sending a request. Test for this with
 // IDParam.Overrides()
 func (r ID) ToParam() IDParam {
-	return param.Override[IDParam](r.RawJSON())
+	// Original implementation doesn't serialize correctly:
+	// return param.Override[IDParam](r.RawJSON())
+	return param.Override[IDParam](json.RawMessage(r.RawJSON()))
 }
 
 // Only one field can be non-zero.

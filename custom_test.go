@@ -2,6 +2,7 @@ package turbopuffer_test
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"testing"
 
@@ -108,4 +109,54 @@ func TestTurbopufferFullTextSearchSchema(t *testing.T) {
 			t.Fatal("FullTextSearchConfig should contain default values")
 		}
 	})
+}
+
+func TestToParamSerializationInt(t *testing.T) {
+	var id turbopuffer.ID
+	err := id.UnmarshalJSON([]byte("123"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	idParam := id.ToParam()
+	idParamJSON, err := json.Marshal(idParam)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var idRoundtripped turbopuffer.ID
+	err = idRoundtripped.UnmarshalJSON(idParamJSON)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("id: %+v", id)
+	t.Logf("idParam: %+v", idParam)
+	t.Logf("idParamJSON: %s", string(idParamJSON))
+	t.Logf("idRoundtripped: %+v", idRoundtripped)
+	if id != idRoundtripped {
+		t.Fatal("id and idRoundtripped should be the same")
+	}
+}
+
+func TestToParamSerializationString(t *testing.T) {
+	var id turbopuffer.ID
+	err := id.UnmarshalJSON([]byte(`"abc"`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	idParam := id.ToParam()
+	idParamJSON, err := json.Marshal(idParam)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var idRoundtripped turbopuffer.ID
+	err = idRoundtripped.UnmarshalJSON(idParamJSON)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("id: %+v", id)
+	t.Logf("idParam: %+v", idParam)
+	t.Logf("idParamJSON: %s", string(idParamJSON))
+	t.Logf("idRoundtripped: %+v", idRoundtripped)
+	if id != idRoundtripped {
+		t.Fatal("id and idRoundtripped should be the same")
+	}
 }
