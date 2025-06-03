@@ -219,17 +219,17 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 				KeyName: "key_name",
 			},
 		},
-		PatchColumns: turbopuffer.DocumentColumnsParam{
+		PatchColumns: turbopuffer.ColumnsParam{
 			ID: []turbopuffer.IDParam{{
 				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			}},
-			Vector: turbopuffer.DocumentColumnsVectorParam{
+			Vector: turbopuffer.ColumnsVectorParam{
 				VectorArray: []turbopuffer.VectorParam{{
 					FloatArray: []float64{0},
 				}},
 			},
 		},
-		PatchRows: []turbopuffer.DocumentRowParam{{
+		PatchRows: []turbopuffer.RowParam{{
 			ID: turbopuffer.IDParam{
 				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			},
@@ -242,17 +242,17 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 				String: turbopuffer.String("string"),
 			},
 		},
-		UpsertColumns: turbopuffer.DocumentColumnsParam{
+		UpsertColumns: turbopuffer.ColumnsParam{
 			ID: []turbopuffer.IDParam{{
 				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			}},
-			Vector: turbopuffer.DocumentColumnsVectorParam{
+			Vector: turbopuffer.ColumnsVectorParam{
 				VectorArray: []turbopuffer.VectorParam{{
 					FloatArray: []float64{0},
 				}},
 			},
 		},
-		UpsertRows: []turbopuffer.DocumentRowParam{{
+		UpsertRows: []turbopuffer.RowParam{{
 			ID: turbopuffer.IDParam{
 				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			},

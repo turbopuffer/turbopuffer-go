@@ -56,7 +56,7 @@ func main() {
 	response, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
 		Namespace:      turbopuffer.String("products"),
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
-		UpsertRows: []turbopuffer.DocumentRowParam{{
+		UpsertRows: []turbopuffer.RowParam{{
 			ID: turbopuffer.IDParam{
 				String: turbopuffer.String("2108ed60-6851-49a0-9016-8325434f3845"),
 			},
