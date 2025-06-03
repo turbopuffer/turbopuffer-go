@@ -22,6 +22,17 @@ func setup(t *testing.T) testContext {
 	}
 }
 
+// TestTurbopufferFullTextSearchSchema tests the custom behavior of the
+// `FullTextSearch` field in the `AttributeSchemaConfigParam` type.
+//
+// If the field is omitted or set to nil, full-text search is disabled
+// (equivalent of explicit `false`). If the field is present but empty,
+// full-text search is enabled with default values (equivalent of explicit
+// `true`). Otherwise the full-text search is configured as specified.
+//
+// We do it this way because it's more idiomatic Go than the union struct that
+// Stainless will generate for the type in the OpenAPI specification (i.e.,
+// `bool | FullTextSearchConfigParam`).
 func TestTurbopufferFullTextSearchSchema(t *testing.T) {
 	tctx := setup(t)
 
@@ -97,5 +108,4 @@ func TestTurbopufferFullTextSearchSchema(t *testing.T) {
 			t.Fatal("FullTextSearchConfig should contain default values")
 		}
 	})
-
 }

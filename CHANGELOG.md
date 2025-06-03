@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.19 (2025-06-03)
+
+Full Changelog: [v0.1.0-alpha.18...v0.1.0-alpha.19](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.18...v0.1.0-alpha.19)
+
+### Features
+
+* **client:** allow overriding unions ([dbea310](https://github.com/turbopuffer/turbopuffer-go/commit/dbea3106c3fdbb0afe9c7c40150c1b4d2638f3da))
+
 ## 0.1.0-alpha.18 (2025-06-03)
 
 Full Changelog: [v0.1.0-alpha.17...v0.1.0-alpha.18](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.17...v0.1.0-alpha.18)
