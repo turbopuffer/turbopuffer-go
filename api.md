@@ -12,12 +12,12 @@ Methods:
 
 Params Types:
 
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#AttributeSchemaConfigParam">AttributeSchemaConfigParam</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#AttributeSchemaParam">AttributeSchemaParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#AttributeSchemaConfigParam">AttributeSchemaConfigParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#AttributeType">AttributeType</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#ColumnsParam">ColumnsParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#DistanceMetric">DistanceMetric</a>
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#FullTextSearchConfigParam">FullTextSearchConfigParam</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#FullTextSearchParam">FullTextSearchParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#FullTextSearchConfigParam">FullTextSearchConfigParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#IDParam">IDParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#IncludeAttributesParam">IncludeAttributesParam</a>
@@ -31,7 +31,7 @@ Response Types:
 
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#AttributeSchemaConfig">AttributeSchemaConfig</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#AttributeType">AttributeType</a>
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#FullTextSearchConfig">FullTextSearchConfig</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#FullTextSearch">FullTextSearch</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#FullTextSearchConfig">FullTextSearchConfig</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#ID">ID</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#Language">Language</a>
