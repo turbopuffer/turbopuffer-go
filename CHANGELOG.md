@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.1.0-alpha.20 (2025-06-03)
+
+Full Changelog: [v0.1.0-alpha.19...v0.1.0-alpha.20](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.19...v0.1.0-alpha.20)
+
+### Features
+
+* **api:** manual updates ([e3eb2a0](https://github.com/turbopuffer/turbopuffer-go/commit/e3eb2a03e8db74e85ea0fa2934c91121e88ec721))
+* **api:** use float32 instead of float64 when possible ([1139c83](https://github.com/turbopuffer/turbopuffer-go/commit/1139c83e4b7f7cc00154a8a30a988bc6bafe29c5))
+* **tests:** add a test to protect against regressions of ToParam ([ebe656f](https://github.com/turbopuffer/turbopuffer-go/commit/ebe656f0a4a50b1c77c891f0aae191d6f45307e0))
+
+
+### Bug Fixes
+
+* **api:** use float32 rather than float64 in vecs ([4e45fad](https://github.com/turbopuffer/turbopuffer-go/commit/4e45fad61ec2dd2924b68a6f068f0de87aeecd72))
+* **client:** cast to raw message when converting to params ([96cfe2e](https://github.com/turbopuffer/turbopuffer-go/commit/96cfe2ecbae487f0a95eea1cc5adfbbe23f47bc2))
+* **internal:** adjust formatting of generated code ([f26c503](https://github.com/turbopuffer/turbopuffer-go/commit/f26c5038e7af47fbe7d443786dc96e9936eab175))
+* **internal:** run gofmt during supplemental codegen ([13263a2](https://github.com/turbopuffer/turbopuffer-go/commit/13263a2cfbaa5487fbfc0509d4ca9ad9d716762e))
+* **test:** adjust test for float32 vectors ([667b516](https://github.com/turbopuffer/turbopuffer-go/commit/667b5160d231622e7ae2887878c4eafc1e69b15a))
+
 ## 0.1.0-alpha.19 (2025-06-03)
 
 Full Changelog: [v0.1.0-alpha.18...v0.1.0-alpha.19](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.18...v0.1.0-alpha.19)
