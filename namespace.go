@@ -191,7 +191,7 @@ func (r *AttributeSchemaConfig) UnmarshalJSON(data []byte) error {
 // be used at the last possible moment before sending a request. Test for this with
 // AttributeSchemaConfigParam.Overrides()
 func (r AttributeSchemaConfig) ToParam() AttributeSchemaConfigParam {
-	return param.Override[AttributeSchemaConfigParam](r.RawJSON())
+	return param.Override[AttributeSchemaConfigParam](json.RawMessage(r.RawJSON()))
 }
 
 // Detailed configuration for an attribute attached to a document.
@@ -328,7 +328,7 @@ func (r *FullTextSearchConfig) UnmarshalJSON(data []byte) error {
 // be used at the last possible moment before sending a request. Test for this with
 // FullTextSearchConfigParam.Overrides()
 func (r FullTextSearchConfig) ToParam() FullTextSearchConfigParam {
-	return param.Override[FullTextSearchConfigParam](r.RawJSON())
+	return param.Override[FullTextSearchConfigParam](json.RawMessage(r.RawJSON()))
 }
 
 // Configuration options for full-text search.
@@ -408,7 +408,7 @@ func (r *ID) UnmarshalJSON(data []byte) error {
 // be used at the last possible moment before sending a request. Test for this with
 // IDParam.Overrides()
 func (r ID) ToParam() IDParam {
-	return param.Override[IDParam](r.RawJSON())
+	return param.Override[IDParam](json.RawMessage(r.RawJSON()))
 }
 
 // Only one field can be non-zero.
@@ -569,7 +569,7 @@ func (r *Row) UnmarshalJSON(data []byte) error {
 // be used at the last possible moment before sending a request. Test for this with
 // RowParam.Overrides()
 func (r Row) ToParam() RowParam {
-	return param.Override[RowParam](r.RawJSON())
+	return param.Override[RowParam](json.RawMessage(r.RawJSON()))
 }
 
 // A single document, in a row-based format.
@@ -642,7 +642,7 @@ func (r *Vector) UnmarshalJSON(data []byte) error {
 // be used at the last possible moment before sending a request. Test for this with
 // VectorParam.Overrides()
 func (r Vector) ToParam() VectorParam {
-	return param.Override[VectorParam](r.RawJSON())
+	return param.Override[VectorParam](json.RawMessage(r.RawJSON()))
 }
 
 // Only one field can be non-zero.
