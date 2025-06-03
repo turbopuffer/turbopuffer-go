@@ -34,7 +34,7 @@ func main() {
 	// Upsert some documents.
 	{
 		res, err := namespace.Write(ctx, turbopuffer.NamespaceWriteParams{
-			UpsertRows: []turbopuffer.DocumentRowParam{
+			UpsertRows: []turbopuffer.RowParam{
 				{
 					ID:     turbopuffer.IDParam{String: turbopuffer.String("b3ff34ea-87bb-469c-a854-9cb7e3713fc3")},
 					Vector: turbopuffer.VectorParam{FloatArray: []float64{1.0, 2.0, 3.0}},
@@ -104,7 +104,7 @@ func main() {
 	// Patch one document.
 	{
 		res, err := namespace.Write(ctx, turbopuffer.NamespaceWriteParams{
-			PatchRows: []turbopuffer.DocumentRowParam{
+			PatchRows: []turbopuffer.RowParam{
 				{
 					ID: turbopuffer.IDParam{String: turbopuffer.String("580d4471-9a9b-44fb-b59d-637ade604f72")},
 					ExtraFields: map[string]any{

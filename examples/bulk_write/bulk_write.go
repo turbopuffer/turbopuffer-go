@@ -35,14 +35,14 @@ func main() {
 	for batch := 0; batch < numBatches; batch++ {
 		batchStartTime := time.Now()
 
-		documents := make([]turbopuffer.DocumentRowParam, 0, batchSize)
+		documents := make([]turbopuffer.RowParam, 0, batchSize)
 		for i := 0; i < batchSize; i++ {
 			id := batch*batchSize + i
 			vector := make([]float64, vectorDim)
 			for j := 0; j < vectorDim; j++ {
 				vector[j] = rand.Float64()
 			}
-			documents = append(documents, turbopuffer.DocumentRowParam{
+			documents = append(documents, turbopuffer.RowParam{
 				ID:     turbopuffer.IDParam{Int: turbopuffer.Int(int64(id))},
 				Vector: turbopuffer.VectorParam{FloatArray: vector},
 			})

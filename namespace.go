@@ -266,15 +266,6 @@ type ColumnsParam struct {
 	paramObj
 }
 
-func (r DocumentColumnsParam) MarshalJSON() (data []byte, err error) {
-	type shadow DocumentColumnsParam
-	extraFields := make(map[string]any)
-	for fieldName, fieldValue := range r.ExtraFields {
-		extraFields[fieldName] = fieldValue
-	}
-	return param.MarshalWithExtras(r, (*shadow)(&r), extraFields)
-}
-
 func (r ColumnsParam) MarshalJSON() (data []byte, err error) {
 	type shadow ColumnsParam
 	return param.MarshalWithExtras(r, (*shadow)(&r), r.ExtraFields)
