@@ -2,6 +2,7 @@ package turbopuffer_test
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"testing"
 
@@ -108,4 +109,40 @@ func TestTurbopufferFullTextSearchSchema(t *testing.T) {
 			t.Fatal("FullTextSearchConfig should contain default values")
 		}
 	})
+}
+
+// The `ToParam` method used to be broken for unions. This test protects against
+// regressions.
+// See: https://turbopuffer-internal.slack.com/archives/C08EK13Q98E/p1748933005836679
+func TestToParamSerialization(t *testing.T) {
+	type testCase struct {
+		name string
+		json string
+	}
+
+	for _, tc := range []testCase{
+		{name: "int", json: "123"},
+		{name: "string", json: `"abc"`},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			var id turbopuffer.ID
+			err := id.UnmarshalJSON([]byte(tc.json))
+			if err != nil {
+				t.Fatal(err)
+			}
+			idParam := id.ToParam()
+			idParamJSON, err := json.Marshal(idParam)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var idRoundtripped turbopuffer.ID
+			err = idRoundtripped.UnmarshalJSON(idParamJSON)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if id != idRoundtripped {
+				t.Fatal("id and idRoundtripped should be the same")
+			}
+		})
+	}
 }
