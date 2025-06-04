@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.0-alpha.22 (2025-06-04)
+
+Full Changelog: [v0.1.0-alpha.21...v0.1.0-alpha.22](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.21...v0.1.0-alpha.22)
+
+### Bug Fixes
+
+* **api:** simplify type of Row and Columns ([faf595c](https://github.com/turbopuffer/turbopuffer-go/commit/faf595cdf0c075941e4f34d3c3f7027c4fbc1685))
+* **tests:** update for simplified Row and Columns ([25710ef](https://github.com/turbopuffer/turbopuffer-go/commit/25710eff67de538ff89890dd4e3fa41b0d0b2eaa))
+* **tests:** update for simplified Row and Columns ([c267e76](https://github.com/turbopuffer/turbopuffer-go/commit/c267e769c813b7694e5d1f3b4fb9ea2a8c577914))
+
 ## 0.1.0-alpha.21 (2025-06-04)
 
 Full Changelog: [v0.1.0-alpha.20...v0.1.0-alpha.21](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.20...v0.1.0-alpha.21)
