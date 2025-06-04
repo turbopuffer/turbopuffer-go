@@ -45,7 +45,7 @@ func TestTurbopufferFullTextSearchSchema(t *testing.T) {
 		_, err := ns.Write(tctx.ctx, turbopuffer.NamespaceWriteParams{
 			UpsertRows: []turbopuffer.RowParam{
 				{
-					"id":        "1",
+					"id":        1,
 					"test-attr": "test-value",
 				},
 			},
