@@ -28,14 +28,12 @@ func TestUsage(t *testing.T) {
 	ns := client.Namespace("products")
 	response, err := ns.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
-		UpsertRows: []turbopuffer.RowParam{{
-			ID: turbopuffer.IDParam{
-				String: turbopuffer.String("2108ed60-6851-49a0-9016-8325434f3845"),
+		UpsertRows: []turbopuffer.RowParam{
+			{
+				"id":     "2108ed60-6851-49a0-9016-8325434f3845",
+				"vector": []float32{0.1, 0.2},
 			},
-			Vector: turbopuffer.VectorParam{
-				FloatArray: []float32{0.1, 0.2},
-			},
-		}},
+		},
 	})
 	if err != nil {
 		t.Fatalf("err should be nil: %s", err.Error())
