@@ -48,9 +48,15 @@ func NewClient(opts ...option.RequestOption) (r Client) {
 	return
 }
 
-func (r *Client) Namespace(namespace string) NamespaceService {
+// Represents a turbopuffer namespace.
+type Namespace struct {
+	NamespaceService
+}
+
+// Namespace creates a new namespace resource.
+func (r *Client) Namespace(namespace string) Namespace {
 	opts := append(r.Options, option.WithDefaultNamespace(namespace))
-	return newNamespaceService(opts...)
+	return Namespace{newNamespaceService(opts...)}
 }
 
 // Execute makes a request with the given context, method, URL, request params,
