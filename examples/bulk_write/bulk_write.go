@@ -42,9 +42,9 @@ func main() {
 			for j := 0; j < vectorDim; j++ {
 				vector[j] = rand.Float32()
 			}
-			documents = append(documents, turbopuffer.RowParam{
-				ID:     turbopuffer.IDParam{Int: turbopuffer.Int(int64(id))},
-				Vector: turbopuffer.VectorParam{FloatArray: vector},
+			documents = append(documents, map[string]any{
+				"id":     id,
+				"vector": vector,
 			})
 		}
 

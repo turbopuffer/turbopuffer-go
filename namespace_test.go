@@ -212,45 +212,13 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 				KeyName: "key_name",
 			},
 		},
-		PatchColumns: turbopuffer.ColumnsParam{
-			ID: []turbopuffer.IDParam{{
-				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			}},
-			Vector: turbopuffer.ColumnsVectorParam{
-				VectorArray: []turbopuffer.VectorParam{{
-					FloatArray: []float32{0},
-				}},
-			},
-		},
-		PatchRows: []turbopuffer.RowParam{{
-			ID: turbopuffer.IDParam{
-				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			},
-			Vector: turbopuffer.VectorParam{
-				FloatArray: []float32{0},
-			},
-		}},
+		PatchColumns: turbopuffer.ColumnsParam{},
+		PatchRows:    []turbopuffer.RowParam{},
 		Schema: map[string]turbopuffer.AttributeSchemaConfigParam{
 			"foo": {Ann: turbopuffer.Bool(true), Filterable: turbopuffer.Bool(true), FullTextSearch: &turbopuffer.FullTextSearchConfigParam{B: turbopuffer.Float(0), CaseSensitive: turbopuffer.Bool(true), K1: turbopuffer.Float(0), Language: turbopuffer.LanguageArabic, RemoveStopwords: turbopuffer.Bool(true), Stemming: turbopuffer.Bool(true), Tokenizer: turbopuffer.TokenizerPreTokenizedArray}, Type: turbopuffer.String("string")},
 		},
-		UpsertColumns: turbopuffer.ColumnsParam{
-			ID: []turbopuffer.IDParam{{
-				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			}},
-			Vector: turbopuffer.ColumnsVectorParam{
-				VectorArray: []turbopuffer.VectorParam{{
-					FloatArray: []float32{0},
-				}},
-			},
-		},
-		UpsertRows: []turbopuffer.RowParam{{
-			ID: turbopuffer.IDParam{
-				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			},
-			Vector: turbopuffer.VectorParam{
-				FloatArray: []float32{0},
-			},
-		}},
+		UpsertColumns: turbopuffer.ColumnsParam{},
+		UpsertRows:    []turbopuffer.RowParam{},
 	})
 	if err != nil {
 		var apierr *turbopuffer.Error
