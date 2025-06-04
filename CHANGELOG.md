@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.21 (2025-06-04)
+
+Full Changelog: [v0.1.0-alpha.20...v0.1.0-alpha.21](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.20...v0.1.0-alpha.21)
+
+### Features
+
+* **api:** add a dedicated Namespace resource ([dbd639d](https://github.com/turbopuffer/turbopuffer-go/commit/dbd639dd4575e525fa5cc641c4124effb2eeac7d))
+
 ## 0.1.0-alpha.20 (2025-06-03)
 
 Full Changelog: [v0.1.0-alpha.19...v0.1.0-alpha.20](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.19...v0.1.0-alpha.20)
