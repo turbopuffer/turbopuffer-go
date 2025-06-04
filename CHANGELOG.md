@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.0-alpha.23 (2025-06-04)
+
+Full Changelog: [v0.1.0-alpha.22...v0.1.0-alpha.23](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.22...v0.1.0-alpha.23)
+
+### Bug Fixes
+
+* **api:** don't use floats for numeric attr values ([754d14b](https://github.com/turbopuffer/turbopuffer-go/commit/754d14b0d652554c69cf554bafe2968b0a10a4da))
+* **tests:** update for new JSON decoding behavior ([aa02f73](https://github.com/turbopuffer/turbopuffer-go/commit/aa02f73f06455fcd73ffed27e8af99a305678002))
+
 ## 0.1.0-alpha.22 (2025-06-04)
 
 Full Changelog: [v0.1.0-alpha.21...v0.1.0-alpha.22](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.21...v0.1.0-alpha.22)
