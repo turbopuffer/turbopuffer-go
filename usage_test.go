@@ -33,7 +33,7 @@ func TestUsage(t *testing.T) {
 				String: turbopuffer.String("2108ed60-6851-49a0-9016-8325434f3845"),
 			},
 			Vector: turbopuffer.VectorParam{
-				FloatArray: []float64{0.1, 0.2},
+				FloatArray: []float32{0.1, 0.2},
 			},
 		}},
 	})

@@ -199,7 +199,7 @@ func (r *AttributeSchemaConfig) UnmarshalJSON(data []byte) error {
 // be used at the last possible moment before sending a request. Test for this with
 // AttributeSchemaConfigParam.Overrides()
 func (r AttributeSchemaConfig) ToParam() AttributeSchemaConfigParam {
-	return param.Override[AttributeSchemaConfigParam](r.RawJSON())
+	return param.Override[AttributeSchemaConfigParam](json.RawMessage(r.RawJSON()))
 }
 
 // Detailed configuration for an attribute attached to a document.
@@ -254,13 +254,13 @@ func (r *ColumnsParam) UnmarshalJSON(data []byte) error {
 // Use [param.IsOmitted] to confirm if a field is set.
 type ColumnsVectorParam struct {
 	VectorArray []VectorParam     `json:",omitzero,inline"`
-	FloatArray  []float64         `json:",omitzero,inline"`
+	FloatArray  []float32         `json:",omitzero,inline"`
 	String      param.Opt[string] `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u ColumnsVectorParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[ColumnsVectorParam](u.VectorArray, u.FloatArray, u.String)
+	return param.MarshalUnion(u, u.VectorArray, u.FloatArray, u.String)
 }
 func (u *ColumnsVectorParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -336,7 +336,7 @@ func (r *FullTextSearchConfig) UnmarshalJSON(data []byte) error {
 // be used at the last possible moment before sending a request. Test for this with
 // FullTextSearchConfigParam.Overrides()
 func (r FullTextSearchConfig) ToParam() FullTextSearchConfigParam {
-	return param.Override[FullTextSearchConfigParam](r.RawJSON())
+	return param.Override[FullTextSearchConfigParam](json.RawMessage(r.RawJSON()))
 }
 
 // Configuration options for full-text search.
@@ -416,7 +416,7 @@ func (r *ID) UnmarshalJSON(data []byte) error {
 // be used at the last possible moment before sending a request. Test for this with
 // IDParam.Overrides()
 func (r ID) ToParam() IDParam {
-	return param.Override[IDParam](r.RawJSON())
+	return param.Override[IDParam](json.RawMessage(r.RawJSON()))
 }
 
 // Only one field can be non-zero.
@@ -429,7 +429,7 @@ type IDParam struct {
 }
 
 func (u IDParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[IDParam](u.String, u.Int)
+	return param.MarshalUnion(u, u.String, u.Int)
 }
 func (u *IDParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -454,7 +454,7 @@ type IncludeAttributesParam struct {
 }
 
 func (u IncludeAttributesParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[IncludeAttributesParam](u.Bool, u.StringArray)
+	return param.MarshalUnion(u, u.Bool, u.StringArray)
 }
 func (u *IncludeAttributesParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -577,7 +577,7 @@ func (r *Row) UnmarshalJSON(data []byte) error {
 // be used at the last possible moment before sending a request. Test for this with
 // RowParam.Overrides()
 func (r Row) ToParam() RowParam {
-	return param.Override[RowParam](r.RawJSON())
+	return param.Override[RowParam](json.RawMessage(r.RawJSON()))
 }
 
 // A single document, in a row-based format.
@@ -609,15 +609,15 @@ const (
 	TokenizerWordV1            Tokenizer = "word_v1"
 )
 
-// Vector contains all possible properties and values from [[]float64], [string].
+// Vector contains all possible properties and values from [[]float32], [string].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
 // will be valid: FloatArray String]
 type Vector struct {
-	// This field will be present if the value is a [[]float64] instead of an object.
-	FloatArray []float64 `json:",inline"`
+	// This field will be present if the value is a [[]float32] instead of an object.
+	FloatArray []float32 `json:",inline"`
 	// This field will be present if the value is a [string] instead of an object.
 	String string `json:",inline"`
 	JSON   struct {
@@ -627,7 +627,7 @@ type Vector struct {
 	} `json:"-"`
 }
 
-func (u Vector) AsFloatArray() (v []float64) {
+func (u Vector) AsFloatArray() (v []float32) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -650,20 +650,20 @@ func (r *Vector) UnmarshalJSON(data []byte) error {
 // be used at the last possible moment before sending a request. Test for this with
 // VectorParam.Overrides()
 func (r Vector) ToParam() VectorParam {
-	return param.Override[VectorParam](r.RawJSON())
+	return param.Override[VectorParam](json.RawMessage(r.RawJSON()))
 }
 
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type VectorParam struct {
-	FloatArray []float64         `json:",omitzero,inline"`
+	FloatArray []float32         `json:",omitzero,inline"`
 	String     param.Opt[string] `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u VectorParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion[VectorParam](u.FloatArray, u.String)
+	return param.MarshalUnion(u, u.FloatArray, u.String)
 }
 func (u *VectorParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -906,7 +906,7 @@ type NamespaceRecallParams struct {
 	Filters any `json:"filters,omitzero"`
 	// Use specific query vectors for the measurement. If omitted, sampled from the
 	// index.
-	Queries []float64 `json:"queries,omitzero"`
+	Queries []float32 `json:"queries,omitzero"`
 	paramObj
 }
 

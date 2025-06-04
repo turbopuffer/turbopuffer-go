@@ -87,7 +87,7 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		IncludeAttributes: turbopuffer.IncludeAttributesParam{
 			Bool: turbopuffer.Bool(true),
 		},
-		RankBy:         turbopuffer.NewRankByVector("vector", []float64{0}),
+		RankBy:         turbopuffer.NewRankByVector("vector", []float32{0}),
 		TopK:           turbopuffer.Int(0),
 		VectorEncoding: turbopuffer.VectorEncodingFloat,
 	})
@@ -119,7 +119,7 @@ func TestNamespaceRecallWithOptionalParams(t *testing.T) {
 		Namespace: turbopuffer.String("namespace"),
 		Filters:   map[string]interface{}{},
 		Num:       turbopuffer.Int(0),
-		Queries:   []float64{0},
+		Queries:   []float32{0},
 		TopK:      turbopuffer.Int(0),
 	})
 	if err != nil {
@@ -218,7 +218,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 			}},
 			Vector: turbopuffer.ColumnsVectorParam{
 				VectorArray: []turbopuffer.VectorParam{{
-					FloatArray: []float64{0},
+					FloatArray: []float32{0},
 				}},
 			},
 		},
@@ -227,7 +227,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			},
 			Vector: turbopuffer.VectorParam{
-				FloatArray: []float64{0},
+				FloatArray: []float32{0},
 			},
 		}},
 		Schema: map[string]turbopuffer.AttributeSchemaConfigParam{
@@ -239,7 +239,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 			}},
 			Vector: turbopuffer.ColumnsVectorParam{
 				VectorArray: []turbopuffer.VectorParam{{
-					FloatArray: []float64{0},
+					FloatArray: []float32{0},
 				}},
 			},
 		},
@@ -248,7 +248,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			},
 			Vector: turbopuffer.VectorParam{
-				FloatArray: []float64{0},
+				FloatArray: []float32{0},
 			},
 		}},
 	})

@@ -37,7 +37,7 @@ func main() {
 			UpsertRows: []turbopuffer.RowParam{
 				{
 					ID:     turbopuffer.IDParam{String: turbopuffer.String("b3ff34ea-87bb-469c-a854-9cb7e3713fc3")},
-					Vector: turbopuffer.VectorParam{FloatArray: []float64{1.0, 2.0, 3.0}},
+					Vector: turbopuffer.VectorParam{FloatArray: []float32{1.0, 2.0, 3.0}},
 					ExtraFields: map[string]any{
 						"name": "Luke",
 						"age":  32,
@@ -45,7 +45,7 @@ func main() {
 				},
 				{
 					ID:     turbopuffer.IDParam{String: turbopuffer.String("580d4471-9a9b-44fb-b59d-637ade604f72")},
-					Vector: turbopuffer.VectorParam{FloatArray: []float64{4.0, 5.0, 6.0}},
+					Vector: turbopuffer.VectorParam{FloatArray: []float32{4.0, 5.0, 6.0}},
 					ExtraFields: map[string]any{
 						"name": "Leia",
 						"age":  28,
@@ -68,7 +68,7 @@ func main() {
 	// Do a vector query.
 	{
 		res, err := namespace.Query(ctx, turbopuffer.NamespaceQueryParams{
-			RankBy:            turbopuffer.NewRankByVector("vector", []float64{3.0, 4.0, 5.0}),
+			RankBy:            turbopuffer.NewRankByVector("vector", []float32{3.0, 4.0, 5.0}),
 			TopK:              turbopuffer.Int(10),
 			IncludeAttributes: turbopuffer.IncludeAttributesParam{Bool: turbopuffer.Bool(true)},
 			Filters: turbopuffer.NewFilterAnd([]turbopuffer.Filter{

@@ -38,9 +38,9 @@ func main() {
 		documents := make([]turbopuffer.RowParam, 0, batchSize)
 		for i := 0; i < batchSize; i++ {
 			id := batch*batchSize + i
-			vector := make([]float64, vectorDim)
+			vector := make([]float32, vectorDim)
 			for j := 0; j < vectorDim; j++ {
-				vector[j] = rand.Float64()
+				vector[j] = rand.Float32()
 			}
 			documents = append(documents, turbopuffer.RowParam{
 				ID:     turbopuffer.IDParam{Int: turbopuffer.Int(int64(id))},

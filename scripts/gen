@@ -4,7 +4,8 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-api_gen_image=ghcr.io/turbopuffer/turbopuffer-apigen:0e05db7e3fbb488816419c541725ce5b64fc5338
+api_gen_image=ghcr.io/turbopuffer/turbopuffer-apigen:21900adc37f904eca6728878a01932c27920c315
 
 echo "==> Generating code"
 docker run -v "$(pwd):/work" "$api_gen_image" go > custom_types.go
+gofmt -s -w custom_types.go
