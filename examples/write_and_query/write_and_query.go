@@ -7,6 +7,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -77,7 +78,7 @@ func main() {
 		}
 		fmt.Println("Query results:")
 		for _, row := range res.Rows {
-			fmt.Printf("    ID: %s, Name: %s, Age: %d\n", row["id"], row["name"], int64(row["age"].(float64)))
+			fmt.Printf("    ID: %s, Name: %s, Age: %s\n", row["id"], row["name"], row["age"].(json.Number))
 		}
 	}
 
@@ -119,7 +120,7 @@ func main() {
 		}
 		fmt.Println("Query results:")
 		for _, row := range res.Rows {
-			fmt.Printf("    ID: %s, Name: %s, Age: %d\n", row["id"], row["name"], int64(row["age"].(float64)))
+			fmt.Printf("    ID: %s, Name: %s, Age: %s\n", row["id"], row["name"], row["age"].(json.Number))
 		}
 	}
 }

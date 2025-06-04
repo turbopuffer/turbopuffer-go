@@ -231,7 +231,12 @@ func (d *decoderBuilder) newTypeDecoder(t reflect.Type) decoderFunc {
 			if !value.IsValid() {
 				return fmt.Errorf("apijson: unexpected invalid value %+#v", value)
 			}
-			if node.Value() != nil && value.CanSet() {
+			if node.Type == gjson.Number {
+				// CUSTOM CODE: when decoding a number into `any`, use
+				// `json.Number` instead of the default `float64`. Attributes
+				// might be uints, which can exceed the range of `float64`.
+				value.Set(reflect.ValueOf(json.Number(node.Raw)))
+			} else if node.Value() != nil && value.CanSet() {
 				value.Set(reflect.ValueOf(node.Value()))
 			}
 			return nil
