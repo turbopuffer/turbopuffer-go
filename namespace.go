@@ -230,52 +230,7 @@ type AttributeType = string
 
 // A list of documents in columnar format. Each key is a column name, mapped to an
 // array of values for that column.
-//
-// The property ID is required.
-type ColumnsParam struct {
-	// The IDs of the documents.
-	ID []IDParam `json:"id,omitzero,required" format:"uuid"`
-	// The vector embeddings of the documents.
-	Vector      ColumnsVectorParam `json:"vector,omitzero"`
-	ExtraFields map[string][]any   `json:"-"`
-	paramObj
-}
-
-func (r ColumnsParam) MarshalJSON() (data []byte, err error) {
-	type shadow ColumnsParam
-	return param.MarshalWithExtras(r, (*shadow)(&r), r.ExtraFields)
-}
-func (r *ColumnsParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type ColumnsVectorParam struct {
-	VectorArray []VectorParam     `json:",omitzero,inline"`
-	FloatArray  []float32         `json:",omitzero,inline"`
-	String      param.Opt[string] `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u ColumnsVectorParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.VectorArray, u.FloatArray, u.String)
-}
-func (u *ColumnsVectorParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *ColumnsVectorParam) asAny() any {
-	if !param.IsOmitted(u.VectorArray) {
-		return &u.VectorArray
-	} else if !param.IsOmitted(u.FloatArray) {
-		return &u.FloatArray
-	} else if !param.IsOmitted(u.String) {
-		return &u.String.Value
-	}
-	return nil
-}
+type ColumnsParam map[string][]any
 
 // A function used to calculate vector similarity.
 type DistanceMetric string
@@ -550,55 +505,8 @@ func (r *QueryPerformance) UnmarshalJSON(data []byte) error {
 }
 
 // A single document, in a row-based format.
-type Row struct {
-	// An identifier for a document.
-	ID ID `json:"id,required" format:"uuid"`
-	// A vector embedding associated with a document.
-	Vector      Vector         `json:"vector"`
-	ExtraFields map[string]any `json:",extras"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID          respjson.Field
-		Vector      respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r Row) RawJSON() string { return r.JSON.raw }
-func (r *Row) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// ToParam converts this Row to a RowParam.
-//
-// Warning: the fields of the param type will not be present. ToParam should only
-// be used at the last possible moment before sending a request. Test for this with
-// RowParam.Overrides()
-func (r Row) ToParam() RowParam {
-	return param.Override[RowParam](json.RawMessage(r.RawJSON()))
-}
-
-// A single document, in a row-based format.
-//
-// The property ID is required.
-type RowParam struct {
-	// An identifier for a document.
-	ID IDParam `json:"id,omitzero,required" format:"uuid"`
-	// A vector embedding associated with a document.
-	Vector      VectorParam    `json:"vector,omitzero"`
-	ExtraFields map[string]any `json:"-"`
-	paramObj
-}
-
-func (r RowParam) MarshalJSON() (data []byte, err error) {
-	type shadow RowParam
-	return param.MarshalWithExtras(r, (*shadow)(&r), r.ExtraFields)
-}
-func (r *RowParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
+type Row map[string]any
+type RowParam Row
 
 // The tokenizer to use for full-text search on an attribute.
 type Tokenizer string

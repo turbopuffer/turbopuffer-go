@@ -36,20 +36,16 @@ func main() {
 		res, err := namespace.Write(ctx, turbopuffer.NamespaceWriteParams{
 			UpsertRows: []turbopuffer.RowParam{
 				{
-					ID:     turbopuffer.IDParam{String: turbopuffer.String("b3ff34ea-87bb-469c-a854-9cb7e3713fc3")},
-					Vector: turbopuffer.VectorParam{FloatArray: []float32{1.0, 2.0, 3.0}},
-					ExtraFields: map[string]any{
-						"name": "Luke",
-						"age":  32,
-					},
+					"id":     "b3ff34ea-87bb-469c-a854-9cb7e3713fc3",
+					"vector": []float32{1.0, 2.0, 3.0},
+					"name":   "Luke",
+					"age":    32,
 				},
 				{
-					ID:     turbopuffer.IDParam{String: turbopuffer.String("580d4471-9a9b-44fb-b59d-637ade604f72")},
-					Vector: turbopuffer.VectorParam{FloatArray: []float32{4.0, 5.0, 6.0}},
-					ExtraFields: map[string]any{
-						"name": "Leia",
-						"age":  28,
-					},
+					"id":     "580d4471-9a9b-44fb-b59d-637ade604f72",
+					"vector": []float32{4.0, 5.0, 6.0},
+					"name":   "Leia",
+					"age":    28,
 				},
 			},
 			Schema: map[string]turbopuffer.AttributeSchemaConfigParam{
@@ -81,7 +77,7 @@ func main() {
 		}
 		fmt.Println("Query results:")
 		for _, row := range res.Rows {
-			fmt.Printf("    ID: %s, Name: %s, Age: %d\n", row.ID.AsString(), row.ExtraFields["name"], int64(row.ExtraFields["age"].(float64)))
+			fmt.Printf("    ID: %s, Name: %s, Age: %d\n", row["id"], row["name"], int64(row["age"].(float64)))
 		}
 	}
 
@@ -99,11 +95,9 @@ func main() {
 		res, err := namespace.Write(ctx, turbopuffer.NamespaceWriteParams{
 			PatchRows: []turbopuffer.RowParam{
 				{
-					ID: turbopuffer.IDParam{String: turbopuffer.String("580d4471-9a9b-44fb-b59d-637ade604f72")},
-					ExtraFields: map[string]any{
-						"name": "Leia",
-						"age":  82,
-					},
+					"id":   "580d4471-9a9b-44fb-b59d-637ade604f72",
+					"name": "Leia",
+					"age":  82,
 				},
 			},
 		})
@@ -125,7 +119,7 @@ func main() {
 		}
 		fmt.Println("Query results:")
 		for _, row := range res.Rows {
-			fmt.Printf("    ID: %s, Name: %s, Age: %d\n", row.ID.AsString(), row.ExtraFields["name"], int64(row.ExtraFields["age"].(float64)))
+			fmt.Printf("    ID: %s, Name: %s, Age: %d\n", row["id"], row["name"], int64(row["age"].(float64)))
 		}
 	}
 }
