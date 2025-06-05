@@ -1,13 +1,13 @@
 package apijson
 
 import (
-	"encoding/json"
 	"reflect"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/tidwall/gjson"
+	"github.com/turbopuffer/turbopuffer-go/packages/respjson"
 )
 
 func P[T any](v T) *T { return &v }
@@ -363,7 +363,7 @@ var tests = map[string]struct {
 
 	"map_string":                       {`{"foo":"bar"}`, map[string]string{"foo": "bar"}},
 	"map_string_with_sjson_path_chars": {`{":a.b.c*:d*-1e.f":"bar"}`, map[string]string{":a.b.c*:d*-1e.f": "bar"}},
-	"map_interface":                    {`{"a":1,"b":"str","c":false}`, map[string]any{"a": json.Number("1"), "b": "str", "c": false}},
+	"map_interface":                    {`{"a":1,"b":"str","c":false}`, map[string]any{"a": respjson.Number("1"), "b": "str", "c": false}},
 
 	"primitive_struct": {
 		`{"a":false,"b":237628372683,"c":654,"d":9999.43,"e":43.76,"f":[1,2,3,4]}`,
@@ -470,7 +470,7 @@ var tests = map[string]struct {
 	"unknown_struct_number": {
 		`{"unknown":12}`,
 		UnknownStruct{
-			Unknown: json.Number("12"),
+			Unknown: respjson.Number("12"),
 		},
 	},
 
