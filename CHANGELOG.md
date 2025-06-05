@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-beta.1 (2025-06-05)
+
+Full Changelog: [v0.1.0-alpha.25...v0.1.0-beta.1](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.25...v0.1.0-beta.1)
+
+### Chores
+
+* prepare for beta release ([1e98a55](https://github.com/turbopuffer/turbopuffer-go/commit/1e98a55425c11033c1397d8872e70f99561a63e5))
+
 ## 0.1.0-alpha.25 (2025-06-05)
 
 Full Changelog: [v0.1.0-alpha.24...v0.1.0-alpha.25](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.24...v0.1.0-alpha.25)
