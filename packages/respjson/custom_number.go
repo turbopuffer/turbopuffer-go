@@ -12,7 +12,7 @@ import (
 //
 // When marshaled to JSON, the string representation is assumed to be valid
 // JSON.
-type Number float64
+type Number string
 
 // String returns the literal text of the number.
 func (n Number) String() string { return string(n) }
