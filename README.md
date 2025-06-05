@@ -60,15 +60,13 @@ func main() {
 		option.WithRegion("gcp-us-central1"), // defaults to os.LookupEnv("TURBOPUFFER_REGION")
 	)
 	namespace := client.Namespace("products")
-	response, err := client.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
+	response, err := namespace.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
 		UpsertRows: []turbopuffer.RowParam{{
-			ID: turbopuffer.IDParam{
-				String: turbopuffer.String("2108ed60-6851-49a0-9016-8325434f3845"),
-			},
-			Vector: turbopuffer.VectorParam{
-				FloatArray: []float64{0.1, 0.2},
-			},
+			"id": "2108ed60-6851-49a0-9016-8325434f3845",
+			"vector": []float32{0.1, 0.2},
+			"additional": "values",
+			// ...
 		}},
 	})
 	if err != nil {
