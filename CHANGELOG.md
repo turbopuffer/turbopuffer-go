@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.0-alpha.25 (2025-06-05)
+
+Full Changelog: [v0.1.0-alpha.24...v0.1.0-alpha.25](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.24...v0.1.0-alpha.25)
+
+### Bug Fixes
+
+* **api:** fix type in improved JSON number type ([75d62e6](https://github.com/turbopuffer/turbopuffer-go/commit/75d62e6cc5a5a66a10cf5030af10e0a7bf8b68ff))
+* **api:** improved JSON number type ([600c85d](https://github.com/turbopuffer/turbopuffer-go/commit/600c85ddedfd173524d83bb3b96fd6a42735c884))
+* **README:** update for improved API ([0ce58ac](https://github.com/turbopuffer/turbopuffer-go/commit/0ce58ac14e587262ce4590e5b73fa013820c7457))
+
 ## 0.1.0-alpha.24 (2025-06-05)
 
 Full Changelog: [v0.1.0-alpha.23...v0.1.0-alpha.24](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.23...v0.1.0-alpha.24)
