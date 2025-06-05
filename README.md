@@ -7,10 +7,10 @@ from applications written in Go.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-> [!WARNING]
-> **The turbopuffer Go client is in alpha.**
+> [!IMPORTANT]
+> **The turbopuffer Go client is in beta.**
 >
-> You may encounter bugs or performance issues. APIs are subject to change.
+> Please let us know about any bugs or performance issues.
 
 ## Installation
 
