@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/turbopuffer/turbopuffer-go/packages/param"
+	"github.com/turbopuffer/turbopuffer-go/packages/respjson"
 	"reflect"
 	"strconv"
 	"sync"
@@ -235,7 +236,7 @@ func (d *decoderBuilder) newTypeDecoder(t reflect.Type) decoderFunc {
 				// CUSTOM CODE: when decoding a number into `any`, use
 				// `json.Number` instead of the default `float64`. Attributes
 				// might be uints, which can exceed the range of `float64`.
-				value.Set(reflect.ValueOf(json.Number(node.Raw)))
+				value.Set(reflect.ValueOf(respjson.Number(node.Raw)))
 			} else if node.Value() != nil && value.CanSet() {
 				value.Set(reflect.ValueOf(node.Value()))
 			}
