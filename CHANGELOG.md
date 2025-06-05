@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.24 (2025-06-05)
+
+Full Changelog: [v0.1.0-alpha.23...v0.1.0-alpha.24](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.23...v0.1.0-alpha.24)
+
+### Bug Fixes
+
+* **api:** use any type for `WriteParams.Delete` too ([f4dc15a](https://github.com/turbopuffer/turbopuffer-go/commit/f4dc15a1abb9fb55b782c6564a3dcf8e9dafedb1))
+
 ## 0.1.0-alpha.23 (2025-06-04)
 
 Full Changelog: [v0.1.0-alpha.22...v0.1.0-alpha.23](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.22...v0.1.0-alpha.23)
