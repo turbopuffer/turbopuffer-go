@@ -850,8 +850,8 @@ type NamespaceWriteParams struct {
 	// The namespace to copy documents from.
 	CopyFromNamespace param.Opt[string] `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
-	DeleteByFilter Filter    `json:"delete_by_filter,omitzero"`
-	Deletes        []IDParam `json:"deletes,omitzero" format:"uuid"`
+	DeleteByFilter Filter `json:"delete_by_filter,omitzero"`
+	Deletes        []any  `json:"deletes,omitzero"`
 	// A function used to calculate vector similarity.
 	//
 	// Any of "cosine_distance", "euclidean_squared".
