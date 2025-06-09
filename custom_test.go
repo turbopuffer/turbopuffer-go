@@ -4,10 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/turbopuffer/turbopuffer-go"
 )
+
+var nonce = fmt.Sprintf("%d", time.Now().UnixMilli())
 
 type testContext struct {
 	ctx    context.Context
@@ -19,7 +23,7 @@ func setup(t *testing.T) testContext {
 	return testContext{
 		ctx:    context.Background(),
 		client: turbopuffer.NewClient(),
-		prefix: fmt.Sprintf("test-go-%s", t.Name()),
+		prefix: fmt.Sprintf("test-go-%s-%s", nonce, t.Name()),
 	}
 }
 
@@ -41,7 +45,8 @@ func TestTurbopufferFullTextSearchSchema(t *testing.T) {
 		t *testing.T,
 		schema map[string]turbopuffer.AttributeSchemaConfigParam,
 	) turbopuffer.NamespaceSchemaResponse {
-		ns := tctx.client.Namespace(fmt.Sprintf("%s-fts-default", tctx.prefix))
+		subtestName := strings.SplitN(t.Name(), "/", 2)[1]
+		ns := tctx.client.Namespace(fmt.Sprintf("%s-fts-%s", tctx.prefix, subtestName))
 		_, err := ns.Write(tctx.ctx, turbopuffer.NamespaceWriteParams{
 			UpsertRows: []turbopuffer.RowParam{
 				{
@@ -91,7 +96,7 @@ func TestTurbopufferFullTextSearchSchema(t *testing.T) {
 		}
 	})
 
-	t.Run("present-but-empty-full-text-search", func(t *testing.T) {
+	t.Run("present-nonempty-full-text-search", func(t *testing.T) {
 		schema := roundtripSchema(t, map[string]turbopuffer.AttributeSchemaConfigParam{
 			"test-attr": {
 				Type: turbopuffer.String("string"),
@@ -104,7 +109,7 @@ func TestTurbopufferFullTextSearchSchema(t *testing.T) {
 			t.Fatal("FullTextSearchConfig should be valid")
 		}
 		if schema["test-attr"].FullTextSearch.Language != turbopuffer.LanguageDutch {
-			t.Fatal("FullTextSearchConfig should contain default values")
+			t.Fatal("FullTextSearchConfig should contain specified values")
 		}
 	})
 }
