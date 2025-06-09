@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.0 (2025-06-09)
+
+Full Changelog: [v0.1.0-beta.1...v0.1.0](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-beta.1...v0.1.0)
+
+### Bug Fixes
+
+* **README:** remove beta warning ([0c4f8d1](https://github.com/turbopuffer/turbopuffer-go/commit/0c4f8d1dbf784e06924f64e3475984cf3b30e7cb))
+* **tests:** ensure every test uses its own namespace ([354e598](https://github.com/turbopuffer/turbopuffer-go/commit/354e5981d76d95b1379d390dae1da0f56b25dd7f))
+* update README warning for beta release ([508cd84](https://github.com/turbopuffer/turbopuffer-go/commit/508cd844f7b10e1a18c2fc5c5a4db878b9f0daf9))
+
 ## 0.1.0-beta.1 (2025-06-05)
 
 Full Changelog: [v0.1.0-alpha.25...v0.1.0-beta.1](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-alpha.25...v0.1.0-beta.1)
