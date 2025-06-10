@@ -2,7 +2,7 @@
 
 <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go"><img src="https://pkg.go.dev/badge/github.com/turbopuffer/turbopuffer-go.svg" alt="Go Reference"></a>
 
-The Turbopuffer Go library provides convenient access to the [Turbopuffer REST API](https://turbopuffer.com/docs)
+The Turbopuffer Go library provides convenient access to the [Turbopuffer REST API](https://turbopuffer.com/docs/auth)
 from applications written in Go.
 
 It is generated with [Stainless](https://www.stainless.com/).
