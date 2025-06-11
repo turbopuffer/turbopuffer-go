@@ -77,7 +77,7 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 		option.WithRegion("gcp-us-central1"),
 	)
-	_, err := client.Namespaces.MultiQuery(context.TODO(), turbopuffer.NamespaceMultiQueryParams{
+	_, err := client.Namespace("ns").MultiQuery(context.TODO(), turbopuffer.NamespaceMultiQueryParams{
 		Namespace: turbopuffer.String("namespace"),
 		Queries: []turbopuffer.NamespaceMultiQueryParamsQuery{{
 			AggregateBy: map[string]any{
