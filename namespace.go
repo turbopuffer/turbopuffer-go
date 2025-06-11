@@ -70,6 +70,23 @@ func (r *NamespaceService) HintCacheWarm(ctx context.Context, query NamespaceHin
 	return
 }
 
+// Issue multiple concurrent queries filter or search documents.
+func (r *NamespaceService) MultiQuery(ctx context.Context, params NamespaceMultiQueryParams, opts ...option.RequestOption) (res *NamespaceMultiQueryResponse, err error) {
+	opts = append(r.Options[:], opts...)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
+	if params.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return
+	}
+	path := fmt.Sprintf("v2/namespaces/%s/query?stainless_overload=multiQuery", params.Namespace.Value)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	return
+}
+
 // Query, filter, full-text search and vector search documents.
 func (r *NamespaceService) Query(ctx context.Context, params NamespaceQueryParams, opts ...option.RequestOption) (res *NamespaceQueryResponse, err error) {
 	opts = append(r.Options[:], opts...)
@@ -737,6 +754,47 @@ func (r *NamespaceHintCacheWarmResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The result of a multi-query.
+type NamespaceMultiQueryResponse struct {
+	// The billing information for a query.
+	Billing QueryBilling `json:"billing,required"`
+	// The performance information for a query.
+	Performance QueryPerformance                    `json:"performance,required"`
+	Results     []NamespaceMultiQueryResponseResult `json:"results,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Billing     respjson.Field
+		Performance respjson.Field
+		Results     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceMultiQueryResponse) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceMultiQueryResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type NamespaceMultiQueryResponseResult struct {
+	Aggregations map[string]any `json:"aggregations"`
+	Rows         []Row          `json:"rows"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Aggregations respjson.Field
+		Rows         respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceMultiQueryResponseResult) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceMultiQueryResponseResult) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // The result of a query.
 type NamespaceQueryResponse struct {
 	// The billing information for a query.
@@ -827,6 +885,80 @@ type NamespaceHintCacheWarmParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
 	paramObj
 }
+
+type NamespaceMultiQueryParams struct {
+	Namespace param.Opt[string]                `path:"namespace,omitzero,required" json:"-"`
+	Queries   []NamespaceMultiQueryParamsQuery `json:"queries,omitzero,required"`
+	// The consistency level for a query.
+	Consistency NamespaceMultiQueryParamsConsistency `json:"consistency,omitzero"`
+	// The encoding to use for vectors in the response.
+	//
+	// Any of "float", "base64".
+	VectorEncoding VectorEncoding `json:"vector_encoding,omitzero"`
+	paramObj
+}
+
+func (r NamespaceMultiQueryParams) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceMultiQueryParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceMultiQueryParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Query, filter, full-text search and vector search documents.
+type NamespaceMultiQueryParamsQuery struct {
+	// The number of results to return.
+	TopK param.Opt[int64] `json:"top_k,omitzero"`
+	// Aggregations to compute over all documents in the namespace that match the
+	// filters.
+	AggregateBy map[string]any `json:"aggregate_by,omitzero"`
+	// A function used to calculate vector similarity.
+	//
+	// Any of "cosine_distance", "euclidean_squared".
+	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
+	// Exact filters for attributes to refine search results for. Think of it as a SQL
+	// WHERE clause.
+	Filters any `json:"filters,omitzero"`
+	// Whether to include attributes in the response.
+	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
+	// How to rank the documents in the namespace.
+	RankBy any `json:"rank_by,omitzero"`
+	paramObj
+}
+
+func (r NamespaceMultiQueryParamsQuery) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceMultiQueryParamsQuery
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceMultiQueryParamsQuery) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The consistency level for a query.
+type NamespaceMultiQueryParamsConsistency struct {
+	// The query's consistency level.
+	//
+	// Any of "strong", "eventual".
+	Level NamespaceMultiQueryParamsConsistencyLevel `json:"level,omitzero"`
+	paramObj
+}
+
+func (r NamespaceMultiQueryParamsConsistency) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceMultiQueryParamsConsistency
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceMultiQueryParamsConsistency) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The query's consistency level.
+type NamespaceMultiQueryParamsConsistencyLevel string
+
+const (
+	NamespaceMultiQueryParamsConsistencyLevelStrong   NamespaceMultiQueryParamsConsistencyLevel = "strong"
+	NamespaceMultiQueryParamsConsistencyLevelEventual NamespaceMultiQueryParamsConsistencyLevel = "eventual"
+)
 
 type NamespaceQueryParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
