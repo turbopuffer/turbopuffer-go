@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.1.1 (2025-06-11)
+
+Full Changelog: [v0.1.0...v0.1.1](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0...v0.1.1)
+
+### Bug Fixes
+
+* **api:** api update ([1b99fc9](https://github.com/turbopuffer/turbopuffer-go/commit/1b99fc9a2f5a520f0fc770b6a96d8d3188aacd8b))
+* **api:** api update ([73d3ab1](https://github.com/turbopuffer/turbopuffer-go/commit/73d3ab1b23b0015f585ef7f3a9361c8243226ad9))
+* **README:** align documentation links with other SDKs ([246d40d](https://github.com/turbopuffer/turbopuffer-go/commit/246d40db961fb8d03c2484dfd9f89c581f8015a6))
+
+
+### Chores
+
+* **test:** custom code ([7c4ecfd](https://github.com/turbopuffer/turbopuffer-go/commit/7c4ecfd75c8a6b8d08f82b1b306743a23089fef6))
+* **test:** Fix test ([9a168fd](https://github.com/turbopuffer/turbopuffer-go/commit/9a168fd01db2e22a409c1651006933e73ce3e694))
+
 ## 0.1.0 (2025-06-09)
 
 Full Changelog: [v0.1.0-beta.1...v0.1.0](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-beta.1...v0.1.0)
