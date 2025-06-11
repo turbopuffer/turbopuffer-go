@@ -2,10 +2,17 @@
 
 <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go"><img src="https://pkg.go.dev/badge/github.com/turbopuffer/turbopuffer-go.svg" alt="Go Reference" align="right"></a>
 
-The turbopuffer Go library provides convenient access to the [turbopuffer REST API](https://turbopuffer.com/docs)
+The turbopuffer Go library provides convenient access to the [turbopuffer HTTP API](https://turbopuffer.com/docs)
 from applications written in Go.
 
 It is generated with [Stainless](https://www.stainless.com/).
+
+## Documentation
+
+The HTTP API documentation can be found at [turbopuffer.com/docs](https://turbopuffer.com/docs/auth).
+
+The full API of this library can be found at
+<https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go>.
 
 ## Installation
 
@@ -24,7 +31,7 @@ Or to pin the version:
 <!-- x-release-please-start-version -->
 
 ```sh
-go get -u 'github.com/turbopuffer/turbopuffer-go@v0.1.0'
+go get -u 'github.com/turbopuffer/turbopuffer-go@v0.1.1'
 ```
 
 <!-- x-release-please-end -->
@@ -34,9 +41,6 @@ go get -u 'github.com/turbopuffer/turbopuffer-go@v0.1.0'
 This library requires Go 1.18+.
 
 ## Usage
-
-The full API of this library can be found at
-<https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go>.
 
 ```go
 package main

@@ -63,6 +63,49 @@ func TestNamespaceHintCacheWarm(t *testing.T) {
 	}
 }
 
+func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
+	t.Skip("skipped: tests are disabled for the time being")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := turbopuffer.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("gcp-us-central1"),
+	)
+	ns := client.Namespace("ns")
+	_, err := ns.MultiQuery(context.TODO(), turbopuffer.NamespaceMultiQueryParams{
+		Namespace: turbopuffer.String("namespace"),
+		Queries: []turbopuffer.NamespaceMultiQueryParamsQuery{{
+			AggregateBy: map[string]any{
+				"foo": "bar",
+			},
+			DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+			Filters:        map[string]interface{}{},
+			IncludeAttributes: turbopuffer.IncludeAttributesParam{
+				Bool: turbopuffer.Bool(true),
+			},
+			RankBy: map[string]interface{}{},
+			TopK:   turbopuffer.Int(0),
+		}},
+		Consistency: turbopuffer.NamespaceMultiQueryParamsConsistency{
+			Level: turbopuffer.NamespaceMultiQueryParamsConsistencyLevelStrong,
+		},
+		VectorEncoding: turbopuffer.VectorEncodingFloat,
+	})
+	if err != nil {
+		var apierr *turbopuffer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
 func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 	t.Skip("skipped: tests are disabled for the time being")
 	baseURL := "http://localhost:4010"

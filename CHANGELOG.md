@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.1 (2025-06-11)
+
+Full Changelog: [v0.1.0...v0.1.1](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0...v0.1.1)
+
+### Features
+* **api:** Add support for new multi-query api
+  
+### Bug Fixes
+
+* **README:** align documentation links with other SDKs ([246d40d](https://github.com/turbopuffer/turbopuffer-go/commit/246d40db961fb8d03c2484dfd9f89c581f8015a6))
+
 ## 0.1.0 (2025-06-09)
 
 Full Changelog: [v0.1.0-beta.1...v0.1.0](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0-beta.1...v0.1.0)
