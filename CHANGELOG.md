@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.1.2 (2025-06-19)
+
+Full Changelog: [v0.1.1...v0.1.2](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.1...v0.1.2)
+
+### Features
+
+* **client:** add debug log helper ([d3568a7](https://github.com/turbopuffer/turbopuffer-go/commit/d3568a7fa15a19b59a5be613d5bc5e9bce40808e))
+
+
+### Bug Fixes
+
+* strict types for async query and multi_query APIs ([#35](https://github.com/turbopuffer/turbopuffer-go/issues/35)) ([1d114bf](https://github.com/turbopuffer/turbopuffer-go/commit/1d114bf90f58a3ea9f06d345ad712d6063ea6a18))
+
+
+### Chores
+
+* **ci:** enable for pull requests ([00aa5a8](https://github.com/turbopuffer/turbopuffer-go/commit/00aa5a8ade868e49a156bbaa6fca0e0f595e8db6))
+
 ## 0.1.1 (2025-06-11)
 
 Full Changelog: [v0.1.0...v0.1.1](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.0...v0.1.1)

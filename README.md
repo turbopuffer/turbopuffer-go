@@ -31,7 +31,7 @@ Or to pin the version:
 <!-- x-release-please-start-version -->
 
 ```sh
-go get -u 'github.com/turbopuffer/turbopuffer-go@v0.1.1'
+go get -u 'github.com/turbopuffer/turbopuffer-go@v0.1.2'
 ```
 
 <!-- x-release-please-end -->
@@ -284,6 +284,8 @@ client.Namespaces(context.TODO(), ...,
 	option.WithJSONSet("some.json.path", map[string]string{"my": "object"}),
 )
 ```
+
+The request option `option.WithDebugLog(nil)` may be helpful while debugging.
 
 See the [full list of request options](https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/option).
 
