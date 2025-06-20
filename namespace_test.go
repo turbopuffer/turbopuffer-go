@@ -80,7 +80,7 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 	ns := client.Namespace("ns")
 	_, err := ns.MultiQuery(context.TODO(), turbopuffer.NamespaceMultiQueryParams{
 		Namespace: turbopuffer.String("namespace"),
-		Queries: []turbopuffer.NamespaceMultiQueryParamsQuery{{
+		Queries: []turbopuffer.QueryParam{{
 			DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
 			IncludeAttributes: turbopuffer.IncludeAttributesParam{
 				Bool: turbopuffer.Bool(true),

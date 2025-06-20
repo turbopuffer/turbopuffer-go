@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.3 (2025-06-20)
+
+Full Changelog: [v0.1.2...v0.1.3](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.2...v0.1.3)
+
+### Features
+
+* **api:** introduce dedicated Query model ([531f2df](https://github.com/turbopuffer/turbopuffer-go/commit/531f2df3e602bd785ad7eea5e6e0e6c20b9c72bc))
+
+
+### Bug Fixes
+
+* strict types for new QueryParam type ([f313206](https://github.com/turbopuffer/turbopuffer-go/commit/f313206d02bf76cc167f4e822c3a1c422bb273b5))
+
 ## 0.1.2 (2025-06-19)
 
 Full Changelog: [v0.1.1...v0.1.2](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.1...v0.1.2)
