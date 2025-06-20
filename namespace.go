@@ -465,6 +465,35 @@ const (
 	LanguageTurkish    Language = "turkish"
 )
 
+// Query, filter, full-text search and vector search documents.
+type QueryParam struct {
+	// The number of results to return.
+	TopK param.Opt[int64] `json:"top_k,omitzero"`
+	// Aggregations to compute over all documents in the namespace that match the
+	// filters.
+	AggregateBy map[string]any `json:"aggregate_by,omitzero"`
+	// A function used to calculate vector similarity.
+	//
+	// Any of "cosine_distance", "euclidean_squared".
+	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
+	// Exact filters for attributes to refine search results for. Think of it as a SQL
+	// WHERE clause.
+	Filters any `json:"filters,omitzero"`
+	// Whether to include attributes in the response.
+	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
+	// How to rank the documents in the namespace.
+	RankBy any `json:"rank_by,omitzero"`
+	paramObj
+}
+
+func (r QueryParam) MarshalJSON() (data []byte, err error) {
+	type shadow QueryParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *QueryParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // The billing information for a query.
 type QueryBilling struct {
 	// The number of billable logical bytes queried from the namespace.
@@ -803,8 +832,8 @@ type NamespaceHintCacheWarmParams struct {
 }
 
 type NamespaceMultiQueryParams struct {
-	Namespace param.Opt[string]                `path:"namespace,omitzero,required" json:"-"`
-	Queries   []NamespaceMultiQueryParamsQuery `json:"queries,omitzero,required"`
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	Queries   []QueryParam      `json:"queries,omitzero,required"`
 	// The consistency level for a query.
 	Consistency NamespaceMultiQueryParamsConsistency `json:"consistency,omitzero"`
 	// The encoding to use for vectors in the response.
@@ -819,35 +848,6 @@ func (r NamespaceMultiQueryParams) MarshalJSON() (data []byte, err error) {
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *NamespaceMultiQueryParams) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// Query, filter, full-text search and vector search documents.
-type NamespaceMultiQueryParamsQuery struct {
-	// The number of results to return.
-	TopK param.Opt[int64] `json:"top_k,omitzero"`
-	// Aggregations to compute over all documents in the namespace that match the
-	// filters.
-	AggregateBy map[string]AggregateBy `json:"aggregate_by,omitzero"`
-	// A function used to calculate vector similarity.
-	//
-	// Any of "cosine_distance", "euclidean_squared".
-	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
-	// Exact filters for attributes to refine search results for. Think of it as a SQL
-	// WHERE clause.
-	Filters Filter `json:"filters,omitzero"`
-	// Whether to include attributes in the response.
-	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
-	// How to rank the documents in the namespace.
-	RankBy RankBy `json:"rank_by,omitzero"`
-	paramObj
-}
-
-func (r NamespaceMultiQueryParamsQuery) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceMultiQueryParamsQuery
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *NamespaceMultiQueryParamsQuery) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
