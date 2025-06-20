@@ -81,7 +81,7 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 	)
 	_, err := client.Namespaces.MultiQuery(context.TODO(), turbopuffer.NamespaceMultiQueryParams{
 		Namespace: turbopuffer.String("namespace"),
-		Queries: []turbopuffer.NamespaceMultiQueryParamsQuery{{
+		Queries: []turbopuffer.QueryParam{{
 			AggregateBy: map[string]any{
 				"foo": "bar",
 			},
