@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.0 (2025-06-21)
+
+Full Changelog: [v0.1.3...v0.2.0](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.3...v0.2.0)
+
+### Features
+
+* **client:** add escape hatch for null slice & maps ([c89845a](https://github.com/turbopuffer/turbopuffer-go/commit/c89845a9de85e1911b8141f45609559b027b2ea2))
+
+
+### Chores
+
+* fix documentation of null map ([4588f72](https://github.com/turbopuffer/turbopuffer-go/commit/4588f725efffa1eaacd98c23503d1f38a5822265))
+
 ## 0.1.3 (2025-06-20)
 
 Full Changelog: [v0.1.2...v0.1.3](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.2...v0.1.3)
