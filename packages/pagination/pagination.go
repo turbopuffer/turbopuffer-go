@@ -42,6 +42,9 @@ func (r *NamespacePage[T]) UnmarshalJSON(data []byte) error {
 // there is no next page, this function will return a 'nil' for the page value, but
 // will not return an error
 func (r *NamespacePage[T]) GetNextPage() (res *NamespacePage[T], err error) {
+	if len(r.Namespaces) == 0 {
+		return nil, nil
+	}
 	next := r.NextCursor
 	if len(next) == 0 {
 		return nil, nil
