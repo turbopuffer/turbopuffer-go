@@ -256,9 +256,9 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		},
 		UpsertColumns:   turbopuffer.ColumnsParam{},
 		UpsertRows:      []turbopuffer.RowParam{},
-		DeleteCondition: map[string]interface{}{},
-		PatchCondition:  map[string]interface{}{},
-		UpsertCondition: map[string]interface{}{},
+		DeleteCondition: turbopuffer.Filter(nil),
+		PatchCondition:  turbopuffer.Filter(nil),
+		UpsertCondition: turbopuffer.Filter(nil),
 	})
 	if err != nil {
 		var apierr *turbopuffer.Error
