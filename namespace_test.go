@@ -250,6 +250,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		Namespace:         turbopuffer.String("namespace"),
 		CopyFromNamespace: turbopuffer.String("copy_from_namespace"),
 		DeleteByFilter:    map[string]interface{}{},
+		DeleteCondition:   map[string]interface{}{},
 		Deletes: []turbopuffer.IDParam{{
 			String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		}},
@@ -269,6 +270,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 				}},
 			},
 		},
+		PatchCondition: map[string]interface{}{},
 		PatchRows: []turbopuffer.RowParam{{
 			ID: turbopuffer.IDParam{
 				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
@@ -290,6 +292,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 				}},
 			},
 		},
+		UpsertCondition: map[string]interface{}{},
 		UpsertRows: []turbopuffer.RowParam{{
 			ID: turbopuffer.IDParam{
 				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
