@@ -28,49 +28,27 @@ func (v AggregateByCount) MarshalJSON() ([]byte, error) {
 	})
 }
 
-type ContainsAllTokensArray struct {
-	attr  string
-	value []string
-}
-
-func NewContainsAllTokensArray(
-	attr string,
-	value []string,
-) ContainsAllTokensArray {
-	return ContainsAllTokensArray{
-		attr,
-		value,
-	}
-}
-func (v ContainsAllTokensArray) MarshalJSON() ([]byte, error) {
-	return shimjson.Marshal([]any{
-		v.attr,
-		"ContainsAllTokens",
-		v.value,
-	})
-}
-
 type Filter interface {
 	sealed_Filter()
 }
 
-func (v FilterEq) sealed_Filter()                {}
-func (v FilterNotEq) sealed_Filter()             {}
-func (v FilterIn) sealed_Filter()                {}
-func (v FilterNotIn) sealed_Filter()             {}
-func (v FilterLt) sealed_Filter()                {}
-func (v FilterLte) sealed_Filter()               {}
-func (v FilterGt) sealed_Filter()                {}
-func (v FilterGte) sealed_Filter()               {}
-func (v FilterGlob) sealed_Filter()              {}
-func (v FilterNotGlob) sealed_Filter()           {}
-func (v FilterIGlob) sealed_Filter()             {}
-func (v FilterNotIGlob) sealed_Filter()          {}
-func (v FilterContainsAllTokens) sealed_Filter() {}
-func (v ContainsAllTokensArray) sealed_Filter()  {}
-func (v FilterNot) sealed_Filter()               {}
-func (v FilterAnd) sealed_Filter()               {}
-func (v FilterOr) sealed_Filter()                {}
+func (v FilterEq) sealed_Filter()                     {}
+func (v FilterNotEq) sealed_Filter()                  {}
+func (v FilterIn) sealed_Filter()                     {}
+func (v FilterNotIn) sealed_Filter()                  {}
+func (v FilterLt) sealed_Filter()                     {}
+func (v FilterLte) sealed_Filter()                    {}
+func (v FilterGt) sealed_Filter()                     {}
+func (v FilterGte) sealed_Filter()                    {}
+func (v FilterGlob) sealed_Filter()                   {}
+func (v FilterNotGlob) sealed_Filter()                {}
+func (v FilterIGlob) sealed_Filter()                  {}
+func (v FilterNotIGlob) sealed_Filter()               {}
+func (v FilterContainsAllTokens) sealed_Filter()      {}
+func (v FilterContainsAllTokensArray) sealed_Filter() {}
+func (v FilterNot) sealed_Filter()                    {}
+func (v FilterAnd) sealed_Filter()                    {}
+func (v FilterOr) sealed_Filter()                     {}
 
 type FilterAnd struct {
 	filters []Filter
@@ -105,6 +83,28 @@ func NewFilterContainsAllTokens(
 	}
 }
 func (v FilterContainsAllTokens) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"ContainsAllTokens",
+		v.value,
+	})
+}
+
+type FilterContainsAllTokensArray struct {
+	attr  string
+	value []string
+}
+
+func NewFilterContainsAllTokensArray(
+	attr string,
+	value []string,
+) FilterContainsAllTokensArray {
+	return FilterContainsAllTokensArray{
+		attr,
+		value,
+	}
+}
+func (v FilterContainsAllTokensArray) MarshalJSON() ([]byte, error) {
 	return shimjson.Marshal([]any{
 		v.attr,
 		"ContainsAllTokens",
