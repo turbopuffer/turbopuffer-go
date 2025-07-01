@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.1.4 (2025-07-01)
+
+Full Changelog: [v0.1.3...v0.1.4](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.3...v0.1.4)
+
+### Features
+
+* **client:** add escape hatch for null slice & maps ([c89845a](https://github.com/turbopuffer/turbopuffer-go/commit/c89845a9de85e1911b8141f45609559b027b2ea2))
+
+
+### Bug Fixes
+
+* add missing Filter prefix to ContainsAllTokensArray ([#39](https://github.com/turbopuffer/turbopuffer-go/issues/39)) ([d419e8a](https://github.com/turbopuffer/turbopuffer-go/commit/d419e8a0163096a918b2aaae13562a85d043347b))
+* add support for `$ref_new` expressions ([#41](https://github.com/turbopuffer/turbopuffer-go/issues/41)) ([53a4120](https://github.com/turbopuffer/turbopuffer-go/commit/53a4120a248a872337192b3071bae8149073874f))
+* **api:** api update ([7466bc1](https://github.com/turbopuffer/turbopuffer-go/commit/7466bc1747bd584a4650d6624bfee1c4bb630cc8))
+* **api:** api update ([51942f8](https://github.com/turbopuffer/turbopuffer-go/commit/51942f8e1d88781fd529891a52ce56c61e6c2845))
+* correct name of stainless bot ([#42](https://github.com/turbopuffer/turbopuffer-go/issues/42)) ([7ab0e6f](https://github.com/turbopuffer/turbopuffer-go/commit/7ab0e6f4cd4872029b5996968d3a0283544e6a8e))
+* don't try to deserialize as json when ResponseBodyInto is []byte ([9f62897](https://github.com/turbopuffer/turbopuffer-go/commit/9f62897af2ba1bd3a1f5f2406c099dcb849ef6ad))
+* **pagination:** check if page data is empty in GetNextPage ([1bea120](https://github.com/turbopuffer/turbopuffer-go/commit/1bea12027038f1576052758de6b5cf0a255ac2fc))
+* **README:** improve headline example ([#40](https://github.com/turbopuffer/turbopuffer-go/issues/40)) ([17fed10](https://github.com/turbopuffer/turbopuffer-go/commit/17fed108319f629b5e843407e5eb3c7cf94c02ab))
+* strict types for write conditions ([#38](https://github.com/turbopuffer/turbopuffer-go/issues/38)) ([ff23fc1](https://github.com/turbopuffer/turbopuffer-go/commit/ff23fc161de06e5cdd21f7343447c1e1c41ff1f5))
+
+
+### Chores
+
+* **ci:** only run for pushes and fork pull requests ([648ed30](https://github.com/turbopuffer/turbopuffer-go/commit/648ed3042097a0325d9e572ef6780fbaaa3d2bd9))
+* fix documentation of null map ([4588f72](https://github.com/turbopuffer/turbopuffer-go/commit/4588f725efffa1eaacd98c23503d1f38a5822265))
+
 ## 0.1.3 (2025-06-20)
 
 Full Changelog: [v0.1.2...v0.1.3](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.2...v0.1.3)
