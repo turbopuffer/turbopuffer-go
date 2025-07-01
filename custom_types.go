@@ -28,6 +28,29 @@ func (v AggregateByCount) MarshalJSON() ([]byte, error) {
 	})
 }
 
+type Expr interface {
+	sealed_Expr()
+}
+
+func (v ExprRefNew) sealed_Expr() {}
+
+type ExprRefNew struct {
+	refNew string
+}
+
+func NewExprRefNew(
+	refNew string,
+) ExprRefNew {
+	return ExprRefNew{
+		refNew: refNew,
+	}
+}
+func (v ExprRefNew) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal(map[string]any{
+		"$ref_new": v.refNew,
+	})
+}
+
 type Filter interface {
 	sealed_Filter()
 }
