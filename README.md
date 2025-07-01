@@ -48,30 +48,57 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/turbopuffer/turbopuffer-go"
 	"github.com/turbopuffer/turbopuffer-go/option"
 )
 
 func main() {
-	client := turbopuffer.NewClient(
-		option.WithAPIKey("tpuf_A1..."),      // defaults to os.LookupEnv("TURBOPUFFER_API_KEY")
-		option.WithRegion("gcp-us-central1"), // defaults to os.LookupEnv("TURBOPUFFER_REGION")
+	ctx := context.Background()
+	tpuf := turbopuffer.NewClient(
+		option.WithAPIKey(os.Getenv("TURBOPUFFER_API_KEY")), // this is the default and can be omitted
+		option.WithRegion("gcp-us-central1"),                // defaults to os.Getenv("TURBOPUFFER_REGION")
 	)
-	namespace := client.Namespace("products")
-	response, err := namespace.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
-		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
-		UpsertRows: []turbopuffer.RowParam{{
-			"id": "2108ed60-6851-49a0-9016-8325434f3845",
-			"vector": []float32{0.1, 0.2},
-			"additional": "values",
-			// ...
-		}},
-	})
+
+	ns := tpuf.Namespace("example")
+
+	// Query nearest neighbors with filter.
+	queryRes, err := ns.Query(
+		ctx,
+		turbopuffer.NamespaceQueryParams{
+			RankBy: turbopuffer.NewRankByVector("vector", []float32{0.1, 0.2}),
+			TopK:   turbopuffer.Int(10),
+			Filters: turbopuffer.NewFilterAnd([]turbopuffer.Filter{
+				turbopuffer.NewFilterEq("name", "foo"),
+				turbopuffer.NewFilterEq("public", 1),
+			}),
+			IncludeAttributes: turbopuffer.IncludeAttributesParam{StringArray: []string{"name"}},
+		},
+	)
 	if err != nil {
-		panic(err.Error())
+		panic(err)
 	}
-	fmt.Printf("%+v\n", response.RowsAffected)
+	fmt.Print(turbopuffer.PrettyPrint(queryRes.Rows))
+	// [{"id": 1, "vector": null, "$dist": 0.009067952632904053, "name": "foo"}]
+
+	// Full-text search on an attribute.
+	ftsRes, err := ns.Query(
+		ctx,
+		turbopuffer.NamespaceQueryParams{
+			TopK:    turbopuffer.Int(10),
+			Filters: turbopuffer.NewFilterEq("name", "foo"),
+			RankBy:  turbopuffer.NewRankByTextBM25("text", "quick walrus"),
+		},
+	)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Print(turbopuffer.PrettyPrint(ftsRes.Rows))
+	// [{"id": 1, "vector": null, "$dist": 0.19, "name": "foo"}]
+	// [{"id": 2, "vector": null, "$dist": 0.168, "name": "foo"}]
+
+	// See https://turbopuffer.com/docs/quickstart for more.
 }
 
 ```
