@@ -985,8 +985,8 @@ type NamespaceWriteParams struct {
 	DeleteByFilter Filter `json:"delete_by_filter,omitzero"`
 	// A condition evaluated against the current value of each document targeted by a
 	// delete write. Only documents that pass the condition are deleted.
-	DeleteCondition any   `json:"delete_condition,omitzero"`
-	Deletes         []any `json:"deletes,omitzero"`
+	DeleteCondition Filter `json:"delete_condition,omitzero"`
+	Deletes         []any  `json:"deletes,omitzero"`
 	// A function used to calculate vector similarity.
 	//
 	// Any of "cosine_distance", "euclidean_squared".
@@ -998,7 +998,7 @@ type NamespaceWriteParams struct {
 	PatchColumns ColumnsParam `json:"patch_columns,omitzero"`
 	// A condition evaluated against the current value of each document targeted by a
 	// patch write. Only documents that pass the condition are patched.
-	PatchCondition any        `json:"patch_condition,omitzero"`
+	PatchCondition Filter     `json:"patch_condition,omitzero"`
 	PatchRows      []RowParam `json:"patch_rows,omitzero"`
 	// The schema of the attributes attached to the documents.
 	Schema map[string]AttributeSchemaConfigParam `json:"schema,omitzero"`
@@ -1007,7 +1007,7 @@ type NamespaceWriteParams struct {
 	UpsertColumns ColumnsParam `json:"upsert_columns,omitzero"`
 	// A condition evaluated against the current value of each document targeted by an
 	// upsert write. Only documents that pass the condition are upserted.
-	UpsertCondition any        `json:"upsert_condition,omitzero"`
+	UpsertCondition Filter     `json:"upsert_condition,omitzero"`
 	UpsertRows      []RowParam `json:"upsert_rows,omitzero"`
 	paramObj
 }
