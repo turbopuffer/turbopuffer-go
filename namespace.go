@@ -985,8 +985,8 @@ type NamespaceWriteParams struct {
 	DeleteByFilter Filter `json:"delete_by_filter,omitzero"`
 	// A condition evaluated against the current value of each document targeted by a
 	// delete write. Only documents that pass the condition are deleted.
-	DeleteCondition any       `json:"delete_condition,omitzero"`
-	Deletes         []any  `json:"deletes,omitzero"`
+	DeleteCondition any   `json:"delete_condition,omitzero"`
+	Deletes         []any `json:"deletes,omitzero"`
 	// A function used to calculate vector similarity.
 	//
 	// Any of "cosine_distance", "euclidean_squared".
