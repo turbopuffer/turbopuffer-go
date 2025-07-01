@@ -888,12 +888,21 @@ type NamespaceWriteResponse struct {
 	RowsAffected int64 `json:"rows_affected,required"`
 	// The status of the request.
 	Status constant.Ok `json:"status,required"`
+	// The number of rows deleted by the write request.
+	RowsDeleted int64 `json:"rows_deleted"`
+	// The number of rows patched by the write request.
+	RowsPatched int64 `json:"rows_patched"`
+	// The number of rows upserted by the write request.
+	RowsUpserted int64 `json:"rows_upserted"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Billing      respjson.Field
 		Message      respjson.Field
 		RowsAffected respjson.Field
 		Status       respjson.Field
+		RowsDeleted  respjson.Field
+		RowsPatched  respjson.Field
+		RowsUpserted respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
 	} `json:"-"`
