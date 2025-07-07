@@ -59,6 +59,10 @@ func (v FilterEq) sealed_Filter()                     {}
 func (v FilterNotEq) sealed_Filter()                  {}
 func (v FilterIn) sealed_Filter()                     {}
 func (v FilterNotIn) sealed_Filter()                  {}
+func (v FilterContains) sealed_Filter()               {}
+func (v FilterNotContains) sealed_Filter()            {}
+func (v FilterContainsAny) sealed_Filter()            {}
+func (v FilterNotContainsAny) sealed_Filter()         {}
 func (v FilterLt) sealed_Filter()                     {}
 func (v FilterLte) sealed_Filter()                    {}
 func (v FilterGt) sealed_Filter()                     {}
@@ -88,6 +92,28 @@ func (v FilterAnd) MarshalJSON() ([]byte, error) {
 	return shimjson.Marshal([]any{
 		"And",
 		v.filters,
+	})
+}
+
+type FilterContains struct {
+	attr  string
+	value any
+}
+
+func NewFilterContains(
+	attr string,
+	value any,
+) FilterContains {
+	return FilterContains{
+		attr,
+		value,
+	}
+}
+func (v FilterContains) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"Contains",
+		v.value,
 	})
 }
 
@@ -131,6 +157,28 @@ func (v FilterContainsAllTokensArray) MarshalJSON() ([]byte, error) {
 	return shimjson.Marshal([]any{
 		v.attr,
 		"ContainsAllTokens",
+		v.value,
+	})
+}
+
+type FilterContainsAny struct {
+	attr  string
+	value any
+}
+
+func NewFilterContainsAny(
+	attr string,
+	value any,
+) FilterContainsAny {
+	return FilterContainsAny{
+		attr,
+		value,
+	}
+}
+func (v FilterContainsAny) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"ContainsAny",
 		v.value,
 	})
 }
@@ -326,6 +374,50 @@ func (v FilterNot) MarshalJSON() ([]byte, error) {
 	return shimjson.Marshal([]any{
 		"Not",
 		v.filter,
+	})
+}
+
+type FilterNotContains struct {
+	attr  string
+	value any
+}
+
+func NewFilterNotContains(
+	attr string,
+	value any,
+) FilterNotContains {
+	return FilterNotContains{
+		attr,
+		value,
+	}
+}
+func (v FilterNotContains) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"NotContains",
+		v.value,
+	})
+}
+
+type FilterNotContainsAny struct {
+	attr  string
+	value any
+}
+
+func NewFilterNotContainsAny(
+	attr string,
+	value any,
+) FilterNotContainsAny {
+	return FilterNotContainsAny{
+		attr,
+		value,
+	}
+}
+func (v FilterNotContainsAny) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"NotContainsAny",
+		v.value,
 	})
 }
 
