@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.5 (2025-07-07)
+
+Full Changelog: [v0.1.4...v0.1.5](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.4...v0.1.5)
+
+### Bug Fixes
+
+* **api:** add support for [Not]Contains[Any] operators ([#43](https://github.com/turbopuffer/turbopuffer-go/issues/43)) ([78e84e0](https://github.com/turbopuffer/turbopuffer-go/commit/78e84e020eb8245e5188d92c71b853b85c60c380))
+
 ## 0.1.4 (2025-07-01)
 
 Full Changelog: [v0.1.3...v0.1.4](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.3...v0.1.4)
