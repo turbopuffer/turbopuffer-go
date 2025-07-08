@@ -23,7 +23,6 @@ func TestAutoPagination(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	iter := client.NamespacesAutoPaging(context.TODO(), turbopuffer.NamespacesParams{
 		Prefix: turbopuffer.String("products"),
