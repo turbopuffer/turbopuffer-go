@@ -25,7 +25,6 @@ func TestNamespaceDeleteAll(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	_, err := client.Namespaces.DeleteAll(context.TODO(), turbopuffer.NamespaceDeleteAllParams{
 		Namespace: turbopuffer.String("namespace"),
@@ -51,7 +50,6 @@ func TestNamespaceHintCacheWarm(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	_, err := client.Namespaces.HintCacheWarm(context.TODO(), turbopuffer.NamespaceHintCacheWarmParams{
 		Namespace: turbopuffer.String("namespace"),
@@ -77,7 +75,6 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	_, err := client.Namespaces.MultiQuery(context.TODO(), turbopuffer.NamespaceMultiQueryParams{
 		Namespace: turbopuffer.String("namespace"),
@@ -119,7 +116,6 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	_, err := client.Namespaces.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("namespace"),
@@ -159,7 +155,6 @@ func TestNamespaceRecallWithOptionalParams(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	_, err := client.Namespaces.Recall(context.TODO(), turbopuffer.NamespaceRecallParams{
 		Namespace: turbopuffer.String("namespace"),
@@ -189,7 +184,6 @@ func TestNamespaceSchema(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	_, err := client.Namespaces.Schema(context.TODO(), turbopuffer.NamespaceSchemaParams{
 		Namespace: turbopuffer.String("namespace"),
@@ -215,7 +209,6 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	_, err := client.Namespaces.UpdateSchema(context.TODO(), turbopuffer.NamespaceUpdateSchemaParams{
 		Namespace: turbopuffer.String("namespace"),
@@ -244,7 +237,6 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	_, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
 		Namespace:         turbopuffer.String("namespace"),
