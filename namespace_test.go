@@ -25,7 +25,6 @@ func TestNamespaceDeleteAll(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	ns := client.Namespace("ns")
 	_, err := ns.DeleteAll(context.TODO(), turbopuffer.NamespaceDeleteAllParams{})
@@ -50,7 +49,6 @@ func TestNamespaceHintCacheWarm(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	ns := client.Namespace("ns")
 	_, err := ns.HintCacheWarm(context.TODO(), turbopuffer.NamespaceHintCacheWarmParams{})
@@ -75,7 +73,6 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	ns := client.Namespace("ns")
 	_, err := ns.MultiQuery(context.TODO(), turbopuffer.NamespaceMultiQueryParams{
@@ -114,7 +111,6 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	ns := client.Namespace("ns")
 	_, err := ns.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
@@ -151,7 +147,6 @@ func TestNamespaceRecallWithOptionalParams(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	ns := client.Namespace("ns")
 	_, err := ns.Recall(context.TODO(), turbopuffer.NamespaceRecallParams{
@@ -182,7 +177,6 @@ func TestNamespaceSchema(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	ns := client.Namespace("ns")
 	_, err := ns.Schema(context.TODO(), turbopuffer.NamespaceSchemaParams{})
@@ -207,7 +201,6 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	ns := client.Namespace("ns")
 	_, err := ns.UpdateSchema(context.TODO(), turbopuffer.NamespaceUpdateSchemaParams{
@@ -236,7 +229,6 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	ns := client.Namespace("ns")
 	_, err := ns.Write(context.TODO(), turbopuffer.NamespaceWriteParams{

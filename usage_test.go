@@ -23,7 +23,6 @@ func TestUsage(t *testing.T) {
 	client := turbopuffer.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
-		option.WithRegion("gcp-us-central1"),
 	)
 	ns := client.Namespace("products")
 	response, err := ns.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
