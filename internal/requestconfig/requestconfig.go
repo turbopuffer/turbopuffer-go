@@ -91,11 +91,13 @@ func (s PreRequestOptionFunc) Apply(r *RequestConfig) error { return s(r) }
 // SubstituteServerVariables applies client variables in the request config to the URL template.
 func SubstituteServerVariables(templateURL *url.URL, cfg *RequestConfig) (*url.URL, error) {
 	baseURL := templateURL.String()
-	if strings.Count(baseURL, "REGION") >= 1 {
+	if strings.Contains(baseURL, "REGION") {
 		if cfg.Region == "" {
-			return nil, fmt.Errorf("must provide Region to substitute %s", baseURL)
+			return nil, fmt.Errorf("region is required, but not set (baseURL has a REGION placeholder: %s)", baseURL)
 		}
 		baseURL = strings.ReplaceAll(baseURL, "REGION", cfg.Region)
+	} else if cfg.Region != "" {
+		return nil, fmt.Errorf("region is set, but would be ignored (baseURL does not contain REGION placeholder: %s)", baseURL)
 	}
 	substitutedURL, err := url.Parse(baseURL)
 	if err != nil {
@@ -198,7 +200,7 @@ func NewRequestConfig(ctx context.Context, method string, u string, body any, ds
 			return nil, err
 		}
 	}
-	if cfg.DefaultBaseURL != nil {
+	if cfg.BaseURL == nil && cfg.DefaultBaseURL != nil {
 		var err error
 		cfg.DefaultBaseURL, err = SubstituteServerVariables(cfg.DefaultBaseURL, &cfg)
 		if err != nil {
