@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/turbopuffer/turbopuffer-go"
+	"github.com/turbopuffer/turbopuffer-go/option"
 )
 
 var nonce = fmt.Sprintf("%d", time.Now().UnixMilli())
@@ -22,7 +23,7 @@ type testContext struct {
 func setup(t *testing.T) testContext {
 	return testContext{
 		ctx:    context.Background(),
-		client: turbopuffer.NewClient(),
+		client: turbopuffer.NewClient(option.WithRegion("gcp-us-central1")),
 		prefix: fmt.Sprintf("test-go-%s-%s", nonce, t.Name()),
 	}
 }

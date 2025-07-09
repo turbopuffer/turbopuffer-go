@@ -52,7 +52,5 @@ else
   echo
 fi
 
-export TURBOPUFFER_REGION=gcp-us-central1
-
 echo "==> Running tests"
 go test ./... "$@"
