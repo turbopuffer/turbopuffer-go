@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.1.6 (2025-07-09)
+
+Full Changelog: [v0.1.5...v0.1.6](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.5...v0.1.6)
+
+### Bug Fixes
+
+* **api:** api update ([fb0c2b5](https://github.com/turbopuffer/turbopuffer-go/commit/fb0c2b53a16809d9b67838bb3ced20a201248840))
+* don't require region unless baseUrl contains {region} placeholder ([#47](https://github.com/turbopuffer/turbopuffer-go/issues/47)) ([5509f4d](https://github.com/turbopuffer/turbopuffer-go/commit/5509f4d162bf6f22b66a250ae3d5240bdb6cb114))
+
+
+### Chores
+
+* **internal:** fix lint script for tests ([b3da884](https://github.com/turbopuffer/turbopuffer-go/commit/b3da88451e1870e79844550528617792bf9d469a))
+* lint tests ([9f7396a](https://github.com/turbopuffer/turbopuffer-go/commit/9f7396aa76d388a9db8f13561365a9d664413dd0))
+
 ## 0.1.5 (2025-07-07)
 
 Full Changelog: [v0.1.4...v0.1.5](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.4...v0.1.5)
