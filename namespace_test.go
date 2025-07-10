@@ -74,9 +74,8 @@ func TestNamespaceMetadata(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
 	)
-	_, err := client.Namespaces.Metadata(context.TODO(), turbopuffer.NamespaceMetadataParams{
-		Namespace: turbopuffer.String("namespace"),
-	})
+	ns := client.Namespace("ns")
+	_, err := ns.Metadata(context.TODO(), turbopuffer.NamespaceMetadataParams{})
 	if err != nil {
 		var apierr *turbopuffer.Error
 		if errors.As(err, &apierr) {
