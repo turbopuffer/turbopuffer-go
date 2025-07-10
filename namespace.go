@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
 	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
@@ -74,6 +75,23 @@ func (r *NamespaceService) HintCacheWarm(ctx context.Context, query NamespaceHin
 		return
 	}
 	path := fmt.Sprintf("v1/namespaces/%s/hint_cache_warm", query.Namespace.Value)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	return
+}
+
+// Get metadata about a namespace.
+func (r *NamespaceService) Metadata(ctx context.Context, query NamespaceMetadataParams, opts ...option.RequestOption) (res *NamespaceMetadata, err error) {
+	opts = append(r.Options[:], opts...)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&query.Namespace, precfg.DefaultNamespace)
+	if query.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return
+	}
+	path := fmt.Sprintf("v1/namespaces/%s/metadata", query.Namespace.Value)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
 }
@@ -465,6 +483,30 @@ const (
 	LanguageTurkish    Language = "turkish"
 )
 
+// Metadata about a namespace.
+type NamespaceMetadata struct {
+	// The approximate number of logical bytes in the namespace.
+	ApproxLogicalBytes int64 `json:"approx_logical_bytes,required"`
+	// The timestamp when the namespace was created.
+	CreatedAt time.Time `json:"created_at,required" format:"date-time"`
+	// The schema of the namespace.
+	Schema map[string]AttributeSchemaConfig `json:"schema,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ApproxLogicalBytes respjson.Field
+		CreatedAt          respjson.Field
+		Schema             respjson.Field
+		ExtraFields        map[string]respjson.Field
+		raw                string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceMetadata) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceMetadata) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Query, filter, full-text search and vector search documents.
 type QueryParam struct {
 	// The number of results to return.
@@ -836,6 +878,11 @@ type NamespaceDeleteAllParams struct {
 }
 
 type NamespaceHintCacheWarmParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	paramObj
+}
+
+type NamespaceMetadataParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
 	paramObj
 }
