@@ -61,6 +61,31 @@ func TestNamespaceHintCacheWarm(t *testing.T) {
 	}
 }
 
+func TestNamespaceMetadata(t *testing.T) {
+	t.Skip("skipped: tests are disabled for the time being")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := turbopuffer.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("tpuf_A1..."),
+	)
+	_, err := client.Namespaces.Metadata(context.TODO(), turbopuffer.NamespaceMetadataParams{
+		Namespace: turbopuffer.String("namespace"),
+	})
+	if err != nil {
+		var apierr *turbopuffer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
 func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 	t.Skip("skipped: tests are disabled for the time being")
 	baseURL := "http://localhost:4010"
