@@ -1027,10 +1027,11 @@ type NamespaceUpdateSchemaParams struct {
 }
 
 func (r NamespaceUpdateSchemaParams) MarshalJSON() (data []byte, err error) {
-	return json.Marshal(r.Schema)
+	type shadow NamespaceUpdateSchemaParams
+	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
-	return json.Unmarshal(data, &r.Schema)
+	return apijson.UnmarshalRoot(data, &r.Schema)
 }
 
 type NamespaceWriteParams struct {
