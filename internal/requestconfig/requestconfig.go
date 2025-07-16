@@ -21,6 +21,7 @@ import (
 	"github.com/turbopuffer/turbopuffer-go/internal"
 	"github.com/turbopuffer/turbopuffer-go/internal/apierror"
 	"github.com/turbopuffer/turbopuffer-go/internal/apiform"
+	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
 	"github.com/turbopuffer/turbopuffer-go/internal/apiquery"
 	"github.com/turbopuffer/turbopuffer-go/packages/param"
 )
@@ -582,7 +583,7 @@ func (cfg *RequestConfig) Execute() (err error) {
 	case *[]byte:
 		*dst = contents
 	default:
-		err = json.NewDecoder(bytes.NewReader(contents)).Decode(cfg.ResponseBodyInto)
+		err = apijson.Unmarshal(contents, cfg.ResponseBodyInto)
 		if err != nil {
 			return fmt.Errorf("error parsing response json: %w", err)
 		}
