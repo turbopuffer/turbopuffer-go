@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.8 (2025-07-18)
+
+Full Changelog: [v0.1.7...v0.1.8](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.7...v0.1.8)
+
+### Chores
+
+* lint tests in subpackages ([c06b027](https://github.com/turbopuffer/turbopuffer-go/commit/c06b0276c389e37a19ed07b8c4be94ca58448866))
+
 ## 0.1.7 (2025-07-10)
 
 Full Changelog: [v0.1.6...v0.1.7](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.6...v0.1.7)
