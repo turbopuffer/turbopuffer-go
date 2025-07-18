@@ -394,11 +394,13 @@ func (b *bodyWithTimeout) Close() error {
 	return err
 }
 
+const retryAfterLimit = time.Duration(30) * time.Minute
+
 func retryDelay(res *http.Response, retryCount int) time.Duration {
 	// If the API asks us to wait a certain amount of time (and it's a reasonable amount),
 	// just do what it says.
 
-	if retryAfterDelay, ok := parseRetryAfterHeader(res); ok && 0 <= retryAfterDelay && retryAfterDelay < time.Minute {
+	if retryAfterDelay, ok := parseRetryAfterHeader(res); ok && 0 <= retryAfterDelay && retryAfterDelay < retryAfterLimit {
 		return retryAfterDelay
 	}
 
