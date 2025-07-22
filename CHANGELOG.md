@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.9 (2025-07-22)
+
+Full Changelog: [v0.1.8...v0.1.9](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.8...v0.1.9)
+
+### Bug Fixes
+
+* **client:** process custom base url ahead of time ([ad1a20a](https://github.com/turbopuffer/turbopuffer-go/commit/ad1a20af43504bbe558ff60afc94da8f527f4c61))
+
 ## 0.1.8 (2025-07-18)
 
 Full Changelog: [v0.1.7...v0.1.8](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.7...v0.1.8)
