@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
@@ -57,7 +58,7 @@ func (r *NamespaceService) DeleteAll(ctx context.Context, body NamespaceDeleteAl
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v2/namespaces/%s", body.Namespace.Value)
+	path := fmt.Sprintf("v2/namespaces/%s", url.PathEscape(body.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, &res, opts...)
 	return
 }
@@ -74,7 +75,7 @@ func (r *NamespaceService) HintCacheWarm(ctx context.Context, query NamespaceHin
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v1/namespaces/%s/hint_cache_warm", query.Namespace.Value)
+	path := fmt.Sprintf("v1/namespaces/%s/hint_cache_warm", url.PathEscape(query.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
 }
@@ -91,7 +92,7 @@ func (r *NamespaceService) Metadata(ctx context.Context, query NamespaceMetadata
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v1/namespaces/%s/metadata", query.Namespace.Value)
+	path := fmt.Sprintf("v1/namespaces/%s/metadata", url.PathEscape(query.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
 }
@@ -108,7 +109,7 @@ func (r *NamespaceService) MultiQuery(ctx context.Context, params NamespaceMulti
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v2/namespaces/%s/query?stainless_overload=multiQuery", params.Namespace.Value)
+	path := fmt.Sprintf("v2/namespaces/%s/query?stainless_overload=multiQuery", url.PathEscape(params.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return
 }
@@ -125,7 +126,7 @@ func (r *NamespaceService) Query(ctx context.Context, params NamespaceQueryParam
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v2/namespaces/%s/query", params.Namespace.Value)
+	path := fmt.Sprintf("v2/namespaces/%s/query", url.PathEscape(params.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return
 }
@@ -142,7 +143,7 @@ func (r *NamespaceService) Recall(ctx context.Context, params NamespaceRecallPar
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v1/namespaces/%s/_debug/recall", params.Namespace.Value)
+	path := fmt.Sprintf("v1/namespaces/%s/_debug/recall", url.PathEscape(params.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return
 }
@@ -159,7 +160,7 @@ func (r *NamespaceService) Schema(ctx context.Context, query NamespaceSchemaPara
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v1/namespaces/%s/schema", query.Namespace.Value)
+	path := fmt.Sprintf("v1/namespaces/%s/schema", url.PathEscape(query.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
 }
@@ -176,7 +177,7 @@ func (r *NamespaceService) UpdateSchema(ctx context.Context, params NamespaceUpd
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v1/namespaces/%s/schema", params.Namespace.Value)
+	path := fmt.Sprintf("v1/namespaces/%s/schema", url.PathEscape(params.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return
 }
@@ -193,7 +194,7 @@ func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParam
 		err = errors.New("missing required namespace parameter")
 		return
 	}
-	path := fmt.Sprintf("v2/namespaces/%s", params.Namespace.Value)
+	path := fmt.Sprintf("v2/namespaces/%s", url.PathEscape(params.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return
 }
