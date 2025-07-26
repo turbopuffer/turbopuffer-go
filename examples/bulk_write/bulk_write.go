@@ -27,7 +27,7 @@ func main() {
 	ctx := context.Background()
 	client := turbopuffer.NewClient(option.WithRegion("gcp-us-central1"))
 
-	namespace := client.Namespace("turbopuffer-go-bulk-upsert-test")
+	namespace := client.Namespace("turbopuffer-go-bulk-write-test")
 	fmt.Printf("Operating on namespace: %s\n", namespace.ID())
 
 	startTime := time.Now()
@@ -49,7 +49,8 @@ func main() {
 		}
 
 		res, err := namespace.Write(ctx, turbopuffer.NamespaceWriteParams{
-			UpsertRows: documents,
+			UpsertRows:     documents,
+			DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
 		})
 		if err != nil {
 			panic(err)

@@ -7,12 +7,12 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 
 	"github.com/turbopuffer/turbopuffer-go"
 	"github.com/turbopuffer/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go/packages/respjson"
 )
 
 func main() {
@@ -78,7 +78,7 @@ func main() {
 		}
 		fmt.Println("Query results:")
 		for _, row := range res.Rows {
-			fmt.Printf("    ID: %s, Name: %s, Age: %s\n", row["id"], row["name"], row["age"].(json.Number))
+			fmt.Printf("    ID: %s, Name: %s, Age: %s\n", row["id"], row["name"], row["age"].(respjson.Number))
 		}
 	}
 
@@ -120,7 +120,7 @@ func main() {
 		}
 		fmt.Println("Query results:")
 		for _, row := range res.Rows {
-			fmt.Printf("    ID: %s, Name: %s, Age: %s\n", row["id"], row["name"], row["age"].(json.Number))
+			fmt.Printf("    ID: %s, Name: %s, Age: %s\n", row["id"], row["name"], row["age"].(respjson.Number))
 		}
 	}
 }
