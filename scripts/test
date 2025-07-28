@@ -54,3 +54,8 @@ fi
 
 echo "==> Running tests"
 go test ./... "$@"
+
+for example in ./examples/*; do
+  echo "==> Running $example"
+  go run "$example"
+done
