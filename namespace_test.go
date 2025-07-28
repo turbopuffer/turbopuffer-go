@@ -107,8 +107,9 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 			AggregateBy: map[string]any{
 				"foo": "bar",
 			},
-			DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
-			Filters:        map[string]interface{}{},
+			DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
+			ExcludeAttributes: []string{"string"},
+			Filters:           map[string]interface{}{},
 			IncludeAttributes: turbopuffer.IncludeAttributesParam{
 				Bool: turbopuffer.Bool(true),
 			},
@@ -150,8 +151,9 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		Consistency: turbopuffer.NamespaceQueryParamsConsistency{
 			Level: turbopuffer.NamespaceQueryParamsConsistencyLevelStrong,
 		},
-		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
-		Filters:        map[string]interface{}{},
+		DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
+		ExcludeAttributes: []string{"string"},
+		Filters:           map[string]interface{}{},
 		IncludeAttributes: turbopuffer.IncludeAttributesParam{
 			Bool: turbopuffer.Bool(true),
 		},
