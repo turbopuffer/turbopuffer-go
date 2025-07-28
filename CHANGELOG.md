@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.11 (2025-07-28)
+
+Full Changelog: [v0.1.10...v0.1.11](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.10...v0.1.11)
+
+### Bug Fixes
+
+* correct some bugs in example code ([#56](https://github.com/turbopuffer/turbopuffer-go/issues/56)) ([9779814](https://github.com/turbopuffer/turbopuffer-go/commit/9779814e770a7e4e700122716995b224245c7fc1))
+* more precise types for filters that take arrays ([64ca1b6](https://github.com/turbopuffer/turbopuffer-go/commit/64ca1b6057dc8760ea10da6958f1c7d0de4501f3))
+
+
+### Chores
+
+* **codegen:** bump apigen ([#55](https://github.com/turbopuffer/turbopuffer-go/issues/55)) ([053ecde](https://github.com/turbopuffer/turbopuffer-go/commit/053ecde20cf2e5d3d5dedd62e4e12a85a8cac51b))
+
 ## 0.1.10 (2025-07-23)
 
 Full Changelog: [v0.1.9...v0.1.10](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.9...v0.1.10)
