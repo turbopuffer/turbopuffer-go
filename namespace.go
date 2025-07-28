@@ -519,6 +519,9 @@ type QueryParam struct {
 	//
 	// Any of "cosine_distance", "euclidean_squared".
 	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
+	// List of attribute names to exclude from the response. All other attributes will
+	// be included in the response.
+	ExcludeAttributes []string `json:"exclude_attributes,omitzero"`
 	// Exact filters for attributes to refine search results for. Think of it as a SQL
 	// WHERE clause.
 	Filters Filter `json:"filters,omitzero"`
@@ -946,6 +949,9 @@ type NamespaceQueryParams struct {
 	//
 	// Any of "cosine_distance", "euclidean_squared".
 	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
+	// List of attribute names to exclude from the response. All other attributes will
+	// be included in the response.
+	ExcludeAttributes []string `json:"exclude_attributes,omitzero"`
 	// Exact filters for attributes to refine search results for. Think of it as a SQL
 	// WHERE clause.
 	Filters Filter `json:"filters,omitzero"`

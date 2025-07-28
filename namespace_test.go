@@ -103,6 +103,7 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 		Namespace: turbopuffer.String("namespace"),
 		Queries: []turbopuffer.QueryParam{{
 			DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+			ExcludeAttributes: []string{"string"},
 			IncludeAttributes: turbopuffer.IncludeAttributesParam{
 				Bool: turbopuffer.Bool(true),
 			},
@@ -143,6 +144,7 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 			Level: turbopuffer.NamespaceQueryParamsConsistencyLevelStrong,
 		},
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+		ExcludeAttributes: []string{"string"},
 		IncludeAttributes: turbopuffer.IncludeAttributesParam{
 			Bool: turbopuffer.Bool(true),
 		},
