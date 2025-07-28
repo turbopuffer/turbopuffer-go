@@ -525,6 +525,8 @@ const (
 type NamespaceMetadata struct {
 	// The approximate number of logical bytes in the namespace.
 	ApproxLogicalBytes int64 `json:"approx_logical_bytes,required"`
+	// The approximate number of rows in the namespace.
+	ApproxRowCount int64 `json:"approx_row_count,required"`
 	// The timestamp when the namespace was created.
 	CreatedAt time.Time `json:"created_at,required" format:"date-time"`
 	// The schema of the namespace.
@@ -532,6 +534,7 @@ type NamespaceMetadata struct {
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ApproxLogicalBytes respjson.Field
+		ApproxRowCount     respjson.Field
 		CreatedAt          respjson.Field
 		Schema             respjson.Field
 		ExtraFields        map[string]respjson.Field
