@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.12 (2025-07-29)
+
+Full Changelog: [v0.1.11...v0.1.12](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.11...v0.1.12)
+
+### Bug Fixes
+
+* add support for regex filter ([2e53da3](https://github.com/turbopuffer/turbopuffer-go/commit/2e53da3f4f0ddefd09a925574c7a1217108ee684))
+* **api:** api update ([1adc270](https://github.com/turbopuffer/turbopuffer-go/commit/1adc270865616d75ba3364c77ddbf2a3eab37e95))
+* **api:** api update ([90a773b](https://github.com/turbopuffer/turbopuffer-go/commit/90a773b4843f8794b9c5abeb75a779298d7e9c4d))
+
 ## 0.1.11 (2025-07-28)
 
 Full Changelog: [v0.1.10...v0.1.11](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.10...v0.1.11)
