@@ -37,6 +37,46 @@ func TestNamespaceDeleteAll(t *testing.T) {
 	}
 }
 
+func TestNamespaceExplainQueryWithOptionalParams(t *testing.T) {
+	t.Skip("skipped: tests are disabled for the time being")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := turbopuffer.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("tpuf_A1..."),
+	)
+	_, err := client.Namespaces.ExplainQuery(context.TODO(), turbopuffer.NamespaceExplainQueryParams{
+		Namespace: turbopuffer.String("namespace"),
+		AggregateBy: map[string]any{
+			"foo": "bar",
+		},
+		Consistency: turbopuffer.NamespaceExplainQueryParamsConsistency{
+			Level: turbopuffer.NamespaceExplainQueryParamsConsistencyLevelStrong,
+		},
+		DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
+		ExcludeAttributes: []string{"string"},
+		Filters:           map[string]interface{}{},
+		IncludeAttributes: turbopuffer.IncludeAttributesParam{
+			Bool: turbopuffer.Bool(true),
+		},
+		RankBy:         map[string]interface{}{},
+		TopK:           turbopuffer.Int(0),
+		VectorEncoding: turbopuffer.VectorEncodingFloat,
+	})
+	if err != nil {
+		var apierr *turbopuffer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
 func TestNamespaceHintCacheWarm(t *testing.T) {
 	t.Skip("skipped: tests are disabled for the time being")
 	baseURL := "http://localhost:4010"

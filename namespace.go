@@ -63,6 +63,23 @@ func (r *NamespaceService) DeleteAll(ctx context.Context, body NamespaceDeleteAl
 	return
 }
 
+// Explain a query plan.
+func (r *NamespaceService) ExplainQuery(ctx context.Context, params NamespaceExplainQueryParams, opts ...option.RequestOption) (res *NamespaceExplainQueryResponse, err error) {
+	opts = append(r.Options[:], opts...)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return
+	}
+	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
+	if params.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return
+	}
+	path := fmt.Sprintf("v2/namespaces/%s/explain_query", url.PathEscape(params.Namespace.Value))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	return
+}
+
 // Warm the cache for a namespace.
 func (r *NamespaceService) HintCacheWarm(ctx context.Context, query NamespaceHintCacheWarmParams, opts ...option.RequestOption) (res *NamespaceHintCacheWarmResponse, err error) {
 	opts = append(r.Options[:], opts...)
@@ -733,6 +750,24 @@ func (r *NamespaceDeleteAllResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The response to a successful query explain.
+type NamespaceExplainQueryResponse struct {
+	// The textual representation of the query plan.
+	PlanText string `json:"plan_text"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		PlanText    respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceExplainQueryResponse) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceExplainQueryResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // The response to a successful cache warm request.
 type NamespaceHintCacheWarmResponse struct {
 	// The status of the request.
@@ -888,6 +923,69 @@ type NamespaceDeleteAllParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
 	paramObj
 }
+
+type NamespaceExplainQueryParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	// The number of results to return.
+	TopK param.Opt[int64] `json:"top_k,omitzero"`
+	// Aggregations to compute over all documents in the namespace that match the
+	// filters.
+	AggregateBy map[string]any `json:"aggregate_by,omitzero"`
+	// The consistency level for a query.
+	Consistency NamespaceExplainQueryParamsConsistency `json:"consistency,omitzero"`
+	// A function used to calculate vector similarity.
+	//
+	// Any of "cosine_distance", "euclidean_squared".
+	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
+	// List of attribute names to exclude from the response. All other attributes will
+	// be included in the response.
+	ExcludeAttributes []string `json:"exclude_attributes,omitzero"`
+	// Exact filters for attributes to refine search results for. Think of it as a SQL
+	// WHERE clause.
+	Filters any `json:"filters,omitzero"`
+	// Whether to include attributes in the response.
+	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
+	// How to rank the documents in the namespace.
+	RankBy any `json:"rank_by,omitzero"`
+	// The encoding to use for vectors in the response.
+	//
+	// Any of "float", "base64".
+	VectorEncoding VectorEncoding `json:"vector_encoding,omitzero"`
+	paramObj
+}
+
+func (r NamespaceExplainQueryParams) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceExplainQueryParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceExplainQueryParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The consistency level for a query.
+type NamespaceExplainQueryParamsConsistency struct {
+	// The query's consistency level.
+	//
+	// Any of "strong", "eventual".
+	Level NamespaceExplainQueryParamsConsistencyLevel `json:"level,omitzero"`
+	paramObj
+}
+
+func (r NamespaceExplainQueryParamsConsistency) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceExplainQueryParamsConsistency
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceExplainQueryParamsConsistency) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The query's consistency level.
+type NamespaceExplainQueryParamsConsistencyLevel string
+
+const (
+	NamespaceExplainQueryParamsConsistencyLevelStrong   NamespaceExplainQueryParamsConsistencyLevel = "strong"
+	NamespaceExplainQueryParamsConsistencyLevelEventual NamespaceExplainQueryParamsConsistencyLevel = "eventual"
+)
 
 type NamespaceHintCacheWarmParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
