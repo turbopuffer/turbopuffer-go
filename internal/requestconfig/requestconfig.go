@@ -181,7 +181,7 @@ func NewRequestConfig(ctx context.Context, method string, u string, body any, ds
 		req.Header.Add(k, v)
 	}
 	cfg := RequestConfig{
-		MaxRetries: 2,
+		MaxRetries: 4,
 		Context:    ctx,
 		Request:    req,
 		HTTPClient: http.DefaultClient,
@@ -405,7 +405,7 @@ func retryDelay(res *http.Response, retryCount int) time.Duration {
 	}
 
 	maxDelay := 8 * time.Second
-	delay := time.Duration(0.5 * float64(time.Second) * math.Pow(2, float64(retryCount)))
+	delay := time.Duration(0.25 * float64(time.Second) * math.Pow(2, float64(retryCount)))
 	if delay > maxDelay {
 		delay = maxDelay
 	}
