@@ -71,6 +71,7 @@ func (v FilterGlob) sealed_Filter()                   {}
 func (v FilterNotGlob) sealed_Filter()                {}
 func (v FilterIGlob) sealed_Filter()                  {}
 func (v FilterNotIGlob) sealed_Filter()               {}
+func (v FilterRegex) sealed_Filter()                  {}
 func (v FilterContainsAllTokens) sealed_Filter()      {}
 func (v FilterContainsAllTokensArray) sealed_Filter() {}
 func (v FilterNot) sealed_Filter()                    {}
@@ -524,6 +525,28 @@ func (v FilterOr) MarshalJSON() ([]byte, error) {
 	return shimjson.Marshal([]any{
 		"Or",
 		v.filters,
+	})
+}
+
+type FilterRegex struct {
+	attr  string
+	value string
+}
+
+func NewFilterRegex(
+	attr string,
+	value string,
+) FilterRegex {
+	return FilterRegex{
+		attr,
+		value,
+	}
+}
+func (v FilterRegex) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"Regex",
+		v.value,
 	})
 }
 
