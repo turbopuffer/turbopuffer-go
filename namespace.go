@@ -209,6 +209,8 @@ type AttributeSchemaConfig struct {
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
 	// filterable. You can override this by setting `filterable: true`.
 	FullTextSearch FullTextSearchConfig `json:"full_text_search"`
+	// Whether to enable Regex filters on this attribute.
+	Regex bool `json:"regex"`
 	// The data type of the attribute. Valid values: string, int, uint, uuid, datetime,
 	// bool, []string, []int, []uint, []uuid, []datetime, [DIMS]f16, [DIMS]f32.
 	Type AttributeType `json:"type"`
@@ -217,6 +219,7 @@ type AttributeSchemaConfig struct {
 		Ann            respjson.Field
 		Filterable     respjson.Field
 		FullTextSearch respjson.Field
+		Regex          respjson.Field
 		Type           respjson.Field
 		ExtraFields    map[string]respjson.Field
 		raw            string
@@ -244,6 +247,8 @@ type AttributeSchemaConfigParam struct {
 	Ann param.Opt[bool] `json:"ann,omitzero"`
 	// Whether or not the attributes can be used in filters.
 	Filterable param.Opt[bool] `json:"filterable,omitzero"`
+	// Whether to enable Regex filters on this attribute.
+	Regex param.Opt[bool] `json:"regex,omitzero"`
 	// The data type of the attribute. Valid values: string, int, uint, uuid, datetime,
 	// bool, []string, []int, []uint, []uuid, []datetime, [DIMS]f16, [DIMS]f32.
 	Type param.Opt[AttributeType] `json:"type,omitzero"`
