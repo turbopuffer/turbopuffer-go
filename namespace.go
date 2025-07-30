@@ -350,6 +350,10 @@ type FullTextSearchConfig struct {
 	// "greek", "hungarian", "italian", "norwegian", "portuguese", "romanian",
 	// "russian", "spanish", "swedish", "tamil", "turkish".
 	Language Language `json:"language"`
+	// Maximum length of a token in bytes. Tokens larger than this value during
+	// tokenization will be filtered out. Has to be between `1` and `254` (inclusive).
+	// Defaults to `39`.
+	MaxTokenLength int64 `json:"max_token_length"`
 	// Removes common words from the text based on language. Defaults to `true` (i.e.
 	// remove common words).
 	RemoveStopwords bool `json:"remove_stopwords"`
@@ -366,6 +370,7 @@ type FullTextSearchConfig struct {
 		CaseSensitive   respjson.Field
 		K1              respjson.Field
 		Language        respjson.Field
+		MaxTokenLength  respjson.Field
 		RemoveStopwords respjson.Field
 		Stemming        respjson.Field
 		Tokenizer       respjson.Field
@@ -398,6 +403,10 @@ type FullTextSearchConfigParam struct {
 	CaseSensitive param.Opt[bool] `json:"case_sensitive,omitzero"`
 	// The `k1` term saturation parameter for BM25. Defaults to `1.2`.
 	K1 param.Opt[float64] `json:"k1,omitzero"`
+	// Maximum length of a token in bytes. Tokens larger than this value during
+	// tokenization will be filtered out. Has to be between `1` and `254` (inclusive).
+	// Defaults to `39`.
+	MaxTokenLength param.Opt[int64] `json:"max_token_length,omitzero"`
 	// Removes common words from the text based on language. Defaults to `true` (i.e.
 	// remove common words).
 	RemoveStopwords param.Opt[bool] `json:"remove_stopwords,omitzero"`
