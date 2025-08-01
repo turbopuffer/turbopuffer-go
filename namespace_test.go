@@ -50,7 +50,8 @@ func TestNamespaceExplainQueryWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
 	)
-	_, err := client.Namespaces.ExplainQuery(context.TODO(), turbopuffer.NamespaceExplainQueryParams{
+	ns := client.Namespace("ns")
+	_, err := ns.ExplainQuery(context.TODO(), turbopuffer.NamespaceExplainQueryParams{
 		Namespace: turbopuffer.String("namespace"),
 		AggregateBy: map[string]any{
 			"foo": "bar",
