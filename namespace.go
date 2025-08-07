@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
+	shimjson "github.com/turbopuffer/turbopuffer-go/internal/encoding/json"
 	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
 	"github.com/turbopuffer/turbopuffer-go/option"
 	"github.com/turbopuffer/turbopuffer-go/packages/param"
@@ -1140,7 +1141,7 @@ type NamespaceUpdateSchemaParams struct {
 }
 
 func (r NamespaceUpdateSchemaParams) MarshalJSON() (data []byte, err error) {
-	return json.Marshal(r.Schema)
+	return shimjson.Marshal(r.Schema)
 }
 func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &r.Schema)
