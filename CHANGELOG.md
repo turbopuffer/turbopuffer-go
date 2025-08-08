@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.16 (2025-08-08)
+
+Full Changelog: [v0.1.15...v0.1.16](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.15...v0.1.16)
+
+### Bug Fixes
+
+* use strict types for ExplainQuery ([#62](https://github.com/turbopuffer/turbopuffer-go/issues/62)) ([aa986b8](https://github.com/turbopuffer/turbopuffer-go/commit/aa986b86aebb72c4b63a972bb5fab4d51835beda))
+
 ## 0.1.15 (2025-08-08)
 
 Full Changelog: [v0.1.14...v0.1.15](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.14...v0.1.15)
