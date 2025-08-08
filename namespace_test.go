@@ -53,19 +53,14 @@ func TestNamespaceExplainQueryWithOptionalParams(t *testing.T) {
 	ns := client.Namespace("ns")
 	_, err := ns.ExplainQuery(context.TODO(), turbopuffer.NamespaceExplainQueryParams{
 		Namespace: turbopuffer.String("namespace"),
-		AggregateBy: map[string]any{
-			"foo": "bar",
-		},
 		Consistency: turbopuffer.NamespaceExplainQueryParamsConsistency{
 			Level: turbopuffer.NamespaceExplainQueryParamsConsistencyLevelStrong,
 		},
 		DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 		ExcludeAttributes: []string{"string"},
-		Filters:           map[string]interface{}{},
 		IncludeAttributes: turbopuffer.IncludeAttributesParam{
 			Bool: turbopuffer.Bool(true),
 		},
-		RankBy:         map[string]interface{}{},
 		TopK:           turbopuffer.Int(0),
 		VectorEncoding: turbopuffer.VectorEncodingFloat,
 	})
