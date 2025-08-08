@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.15 (2025-08-08)
+
+Full Changelog: [v0.1.14...v0.1.15](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.14...v0.1.15)
+
+### Features
+
+* **client:** support optional json html escaping ([da5ef74](https://github.com/turbopuffer/turbopuffer-go/commit/da5ef74148df430c91776ea258b47b5844c8fcaf))
+
+
+### Bug Fixes
+
+* add FullTextSearchConfig.MaxTokenLength ([fbf6e7b](https://github.com/turbopuffer/turbopuffer-go/commit/fbf6e7b662facaa4886b8dc1515510a9b0a52036))
+* **api:** api update ([4cf2036](https://github.com/turbopuffer/turbopuffer-go/commit/4cf2036e0fdb46bb89feb087e81715a4c0bdd3de))
+
 ## 0.1.14 (2025-07-29)
 
 Full Changelog: [v0.1.13...v0.1.14](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.13...v0.1.14)
