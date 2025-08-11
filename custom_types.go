@@ -11,20 +11,14 @@ type AggregateBy interface {
 func (v AggregateByCount) sealed_AggregateBy() {}
 
 type AggregateByCount struct {
-	attr string
 }
 
-func NewAggregateByCount(
-	attr string,
-) AggregateByCount {
-	return AggregateByCount{
-		attr,
-	}
+func NewAggregateByCount() AggregateByCount {
+	return AggregateByCount{}
 }
 func (v AggregateByCount) MarshalJSON() ([]byte, error) {
 	return shimjson.Marshal([]any{
 		"Count",
-		v.attr,
 	})
 }
 
