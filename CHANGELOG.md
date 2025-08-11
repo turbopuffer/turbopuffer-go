@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.17 (2025-08-11)
+
+Full Changelog: [v0.1.16...v0.1.17](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.16...v0.1.17)
+
+### Chores
+
+* **internal:** fix .stats.yml ([06a7a35](https://github.com/turbopuffer/turbopuffer-go/commit/06a7a359126a5785d121a2e4cf59d44b4b72e345))
+* **internal:** update comment in script ([8b16e89](https://github.com/turbopuffer/turbopuffer-go/commit/8b16e896be5da2661238d7b2a1758ac8ee1307aa))
+* update @stainless-api/prism-cli to v5.15.0 ([26ce790](https://github.com/turbopuffer/turbopuffer-go/commit/26ce790273caff1f42d3afc0792e389312a0de7b))
+
 ## 0.1.16 (2025-08-08)
 
 Full Changelog: [v0.1.15...v0.1.16](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.15...v0.1.16)
