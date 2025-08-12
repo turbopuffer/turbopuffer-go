@@ -249,7 +249,7 @@ func WithRequestBody(contentType string, body any) RequestOption {
 	})
 }
 
-// WithRequestBodyFuncAndContentLength returns a RequestOption that sets (*http.Request).GetBody
+// WithRequestBodyFunc returns a RequestOption that sets (*http.Request).GetBody
 // and (*http.Request).ContentLength for the request. `getBodyFunc` will be called instantly to
 // populate the initial body, and again if/when the request is retried.
 func WithRequestBodyFunc(getBodyFunc func() (io.ReadCloser, error), contentLength int64) RequestOption {
