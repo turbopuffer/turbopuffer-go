@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.18 (2025-08-12)
+
+Full Changelog: [v0.1.17...v0.1.18](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.17...v0.1.18)
+
+### Bug Fixes
+
+* remove 200 error code for hint_cache_warm API call (always 202 now) ([7662222](https://github.com/turbopuffer/turbopuffer-go/commit/7662222902ae0dc0afecda3067d957e02074e2d2))
+
+
+### Chores
+
+* **internal:** codegen related update ([7d9d5d6](https://github.com/turbopuffer/turbopuffer-go/commit/7d9d5d63f5f2e48db466866cfc1f3b2ba7189b3b))
+
 ## 0.1.17 (2025-08-11)
 
 Full Changelog: [v0.1.16...v0.1.17](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.16...v0.1.17)
