@@ -865,8 +865,8 @@ func (r *NamespaceExplainQueryResponse) UnmarshalJSON(data []byte) error {
 // The response to a successful cache warm request.
 type NamespaceHintCacheWarmResponse struct {
 	// The status of the request.
-	Status  constant.Ok `json:"status,required"`
-	Message string      `json:"message"`
+	Status  constant.Accepted `json:"status,required"`
+	Message string            `json:"message"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Status      respjson.Field
