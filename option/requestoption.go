@@ -249,6 +249,24 @@ func WithRequestBody(contentType string, body any) RequestOption {
 	})
 }
 
+// WithRequestBodyFunc returns a RequestOption that sets (*http.Request).GetBody
+// and (*http.Request).ContentLength for the request. `getBodyFunc` will be called instantly to
+// populate the initial body, and again if/when the request is retried.
+func WithRequestBodyFunc(getBodyFunc func() (io.ReadCloser, error), contentLength int64) RequestOption {
+	return requestconfig.PreRequestOptionFunc(func(r *requestconfig.RequestConfig) error {
+		r.Request.GetBody = getBodyFunc
+		r.Request.ContentLength = contentLength
+
+		body, err := getBodyFunc()
+		if err != nil {
+			return fmt.Errorf("failed to get body: %w", err)
+		}
+		r.Request.Body = body
+
+		return nil
+	})
+}
+
 // WithRequestTimeout returns a RequestOption that sets the timeout for
 // each request attempt. This should be smaller than the timeout defined in
 // the context, which spans all retries.
