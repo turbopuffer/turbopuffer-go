@@ -597,6 +597,9 @@ type QueryParam struct {
 	// Exact filters for attributes to refine search results for. Think of it as a SQL
 	// WHERE clause.
 	Filters any `json:"filters,omitzero"`
+	// Groups documents by the specified attributes (the "group key") before computing
+	// aggregates. Aggregates are computed separately for each group.
+	GroupBy []string `json:"group_by,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
 	// How to rank the documents in the namespace.
@@ -906,14 +909,16 @@ func (r *NamespaceMultiQueryResponse) UnmarshalJSON(data []byte) error {
 }
 
 type NamespaceMultiQueryResponseResult struct {
-	Aggregations map[string]any `json:"aggregations"`
-	Rows         []Row          `json:"rows"`
+	AggregationGroups []Row          `json:"aggregation_groups"`
+	Aggregations      map[string]any `json:"aggregations"`
+	Rows              []Row          `json:"rows"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Aggregations respjson.Field
-		Rows         respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
+		AggregationGroups respjson.Field
+		Aggregations      respjson.Field
+		Rows              respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -928,17 +933,19 @@ type NamespaceQueryResponse struct {
 	// The billing information for a query.
 	Billing QueryBilling `json:"billing,required"`
 	// The performance information for a query.
-	Performance  QueryPerformance `json:"performance,required"`
-	Aggregations map[string]any   `json:"aggregations"`
-	Rows         []Row            `json:"rows"`
+	Performance       QueryPerformance `json:"performance,required"`
+	AggregationGroups []Row            `json:"aggregation_groups"`
+	Aggregations      map[string]any   `json:"aggregations"`
+	Rows              []Row            `json:"rows"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Billing      respjson.Field
-		Performance  respjson.Field
-		Aggregations respjson.Field
-		Rows         respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
+		Billing           respjson.Field
+		Performance       respjson.Field
+		AggregationGroups respjson.Field
+		Aggregations      respjson.Field
+		Rows              respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -1037,6 +1044,9 @@ type NamespaceExplainQueryParams struct {
 	// Exact filters for attributes to refine search results for. Think of it as a SQL
 	// WHERE clause.
 	Filters any `json:"filters,omitzero"`
+	// Groups documents by the specified attributes (the "group key") before computing
+	// aggregates. Aggregates are computed separately for each group.
+	GroupBy []string `json:"group_by,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
 	// How to rank the documents in the namespace.
@@ -1155,6 +1165,9 @@ type NamespaceQueryParams struct {
 	// Exact filters for attributes to refine search results for. Think of it as a SQL
 	// WHERE clause.
 	Filters any `json:"filters,omitzero"`
+	// Groups documents by the specified attributes (the "group key") before computing
+	// aggregates. Aggregates are computed separately for each group.
+	GroupBy []string `json:"group_by,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
 	// How to rank the documents in the namespace.
