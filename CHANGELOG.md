@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.19 (2025-08-18)
+
+Full Changelog: [v0.1.18...v0.1.19](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.18...v0.1.19)
+
+### Bug Fixes
+
+* **api:** add support for `group_by` query parameter ([2a06092](https://github.com/turbopuffer/turbopuffer-go/commit/2a06092a3ccb1583c29e0c2636e08ee94f4e3711))
+
 ## 0.1.18 (2025-08-12)
 
 Full Changelog: [v0.1.17...v0.1.18](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.17...v0.1.18)
