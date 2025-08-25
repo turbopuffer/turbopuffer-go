@@ -361,9 +361,10 @@ type FullTextSearchConfig struct {
 	// Language-specific stemming for the text. Defaults to `false` (i.e., do not
 	// stem).
 	Stemming bool `json:"stemming"`
-	// The tokenizer to use for full-text search on an attribute.
+	// The tokenizer to use for full-text search on an attribute. Defaults to
+	// `word_v2`.
 	//
-	// Any of "pre_tokenized_array", "word_v0", "word_v1".
+	// Any of "pre_tokenized_array", "word_v0", "word_v1", "word_v2".
 	Tokenizer Tokenizer `json:"tokenizer"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -420,9 +421,10 @@ type FullTextSearchConfigParam struct {
 	// "greek", "hungarian", "italian", "norwegian", "portuguese", "romanian",
 	// "russian", "spanish", "swedish", "tamil", "turkish".
 	Language Language `json:"language,omitzero"`
-	// The tokenizer to use for full-text search on an attribute.
+	// The tokenizer to use for full-text search on an attribute. Defaults to
+	// `word_v2`.
 	//
-	// Any of "pre_tokenized_array", "word_v0", "word_v1".
+	// Any of "pre_tokenized_array", "word_v0", "word_v1", "word_v2".
 	Tokenizer Tokenizer `json:"tokenizer,omitzero"`
 	paramObj
 }
@@ -722,13 +724,15 @@ func (r *RowParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// The tokenizer to use for full-text search on an attribute.
+// The tokenizer to use for full-text search on an attribute. Defaults to
+// `word_v2`.
 type Tokenizer string
 
 const (
 	TokenizerPreTokenizedArray Tokenizer = "pre_tokenized_array"
 	TokenizerWordV0            Tokenizer = "word_v0"
 	TokenizerWordV1            Tokenizer = "word_v1"
+	TokenizerWordV2            Tokenizer = "word_v2"
 )
 
 // Vector contains all possible properties and values from [[]float64], [string].
