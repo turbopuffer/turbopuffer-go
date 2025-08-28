@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0 (2025-08-28)
+
+Full Changelog: [v0.1.19...v1.0.0](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.19...v1.0.0)
+
+### Features
+
+* Make word_v2 the default FTS tokenizer ([1f6c1c1](https://github.com/turbopuffer/turbopuffer-go/commit/1f6c1c1a8024661195584a099aa8f11dea452530))
+
 ## 0.1.19 (2025-08-18)
 
 Full Changelog: [v0.1.18...v0.1.19](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.18...v0.1.19)
