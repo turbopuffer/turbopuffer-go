@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.1 (2025-08-28)
+
+Full Changelog: [v1.0.0...v1.0.1](https://github.com/turbopuffer/turbopuffer-go/compare/v1.0.0...v1.0.1)
+
+### Bug Fixes
+
+* close body before retrying ([a624a99](https://github.com/turbopuffer/turbopuffer-go/commit/a624a991f40c4255972987720f8e2642ed812b62))
+
 ## 1.0.0 (2025-08-28)
 
 Full Changelog: [v0.1.19...v1.0.0](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.19...v1.0.0)
