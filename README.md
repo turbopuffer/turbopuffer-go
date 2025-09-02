@@ -1,6 +1,10 @@
 # turbopuffer Go API Library <a href="https://turbopuffer.com"><img src="https://github.com/user-attachments/assets/8d6cca4c-10b7-4d3a-9782-696053baf44e" align="right"></a>
 
+<!-- x-release-please-start-version -->
+
 <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go"><img src="https://pkg.go.dev/badge/github.com/turbopuffer/turbopuffer-go.svg" alt="Go Reference" align="right"></a>
+
+<!-- x-release-please-end -->
 
 The turbopuffer Go library provides convenient access to the [turbopuffer HTTP API](https://turbopuffer.com/docs)
 from applications written in Go.
