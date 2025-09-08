@@ -209,6 +209,8 @@ func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParam
 	return
 }
 
+type AggregationGroup map[string]any
+
 // Detailed configuration for an attribute attached to a document.
 type AttributeSchemaConfig struct {
 	// Whether to create an approximate nearest neighbor index for the attribute.
@@ -913,9 +915,9 @@ func (r *NamespaceMultiQueryResponse) UnmarshalJSON(data []byte) error {
 }
 
 type NamespaceMultiQueryResponseResult struct {
-	AggregationGroups []Row          `json:"aggregation_groups"`
-	Aggregations      map[string]any `json:"aggregations"`
-	Rows              []Row          `json:"rows"`
+	AggregationGroups []AggregationGroup `json:"aggregation_groups"`
+	Aggregations      map[string]any     `json:"aggregations"`
+	Rows              []Row              `json:"rows"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		AggregationGroups respjson.Field
@@ -937,10 +939,10 @@ type NamespaceQueryResponse struct {
 	// The billing information for a query.
 	Billing QueryBilling `json:"billing,required"`
 	// The performance information for a query.
-	Performance       QueryPerformance `json:"performance,required"`
-	AggregationGroups []Row            `json:"aggregation_groups"`
-	Aggregations      map[string]any   `json:"aggregations"`
-	Rows              []Row            `json:"rows"`
+	Performance       QueryPerformance   `json:"performance,required"`
+	AggregationGroups []AggregationGroup `json:"aggregation_groups"`
+	Aggregations      map[string]any     `json:"aggregations"`
+	Rows              []Row              `json:"rows"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Billing           respjson.Field
