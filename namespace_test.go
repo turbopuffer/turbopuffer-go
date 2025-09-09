@@ -227,11 +227,12 @@ func TestNamespaceRecallWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 	)
 	_, err := client.Namespaces.Recall(context.TODO(), turbopuffer.NamespaceRecallParams{
-		Namespace: turbopuffer.String("namespace"),
-		Filters:   map[string]interface{}{},
-		Num:       turbopuffer.Int(0),
-		Queries:   []float64{0},
-		TopK:      turbopuffer.Int(0),
+		Namespace:          turbopuffer.String("namespace"),
+		Filters:            map[string]interface{}{},
+		IncludeGroundTruth: turbopuffer.Bool(true),
+		Num:                turbopuffer.Int(0),
+		Queries:            []float64{0},
+		TopK:               turbopuffer.Int(0),
 	})
 	if err != nil {
 		var apierr *turbopuffer.Error

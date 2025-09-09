@@ -970,11 +970,15 @@ type NamespaceRecallResponse struct {
 	AvgExhaustiveCount float64 `json:"avg_exhaustive_count,required"`
 	// The average recall of the queries.
 	AvgRecall float64 `json:"avg_recall,required"`
+	// Ground truth data including query vectors and true nearest neighbors. Only
+	// included when include_ground_truth is true.
+	GroundTruth []NamespaceRecallResponseGroundTruth `json:"ground_truth"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		AvgAnnCount        respjson.Field
 		AvgExhaustiveCount respjson.Field
 		AvgRecall          respjson.Field
+		GroundTruth        respjson.Field
 		ExtraFields        map[string]respjson.Field
 		raw                string
 	} `json:"-"`
@@ -983,6 +987,26 @@ type NamespaceRecallResponse struct {
 // Returns the unmodified JSON received from the API
 func (r NamespaceRecallResponse) RawJSON() string { return r.JSON.raw }
 func (r *NamespaceRecallResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type NamespaceRecallResponseGroundTruth struct {
+	// The true nearest neighbors with their distances and vectors.
+	NearestNeighbors []Row `json:"nearest_neighbors,required"`
+	// The query vector used for this search.
+	QueryVector []float64 `json:"query_vector,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		NearestNeighbors respjson.Field
+		QueryVector      respjson.Field
+		ExtraFields      map[string]respjson.Field
+		raw              string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceRecallResponseGroundTruth) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceRecallResponseGroundTruth) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -1220,6 +1244,9 @@ const (
 
 type NamespaceRecallParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	// Include ground truth data (query vectors and true nearest neighbors) in the
+	// response.
+	IncludeGroundTruth param.Opt[bool] `json:"include_ground_truth,omitzero"`
 	// The number of searches to run.
 	Num param.Opt[int64] `json:"num,omitzero"`
 	// Search for `top_k` nearest neighbors.
