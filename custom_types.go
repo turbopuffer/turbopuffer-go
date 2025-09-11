@@ -61,6 +61,10 @@ func (v FilterLt) sealed_Filter()                     {}
 func (v FilterLte) sealed_Filter()                    {}
 func (v FilterGt) sealed_Filter()                     {}
 func (v FilterGte) sealed_Filter()                    {}
+func (v FilterAnyLt) sealed_Filter()                  {}
+func (v FilterAnyLte) sealed_Filter()                 {}
+func (v FilterAnyGt) sealed_Filter()                  {}
+func (v FilterAnyGte) sealed_Filter()                 {}
 func (v FilterGlob) sealed_Filter()                   {}
 func (v FilterNotGlob) sealed_Filter()                {}
 func (v FilterIGlob) sealed_Filter()                  {}
@@ -87,6 +91,94 @@ func (v FilterAnd) MarshalJSON() ([]byte, error) {
 	return shimjson.Marshal([]any{
 		"And",
 		v.filters,
+	})
+}
+
+type FilterAnyGt struct {
+	attr  string
+	value any
+}
+
+func NewFilterAnyGt(
+	attr string,
+	value any,
+) FilterAnyGt {
+	return FilterAnyGt{
+		attr,
+		value,
+	}
+}
+func (v FilterAnyGt) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"AnyGt",
+		v.value,
+	})
+}
+
+type FilterAnyGte struct {
+	attr  string
+	value any
+}
+
+func NewFilterAnyGte(
+	attr string,
+	value any,
+) FilterAnyGte {
+	return FilterAnyGte{
+		attr,
+		value,
+	}
+}
+func (v FilterAnyGte) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"AnyGte",
+		v.value,
+	})
+}
+
+type FilterAnyLt struct {
+	attr  string
+	value any
+}
+
+func NewFilterAnyLt(
+	attr string,
+	value any,
+) FilterAnyLt {
+	return FilterAnyLt{
+		attr,
+		value,
+	}
+}
+func (v FilterAnyLt) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"AnyLt",
+		v.value,
+	})
+}
+
+type FilterAnyLte struct {
+	attr  string
+	value any
+}
+
+func NewFilterAnyLte(
+	attr string,
+	value any,
+) FilterAnyLte {
+	return FilterAnyLte{
+		attr,
+		value,
+	}
+}
+func (v FilterAnyLte) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"AnyLte",
+		v.value,
 	})
 }
 
