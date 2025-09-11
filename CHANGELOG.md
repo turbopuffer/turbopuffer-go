@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.1.0 (2025-09-11)
+
+Full Changelog: [v1.0.0...v1.1.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.0.0...v1.1.0)
+
+### Features
+
+* spec: add dedicated type for AggregationGroup response ([e92ddfe](https://github.com/turbopuffer/turbopuffer-go/commit/e92ddfe7a2bbd10e3fb5cbfea96e0e26a97ec5d2))
+* tpuf: add include_ground_truth option to recall endpoint ([a5838ca](https://github.com/turbopuffer/turbopuffer-go/commit/a5838cae384ce595ca82799b9ffb60df068f47cd))
+
+
+### Bug Fixes
+
+* close body before retrying ([a624a99](https://github.com/turbopuffer/turbopuffer-go/commit/a624a991f40c4255972987720f8e2642ed812b62))
+* **internal:** unmarshal correctly when there are multiple discriminators ([1c21ca3](https://github.com/turbopuffer/turbopuffer-go/commit/1c21ca38bb846f39ce58f14e7a4719dbc6bb0bec))
+* remove null from release please manifest ([f8ae2f8](https://github.com/turbopuffer/turbopuffer-go/commit/f8ae2f82d103855fb6f69122f545bf32efbaf65b))
+* use release please annotations on more places ([a6aa93a](https://github.com/turbopuffer/turbopuffer-go/commit/a6aa93a6d758a2094df1293265df99929beea2d6))
+
 ## 1.0.0 (2025-08-28)
 
 Full Changelog: [v0.1.19...v1.0.0](https://github.com/turbopuffer/turbopuffer-go/compare/v0.1.19...v1.0.0)
