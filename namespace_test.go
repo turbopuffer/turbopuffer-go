@@ -215,12 +215,12 @@ func TestNamespaceRecallWithOptionalParams(t *testing.T) {
 	)
 	ns := client.Namespace("ns")
 	_, err := ns.Recall(context.TODO(), turbopuffer.NamespaceRecallParams{
-		Namespace: turbopuffer.String("namespace"),
+		Namespace:          turbopuffer.String("namespace"),
 		Filters:            map[string]interface{}{},
 		IncludeGroundTruth: turbopuffer.Bool(true),
 		Num:                turbopuffer.Int(0),
 		Queries:            []float32{0},
-		TopK:      turbopuffer.Int(0),
+		TopK:               turbopuffer.Int(0),
 	})
 	if err != nil {
 		var apierr *turbopuffer.Error
