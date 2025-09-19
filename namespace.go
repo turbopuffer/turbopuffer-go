@@ -282,6 +282,21 @@ func (r *AttributeSchemaConfigParam) UnmarshalJSON(data []byte) error {
 
 type AttributeType = string
 
+// Additional (optional) parameters for a single BM25 query clause.
+type Bm25ClauseParams struct {
+	// Whether to treat the last token in the query input as a literal prefix.
+	LastAsPrefix param.Opt[bool] `json:"last_as_prefix,omitzero"`
+	paramObj
+}
+
+func (r Bm25ClauseParams) MarshalJSON() (data []byte, err error) {
+	type shadow Bm25ClauseParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *Bm25ClauseParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // A list of documents in columnar format. Each key is a column name, mapped to an
 // array of values for that column.
 //
@@ -329,6 +344,21 @@ func (u *ColumnsVectorParam) asAny() any {
 		return &u.String.Value
 	}
 	return nil
+}
+
+// Additional (optional) parameters for the ContainsAllTokens filter.
+type ContainsAllTokensFilterParams struct {
+	// Whether to treat the last token in the query input as a literal prefix.
+	LastAsPrefix param.Opt[bool] `json:"last_as_prefix,omitzero"`
+	paramObj
+}
+
+func (r ContainsAllTokensFilterParams) MarshalJSON() (data []byte, err error) {
+	type shadow ContainsAllTokensFilterParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ContainsAllTokensFilterParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
 }
 
 // A function used to calculate vector similarity.
