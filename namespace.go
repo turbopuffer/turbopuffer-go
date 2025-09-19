@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"slices"
 	"time"
 
 	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
@@ -49,7 +50,7 @@ func (r *NamespaceService) ID() string {
 
 // Delete namespace.
 func (r *NamespaceService) DeleteAll(ctx context.Context, body NamespaceDeleteAllParams, opts ...option.RequestOption) (res *NamespaceDeleteAllResponse, err error) {
-	opts = append(r.Options[:], opts...)
+	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
 		return
@@ -66,7 +67,7 @@ func (r *NamespaceService) DeleteAll(ctx context.Context, body NamespaceDeleteAl
 
 // Explain a query plan.
 func (r *NamespaceService) ExplainQuery(ctx context.Context, params NamespaceExplainQueryParams, opts ...option.RequestOption) (res *NamespaceExplainQueryResponse, err error) {
-	opts = append(r.Options[:], opts...)
+	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
 		return
@@ -83,7 +84,7 @@ func (r *NamespaceService) ExplainQuery(ctx context.Context, params NamespaceExp
 
 // Warm the cache for a namespace.
 func (r *NamespaceService) HintCacheWarm(ctx context.Context, query NamespaceHintCacheWarmParams, opts ...option.RequestOption) (res *NamespaceHintCacheWarmResponse, err error) {
-	opts = append(r.Options[:], opts...)
+	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
 		return
@@ -100,7 +101,7 @@ func (r *NamespaceService) HintCacheWarm(ctx context.Context, query NamespaceHin
 
 // Get metadata about a namespace.
 func (r *NamespaceService) Metadata(ctx context.Context, query NamespaceMetadataParams, opts ...option.RequestOption) (res *NamespaceMetadata, err error) {
-	opts = append(r.Options[:], opts...)
+	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
 		return
@@ -117,7 +118,7 @@ func (r *NamespaceService) Metadata(ctx context.Context, query NamespaceMetadata
 
 // Issue multiple concurrent queries filter or search documents.
 func (r *NamespaceService) MultiQuery(ctx context.Context, params NamespaceMultiQueryParams, opts ...option.RequestOption) (res *NamespaceMultiQueryResponse, err error) {
-	opts = append(r.Options[:], opts...)
+	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
 		return
@@ -134,7 +135,7 @@ func (r *NamespaceService) MultiQuery(ctx context.Context, params NamespaceMulti
 
 // Query, filter, full-text search and vector search documents.
 func (r *NamespaceService) Query(ctx context.Context, params NamespaceQueryParams, opts ...option.RequestOption) (res *NamespaceQueryResponse, err error) {
-	opts = append(r.Options[:], opts...)
+	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
 		return
@@ -151,7 +152,7 @@ func (r *NamespaceService) Query(ctx context.Context, params NamespaceQueryParam
 
 // Evaluate recall.
 func (r *NamespaceService) Recall(ctx context.Context, params NamespaceRecallParams, opts ...option.RequestOption) (res *NamespaceRecallResponse, err error) {
-	opts = append(r.Options[:], opts...)
+	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
 		return
@@ -168,7 +169,7 @@ func (r *NamespaceService) Recall(ctx context.Context, params NamespaceRecallPar
 
 // Get namespace schema.
 func (r *NamespaceService) Schema(ctx context.Context, query NamespaceSchemaParams, opts ...option.RequestOption) (res *NamespaceSchemaResponse, err error) {
-	opts = append(r.Options[:], opts...)
+	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
 		return
@@ -185,7 +186,7 @@ func (r *NamespaceService) Schema(ctx context.Context, query NamespaceSchemaPara
 
 // Update namespace schema.
 func (r *NamespaceService) UpdateSchema(ctx context.Context, params NamespaceUpdateSchemaParams, opts ...option.RequestOption) (res *NamespaceUpdateSchemaResponse, err error) {
-	opts = append(r.Options[:], opts...)
+	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
 		return
@@ -202,7 +203,7 @@ func (r *NamespaceService) UpdateSchema(ctx context.Context, params NamespaceUpd
 
 // Create, update, or delete documents.
 func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParams, opts ...option.RequestOption) (res *NamespaceWriteResponse, err error) {
-	opts = append(r.Options[:], opts...)
+	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
 		return
