@@ -6,6 +6,7 @@ import (
 	"context"
 	"net/http"
 	"os"
+	"slices"
 
 	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
 	"github.com/turbopuffer/turbopuffer-go/option"
@@ -83,7 +84,7 @@ func NewClient(opts ...option.RequestOption) (r Client) {
 // For even greater flexibility, see [option.WithResponseInto] and
 // [option.WithResponseBodyInto].
 func (r *Client) Execute(ctx context.Context, method string, path string, params any, res any, opts ...option.RequestOption) error {
-	opts = append(r.Options, opts...)
+	opts = slices.Concat(r.Options, opts)
 	return requestconfig.ExecuteNewRequest(ctx, method, path, params, res, opts...)
 }
 
@@ -123,7 +124,7 @@ func (r *Client) Delete(ctx context.Context, path string, params any, res any, o
 // List namespaces.
 func (r *Client) Namespaces(ctx context.Context, query NamespacesParams, opts ...option.RequestOption) (res *pagination.NamespacePage[NamespaceSummary], err error) {
 	var raw *http.Response
-	opts = append(r.Options[:], opts...)
+	opts = slices.Concat(r.Options, opts)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "v1/namespaces"
 	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
