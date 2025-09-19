@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.2.0 (2025-09-19)
+
+Full Changelog: [v1.1.0...v1.2.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.1.0...v1.2.0)
+
+### Features
+
+* add WithParams variant to BM25 and ContainsAllTokens ([5adf1cd](https://github.com/turbopuffer/turbopuffer-go/commit/5adf1cd11ff1568b9ca7ae35861e6d3099ef9fe0))
+
+
+### Bug Fixes
+
+* use slices.Concat instead of sometimes modifying r.Options ([bfebe89](https://github.com/turbopuffer/turbopuffer-go/commit/bfebe899beea3a4379f21f88890c4bc8947097de))
+
+
+### Chores
+
+* bump minimum go version to 1.22 ([c917377](https://github.com/turbopuffer/turbopuffer-go/commit/c917377212159488594d098817a9f004146552d0))
+* do not install brew dependencies in ./scripts/bootstrap by default ([895d0d5](https://github.com/turbopuffer/turbopuffer-go/commit/895d0d586761b234839fe2de9924f6d0a627475d))
+* update more docs for 1.22 ([9a0c9c0](https://github.com/turbopuffer/turbopuffer-go/commit/9a0c9c0a2d1a8b69d47db39959741df0b9b7a64e))
+
 ## 1.1.0 (2025-09-11)
 
 Full Changelog: [v1.0.0...v1.1.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.0.0...v1.1.0)
