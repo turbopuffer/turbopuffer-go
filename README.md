@@ -42,7 +42,7 @@ go get -u 'github.com/turbopuffer/turbopuffer-go@v1.1.0'
 
 ## Requirements
 
-This library requires Go 1.18+.
+This library requires Go 1.22+.
 
 ## Usage
 
