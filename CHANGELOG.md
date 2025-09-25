@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.1 (2025-09-25)
+
+Full Changelog: [v1.2.0...v1.2.1](https://github.com/turbopuffer/turbopuffer-go/compare/v1.2.0...v1.2.1)
+
+### Bug Fixes
+
+* bugfix for setting JSON keys with special characters ([cb3e41c](https://github.com/turbopuffer/turbopuffer-go/commit/cb3e41c2baab248cc59e19c6459f7bb0452c58c0))
+
 ## 1.2.0 (2025-09-19)
 
 Full Changelog: [v1.1.0...v1.2.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.1.0...v1.2.0)
