@@ -74,7 +74,7 @@ func (r *NamespaceService) ExplainQuery(ctx context.Context, params NamespaceExp
 	return
 }
 
-// Warm the cache for a namespace.
+// Signal turbopuffer to prepare for low-latency requests.
 func (r *NamespaceService) HintCacheWarm(ctx context.Context, query NamespaceHintCacheWarmParams, opts ...option.RequestOption) (res *NamespaceHintCacheWarmResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
