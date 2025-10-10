@@ -1321,6 +1321,8 @@ type NamespaceWriteParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
 	// The namespace to copy documents from.
 	CopyFromNamespace param.Opt[string] `json:"copy_from_namespace,omitzero"`
+	// Disables write throttling (HTTP 429 responses) during high-volume ingestion.
+	DisableBackpressure param.Opt[bool] `json:"disable_backpressure,omitzero"`
 	// The filter specifying which documents to delete.
 	DeleteByFilter any `json:"delete_by_filter,omitzero"`
 	// A condition evaluated against the current value of each document targeted by a

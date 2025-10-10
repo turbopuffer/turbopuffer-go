@@ -317,7 +317,8 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		Deletes: []turbopuffer.IDParam{{
 			String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		}},
-		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+		DisableBackpressure: turbopuffer.Bool(true),
+		DistanceMetric:      turbopuffer.DistanceMetricCosineDistance,
 		Encryption: turbopuffer.NamespaceWriteParamsEncryption{
 			Cmek: turbopuffer.NamespaceWriteParamsEncryptionCmek{
 				KeyName: "key_name",
