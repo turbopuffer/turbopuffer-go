@@ -82,7 +82,7 @@ func (r *NamespaceService) ExplainQuery(ctx context.Context, params NamespaceExp
 	return
 }
 
-// Warm the cache for a namespace.
+// Signal turbopuffer to prepare for low-latency requests.
 func (r *NamespaceService) HintCacheWarm(ctx context.Context, query NamespaceHintCacheWarmParams, opts ...option.RequestOption) (res *NamespaceHintCacheWarmResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
@@ -1237,6 +1237,8 @@ type NamespaceWriteParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
 	// The namespace to copy documents from.
 	CopyFromNamespace param.Opt[string] `json:"copy_from_namespace,omitzero"`
+	// Disables write throttling (HTTP 429 responses) during high-volume ingestion.
+	DisableBackpressure param.Opt[bool] `json:"disable_backpressure,omitzero"`
 	// The filter specifying which documents to delete.
 	DeleteByFilter Filter `json:"delete_by_filter,omitzero"`
 	// A condition evaluated against the current value of each document targeted by a

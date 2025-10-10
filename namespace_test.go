@@ -302,6 +302,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		DeleteByFilter:    turbopuffer.NewFilterEq("id", "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		Deletes:           []any{"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"},
 		DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
+		DisableBackpressure: turbopuffer.Bool(true),
 		Encryption: turbopuffer.NamespaceWriteParamsEncryption{
 			Cmek: turbopuffer.NamespaceWriteParamsEncryptionCmek{
 				KeyName: "key_name",

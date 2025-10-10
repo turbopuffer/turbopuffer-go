@@ -875,10 +875,8 @@ func NewRankByTextProduct(
 func (v RankByTextProduct) MarshalJSON() ([]byte, error) {
 	return shimjson.Marshal([]any{
 		"Product",
-		[]any{
-			v.weight,
-			v.subquery,
-		},
+		v.weight,
+		v.subquery,
 	})
 }
 
