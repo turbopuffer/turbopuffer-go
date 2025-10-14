@@ -232,8 +232,9 @@ type AttributeSchemaConfig struct {
 	FullTextSearch FullTextSearchConfig `json:"full_text_search"`
 	// Whether to enable Regex filters on this attribute.
 	Regex bool `json:"regex"`
-	// The data type of the attribute. Valid values: string, int, uint, uuid, datetime,
-	// bool, []string, []int, []uint, []uuid, []datetime, [DIMS]f16, [DIMS]f32.
+	// The data type of the attribute. Valid values: string, int, uint, float, uuid,
+	// datetime, bool, []string, []int, []uint, []float, []uuid, []datetime, []bool,
+	// [DIMS]f16, [DIMS]f32.
 	Type AttributeType `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -270,8 +271,9 @@ type AttributeSchemaConfigParam struct {
 	Filterable param.Opt[bool] `json:"filterable,omitzero"`
 	// Whether to enable Regex filters on this attribute.
 	Regex param.Opt[bool] `json:"regex,omitzero"`
-	// The data type of the attribute. Valid values: string, int, uint, uuid, datetime,
-	// bool, []string, []int, []uint, []uuid, []datetime, [DIMS]f16, [DIMS]f32.
+	// The data type of the attribute. Valid values: string, int, uint, float, uuid,
+	// datetime, bool, []string, []int, []uint, []float, []uuid, []datetime, []bool,
+	// [DIMS]f16, [DIMS]f32.
 	Type param.Opt[AttributeType] `json:"type,omitzero"`
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
