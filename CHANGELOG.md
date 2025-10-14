@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.3.0 (2025-10-14)
+
+Full Changelog: [v1.2.0...v1.3.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.2.0...v1.3.0)
+
+### Features
+
+* Add float, []float and []bool to the list of valid types in the OpenAPI spec. ([9027106](https://github.com/turbopuffer/turbopuffer-go/commit/902710638c3872b5a0a561a8aeee50ecf87996ff))
+* Promote disable_backpressure to first-class Write property ([8a479d4](https://github.com/turbopuffer/turbopuffer-go/commit/8a479d433bd807207ffb493957d1accae8fddbc9))
+
+
+### Bug Fixes
+
+* bugfix for setting JSON keys with special characters ([cb3e41c](https://github.com/turbopuffer/turbopuffer-go/commit/cb3e41c2baab248cc59e19c6459f7bb0452c58c0))
+
+
+### Documentation
+
+* hint_cache_warm also update header and openapi ([63c6e68](https://github.com/turbopuffer/turbopuffer-go/commit/63c6e68f4763411a8a4b8efa9c7d1179cccce678))
+
 ## 1.2.0 (2025-09-19)
 
 Full Changelog: [v1.1.0...v1.2.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.1.0...v1.2.0)
