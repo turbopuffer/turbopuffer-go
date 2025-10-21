@@ -1315,7 +1315,7 @@ func (r *NamespaceWriteParamsEncryptionCmek) UnmarshalJSON(data []byte) error {
 // The patch and filter specifying which documents to patch.
 type NamespaceWriteParamsPatchByFilter struct {
 	// Filter by attributes. Same syntax as the query endpoint.
-	Filters any            `json:"filters,omitzero"`
+	Filters Filter         `json:"filters,omitzero"`
 	Patch   map[string]any `json:"patch,omitzero"`
 	paramObj
 }
