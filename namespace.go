@@ -1253,6 +1253,8 @@ type NamespaceWriteParams struct {
 	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
 	// The encryption configuration for a namespace.
 	Encryption NamespaceWriteParamsEncryption `json:"encryption,omitzero"`
+	// The patch and filter specifying which documents to patch.
+	PatchByFilter NamespaceWriteParamsPatchByFilter `json:"patch_by_filter,omitzero"`
 	// A list of documents in columnar format. Each key is a column name, mapped to an
 	// array of values for that column.
 	PatchColumns ColumnsParam `json:"patch_columns,omitzero"`
@@ -1307,5 +1309,21 @@ func (r NamespaceWriteParamsEncryptionCmek) MarshalJSON() (data []byte, err erro
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *NamespaceWriteParamsEncryptionCmek) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The patch and filter specifying which documents to patch.
+type NamespaceWriteParamsPatchByFilter struct {
+	// Filter by attributes. Same syntax as the query endpoint.
+	Filters any            `json:"filters,omitzero"`
+	Patch   map[string]any `json:"patch,omitzero"`
+	paramObj
+}
+
+func (r NamespaceWriteParamsPatchByFilter) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceWriteParamsPatchByFilter
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceWriteParamsPatchByFilter) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
