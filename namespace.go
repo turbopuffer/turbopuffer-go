@@ -563,12 +563,21 @@ type NamespaceMetadata struct {
 	CreatedAt time.Time `json:"created_at,required" format:"date-time"`
 	// The schema of the namespace.
 	Schema map[string]AttributeSchemaConfig `json:"schema,required"`
+	// The timestamp when the namespace was last modified by a write operation.
+	UpdatedAt time.Time `json:"updated_at,required" format:"date-time"`
+	// Indicates that the namespace is encrypted with a customer-managed encryption key
+	// (CMEK).
+	Encryption NamespaceMetadataEncryption `json:"encryption"`
+	Index      NamespaceMetadataIndex      `json:"index"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ApproxLogicalBytes respjson.Field
 		ApproxRowCount     respjson.Field
 		CreatedAt          respjson.Field
 		Schema             respjson.Field
+		UpdatedAt          respjson.Field
+		Encryption         respjson.Field
+		Index              respjson.Field
 		ExtraFields        map[string]respjson.Field
 		raw                string
 	} `json:"-"`
@@ -577,6 +586,145 @@ type NamespaceMetadata struct {
 // Returns the unmodified JSON received from the API
 func (r NamespaceMetadata) RawJSON() string { return r.JSON.raw }
 func (r *NamespaceMetadata) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// NamespaceMetadataEncryption contains all possible properties and values from
+// [bool], [NamespaceMetadataEncryptionCmek].
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+//
+// If the underlying value is not a json object, one of the following properties
+// will be valid: Bool]
+type NamespaceMetadataEncryption struct {
+	// This field will be present if the value is a [bool] instead of an object.
+	Bool bool `json:",inline"`
+	// This field is from variant [NamespaceMetadataEncryptionCmek].
+	Cmek NamespaceMetadataEncryptionCmekCmek `json:"cmek"`
+	JSON struct {
+		Bool respjson.Field
+		Cmek respjson.Field
+		raw  string
+	} `json:"-"`
+}
+
+func (u NamespaceMetadataEncryption) AsBool() (v bool) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u NamespaceMetadataEncryption) AsNamespaceMetadataEncryptionCmek() (v NamespaceMetadataEncryptionCmek) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u NamespaceMetadataEncryption) RawJSON() string { return u.JSON.raw }
+
+func (r *NamespaceMetadataEncryption) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Indicates that the namespace is encrypted with a customer-managed encryption key
+// (CMEK).
+type NamespaceMetadataEncryptionCmek struct {
+	Cmek NamespaceMetadataEncryptionCmekCmek `json:"cmek"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Cmek        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceMetadataEncryptionCmek) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceMetadataEncryptionCmek) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type NamespaceMetadataEncryptionCmekCmek struct {
+	// The name of the CMEK key in use.
+	KeyName string `json:"key_name,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		KeyName     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceMetadataEncryptionCmekCmek) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceMetadataEncryptionCmekCmek) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// NamespaceMetadataIndex contains all possible properties and values from
+// [NamespaceMetadataIndexStatus], [NamespaceMetadataIndexObject].
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+type NamespaceMetadataIndex struct {
+	Status string `json:"status"`
+	// This field is from variant [NamespaceMetadataIndexObject].
+	UnindexedBytes int64 `json:"unindexed_bytes"`
+	JSON           struct {
+		Status         respjson.Field
+		UnindexedBytes respjson.Field
+		raw            string
+	} `json:"-"`
+}
+
+func (u NamespaceMetadataIndex) AsNamespaceMetadataIndexStatus() (v NamespaceMetadataIndexStatus) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u NamespaceMetadataIndex) AsNamespaceMetadataIndexObject() (v NamespaceMetadataIndexObject) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u NamespaceMetadataIndex) RawJSON() string { return u.JSON.raw }
+
+func (r *NamespaceMetadataIndex) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type NamespaceMetadataIndexStatus struct {
+	Status constant.UpToDate `json:"status,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Status      respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceMetadataIndexStatus) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceMetadataIndexStatus) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type NamespaceMetadataIndexObject struct {
+	Status constant.Updating `json:"status,required"`
+	// The number of bytes in the namespace that are in the write-ahead log but have
+	// not yet been indexed.
+	UnindexedBytes int64 `json:"unindexed_bytes,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Status         respjson.Field
+		UnindexedBytes respjson.Field
+		ExtraFields    map[string]respjson.Field
+		raw            string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceMetadataIndexObject) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceMetadataIndexObject) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
