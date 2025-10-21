@@ -308,6 +308,12 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 				KeyName: "key_name",
 			},
 		},
+		PatchByFilter: turbopuffer.NamespaceWriteParamsPatchByFilter{
+			Filters: turbopuffer.Filter(nil),
+			Patch: map[string]any{
+				"foo": "bar",
+			},
+		},
 		PatchColumns: turbopuffer.ColumnsParam{},
 		PatchRows:    []turbopuffer.RowParam{},
 		Schema: map[string]turbopuffer.AttributeSchemaConfigParam{
