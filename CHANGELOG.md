@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.5.0 (2025-10-22)
+
+Full Changelog: [v1.3.0...v1.5.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.3.0...v1.5.0)
+
+### Features
+
+* Metadata endpoint updates (e.g. to track indexing progress) ([e1f2486](https://github.com/turbopuffer/turbopuffer-go/commit/e1f2486e467665a5592cfb0570a170e7be98c368))
+* required for patch_by_filter :facepalm: ([edce63a](https://github.com/turbopuffer/turbopuffer-go/commit/edce63af457851832b6565f7576b2b9a79c2eef6))
+* stainless: add patch_by_filter ([b351165](https://github.com/turbopuffer/turbopuffer-go/commit/b351165da997cbd251f991ed7861fb65030f20af))
+
+
+### Chores
+
+* fix typesg ([#73](https://github.com/turbopuffer/turbopuffer-go/issues/73)) ([bc51479](https://github.com/turbopuffer/turbopuffer-go/commit/bc5147925059c78871af4d936b5ae2106e107813))
+
 ## 1.3.0 (2025-10-14)
 
 Full Changelog: [v1.2.0...v1.3.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.2.0...v1.3.0)
