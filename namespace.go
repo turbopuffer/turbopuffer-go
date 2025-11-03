@@ -214,8 +214,9 @@ type AggregationGroup map[string]any
 
 // Detailed configuration for an attribute attached to a document.
 type AttributeSchemaConfig struct {
-	// Whether to create an approximate nearest neighbor index for the attribute.
-	Ann bool `json:"ann"`
+	// Whether to create an approximate nearest neighbor index for the attribute. Can
+	// be a boolean or a detailed configuration object.
+	Ann AttributeSchemaConfigAnn `json:"ann"`
 	// Whether or not the attributes can be used in filters.
 	Filterable bool `json:"filterable"`
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
@@ -255,10 +256,28 @@ func (r AttributeSchemaConfig) ToParam() AttributeSchemaConfigParam {
 	return param.Override[AttributeSchemaConfigParam](json.RawMessage(r.RawJSON()))
 }
 
+// Configuration options for ANN (Approximate Nearest Neighbor) indexing.
+type AttributeSchemaConfigAnn struct {
+	// A function used to calculate vector similarity.
+	//
+	// Any of "cosine_distance", "euclidean_squared".
+	DistanceMetric DistanceMetric `json:"distance_metric"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		DistanceMetric respjson.Field
+		ExtraFields    map[string]respjson.Field
+		raw            string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r AttributeSchemaConfigAnn) RawJSON() string { return r.JSON.raw }
+func (r *AttributeSchemaConfigAnn) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Detailed configuration for an attribute attached to a document.
 type AttributeSchemaConfigParam struct {
-	// Whether to create an approximate nearest neighbor index for the attribute.
-	Ann param.Opt[bool] `json:"ann,omitzero"`
 	// Whether or not the attributes can be used in filters.
 	Filterable param.Opt[bool] `json:"filterable,omitzero"`
 	// Whether to enable Regex filters on this attribute.
@@ -267,6 +286,9 @@ type AttributeSchemaConfigParam struct {
 	// datetime, bool, []string, []int, []uint, []float, []uuid, []datetime, []bool,
 	// [DIMS]f16, [DIMS]f32.
 	Type param.Opt[AttributeType] `json:"type,omitzero"`
+	// Whether to create an approximate nearest neighbor index for the attribute. Can
+	// be a boolean or a detailed configuration object.
+	Ann AttributeSchemaConfigAnnParam `json:"ann,omitzero"`
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
 	// filterable. You can override this by setting `filterable: true`.
@@ -279,6 +301,23 @@ func (r AttributeSchemaConfigParam) MarshalJSON() (data []byte, err error) {
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *AttributeSchemaConfigParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Configuration options for ANN (Approximate Nearest Neighbor) indexing.
+type AttributeSchemaConfigAnnParam struct {
+	// A function used to calculate vector similarity.
+	//
+	// Any of "cosine_distance", "euclidean_squared".
+	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
+	paramObj
+}
+
+func (r AttributeSchemaConfigAnnParam) MarshalJSON() (data []byte, err error) {
+	type shadow AttributeSchemaConfigAnnParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *AttributeSchemaConfigAnnParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
