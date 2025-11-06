@@ -716,12 +716,12 @@ func (r *NamespaceMetadataEncryptionCmekCmek) UnmarshalJSON(data []byte) error {
 }
 
 // NamespaceMetadataIndex contains all possible properties and values from
-// [NamespaceMetadataIndexStatus], [NamespaceMetadataIndexObject].
+// [NamespaceMetadataIndexIndexUpToDate], [NamespaceMetadataIndexIndexUpdating].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 type NamespaceMetadataIndex struct {
 	Status string `json:"status"`
-	// This field is from variant [NamespaceMetadataIndexObject].
+	// This field is from variant [NamespaceMetadataIndexIndexUpdating].
 	UnindexedBytes int64 `json:"unindexed_bytes"`
 	JSON           struct {
 		Status         respjson.Field
@@ -730,12 +730,12 @@ type NamespaceMetadataIndex struct {
 	} `json:"-"`
 }
 
-func (u NamespaceMetadataIndex) AsNamespaceMetadataIndexStatus() (v NamespaceMetadataIndexStatus) {
+func (u NamespaceMetadataIndex) AsIndexUpToDate() (v NamespaceMetadataIndexIndexUpToDate) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u NamespaceMetadataIndex) AsNamespaceMetadataIndexObject() (v NamespaceMetadataIndexObject) {
+func (u NamespaceMetadataIndex) AsIndexUpdating() (v NamespaceMetadataIndexIndexUpdating) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -747,7 +747,7 @@ func (r *NamespaceMetadataIndex) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type NamespaceMetadataIndexStatus struct {
+type NamespaceMetadataIndexIndexUpToDate struct {
 	Status constant.UpToDate `json:"status,required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -758,12 +758,12 @@ type NamespaceMetadataIndexStatus struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r NamespaceMetadataIndexStatus) RawJSON() string { return r.JSON.raw }
-func (r *NamespaceMetadataIndexStatus) UnmarshalJSON(data []byte) error {
+func (r NamespaceMetadataIndexIndexUpToDate) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceMetadataIndexIndexUpToDate) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type NamespaceMetadataIndexObject struct {
+type NamespaceMetadataIndexIndexUpdating struct {
 	Status constant.Updating `json:"status,required"`
 	// The number of bytes in the namespace that are in the write-ahead log but have
 	// not yet been indexed.
@@ -778,8 +778,8 @@ type NamespaceMetadataIndexObject struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r NamespaceMetadataIndexObject) RawJSON() string { return r.JSON.raw }
-func (r *NamespaceMetadataIndexObject) UnmarshalJSON(data []byte) error {
+func (r NamespaceMetadataIndexIndexUpdating) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceMetadataIndexIndexUpdating) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
