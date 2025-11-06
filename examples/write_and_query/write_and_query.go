@@ -50,9 +50,9 @@ func main() {
 				},
 			},
 			Schema: map[string]turbopuffer.AttributeSchemaConfigParam{
-				"id":   {Type: turbopuffer.String("uuid")},
-				"name": {Type: turbopuffer.String("string"), Filterable: turbopuffer.Bool(true)},
-				"age":  {Type: turbopuffer.String("uint")},
+				"id":   {Type: turbopuffer.AttributeType("uuid")},
+				"name": {Type: turbopuffer.AttributeType("string"), Filterable: turbopuffer.Bool(true)},
+				"age":  {Type: turbopuffer.AttributeType("uint")},
 			},
 			DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
 		})

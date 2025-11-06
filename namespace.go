@@ -222,6 +222,10 @@ type AggregationGroup map[string]any
 
 // Detailed configuration for an attribute attached to a document.
 type AttributeSchemaConfig struct {
+	// The data type of the attribute. Valid values: string, int, uint, float, uuid,
+	// datetime, bool, []string, []int, []uint, []float, []uuid, []datetime, []bool,
+	// [DIMS]f16, [DIMS]f32.
+	Type AttributeType `json:"type,required"`
 	// Whether to create an approximate nearest neighbor index for the attribute. Can
 	// be a boolean or a detailed configuration object.
 	Ann AttributeSchemaConfigAnn `json:"ann"`
@@ -233,17 +237,13 @@ type AttributeSchemaConfig struct {
 	FullTextSearch FullTextSearchConfig `json:"full_text_search"`
 	// Whether to enable Regex filters on this attribute.
 	Regex bool `json:"regex"`
-	// The data type of the attribute. Valid values: string, int, uint, float, uuid,
-	// datetime, bool, []string, []int, []uint, []float, []uuid, []datetime, []bool,
-	// [DIMS]f16, [DIMS]f32.
-	Type AttributeType `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
+		Type           respjson.Field
 		Ann            respjson.Field
 		Filterable     respjson.Field
 		FullTextSearch respjson.Field
 		Regex          respjson.Field
-		Type           respjson.Field
 		ExtraFields    map[string]respjson.Field
 		raw            string
 	} `json:"-"`
@@ -285,15 +285,17 @@ func (r *AttributeSchemaConfigAnn) UnmarshalJSON(data []byte) error {
 }
 
 // Detailed configuration for an attribute attached to a document.
+//
+// The property Type is required.
 type AttributeSchemaConfigParam struct {
+	// The data type of the attribute. Valid values: string, int, uint, float, uuid,
+	// datetime, bool, []string, []int, []uint, []float, []uuid, []datetime, []bool,
+	// [DIMS]f16, [DIMS]f32.
+	Type AttributeType `json:"type,required"`
 	// Whether or not the attributes can be used in filters.
 	Filterable param.Opt[bool] `json:"filterable,omitzero"`
 	// Whether to enable Regex filters on this attribute.
 	Regex param.Opt[bool] `json:"regex,omitzero"`
-	// The data type of the attribute. Valid values: string, int, uint, float, uuid,
-	// datetime, bool, []string, []int, []uint, []float, []uuid, []datetime, []bool,
-	// [DIMS]f16, [DIMS]f32.
-	Type param.Opt[AttributeType] `json:"type,omitzero"`
 	// Whether to create an approximate nearest neighbor index for the attribute. Can
 	// be a boolean or a detailed configuration object.
 	Ann AttributeSchemaConfigAnnParam `json:"ann,omitzero"`
