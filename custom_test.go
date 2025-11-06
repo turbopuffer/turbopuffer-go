@@ -71,7 +71,7 @@ func TestTurbopufferFullTextSearchSchema(t *testing.T) {
 	t.Run("omit-full-text-search", func(t *testing.T) {
 		schema := roundtripSchema(t, map[string]turbopuffer.AttributeSchemaConfigParam{
 			"test-attr": {
-				Type: turbopuffer.String("string"),
+				Type: turbopuffer.AttributeType("string"),
 			},
 		})
 		if schema["test-attr"].JSON.FullTextSearch.Valid() {
@@ -82,7 +82,7 @@ func TestTurbopufferFullTextSearchSchema(t *testing.T) {
 	t.Run("present-but-empty-full-text-search", func(t *testing.T) {
 		schema := roundtripSchema(t, map[string]turbopuffer.AttributeSchemaConfigParam{
 			"test-attr": {
-				Type:           turbopuffer.String("string"),
+				Type:           turbopuffer.AttributeType("string"),
 				FullTextSearch: &turbopuffer.FullTextSearchConfigParam{},
 			},
 		})
@@ -100,7 +100,7 @@ func TestTurbopufferFullTextSearchSchema(t *testing.T) {
 	t.Run("present-nonempty-full-text-search", func(t *testing.T) {
 		schema := roundtripSchema(t, map[string]turbopuffer.AttributeSchemaConfigParam{
 			"test-attr": {
-				Type: turbopuffer.String("string"),
+				Type: turbopuffer.AttributeType("string"),
 				FullTextSearch: &turbopuffer.FullTextSearchConfigParam{
 					Language: turbopuffer.LanguageDutch,
 				},
