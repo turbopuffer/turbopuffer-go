@@ -600,23 +600,23 @@ type NamespaceMetadata struct {
 	ApproxRowCount int64 `json:"approx_row_count,required"`
 	// The timestamp when the namespace was created.
 	CreatedAt time.Time `json:"created_at,required" format:"date-time"`
+	// Indicates that the namespace is encrypted with a customer-managed encryption key
+	// (CMEK).
+	Encryption NamespaceMetadataEncryption `json:"encryption,required"`
+	Index      NamespaceMetadataIndex      `json:"index,required"`
 	// The schema of the namespace.
 	Schema map[string]AttributeSchemaConfig `json:"schema,required"`
 	// The timestamp when the namespace was last modified by a write operation.
 	UpdatedAt time.Time `json:"updated_at,required" format:"date-time"`
-	// Indicates that the namespace is encrypted with a customer-managed encryption key
-	// (CMEK).
-	Encryption NamespaceMetadataEncryption `json:"encryption"`
-	Index      NamespaceMetadataIndex      `json:"index"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ApproxLogicalBytes respjson.Field
 		ApproxRowCount     respjson.Field
 		CreatedAt          respjson.Field
-		Schema             respjson.Field
-		UpdatedAt          respjson.Field
 		Encryption         respjson.Field
 		Index              respjson.Field
+		Schema             respjson.Field
+		UpdatedAt          respjson.Field
 		ExtraFields        map[string]respjson.Field
 		raw                string
 	} `json:"-"`
@@ -629,25 +629,22 @@ func (r *NamespaceMetadata) UnmarshalJSON(data []byte) error {
 }
 
 // NamespaceMetadataEncryption contains all possible properties and values from
-// [bool], [NamespaceMetadataEncryptionCmek].
+// [NamespaceMetadataEncryptionSse], [NamespaceMetadataEncryptionCmek].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
-//
-// If the underlying value is not a json object, one of the following properties
-// will be valid: Bool]
 type NamespaceMetadataEncryption struct {
-	// This field will be present if the value is a [bool] instead of an object.
-	Bool bool `json:",inline"`
+	// This field is from variant [NamespaceMetadataEncryptionSse].
+	Sse bool `json:"sse"`
 	// This field is from variant [NamespaceMetadataEncryptionCmek].
 	Cmek NamespaceMetadataEncryptionCmekCmek `json:"cmek"`
 	JSON struct {
-		Bool respjson.Field
+		Sse  respjson.Field
 		Cmek respjson.Field
 		raw  string
 	} `json:"-"`
 }
 
-func (u NamespaceMetadataEncryption) AsBool() (v bool) {
+func (u NamespaceMetadataEncryption) AsNamespaceMetadataEncryptionSse() (v NamespaceMetadataEncryptionSse) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -664,10 +661,27 @@ func (r *NamespaceMetadataEncryption) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+type NamespaceMetadataEncryptionSse struct {
+	// Always true. Indicates that the namespace is encrypted with SSE.
+	Sse bool `json:"sse,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Sse         respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceMetadataEncryptionSse) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceMetadataEncryptionSse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Indicates that the namespace is encrypted with a customer-managed encryption key
 // (CMEK).
 type NamespaceMetadataEncryptionCmek struct {
-	Cmek NamespaceMetadataEncryptionCmekCmek `json:"cmek"`
+	Cmek NamespaceMetadataEncryptionCmekCmek `json:"cmek,required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Cmek        respjson.Field
