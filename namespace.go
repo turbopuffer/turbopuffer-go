@@ -1440,7 +1440,9 @@ func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
 
 type NamespaceWriteParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
-	// The namespace to copy documents from.
+	// The namespace to copy documents from. When copying, you can optionally specify
+	// an `encryption` parameter to encrypt the destination namespace with a different
+	// CMEK key than the source namespace.
 	CopyFromNamespace param.Opt[string] `json:"copy_from_namespace,omitzero"`
 	// Disables write throttling (HTTP 429 responses) during high-volume ingestion.
 	DisableBackpressure param.Opt[bool] `json:"disable_backpressure,omitzero"`
