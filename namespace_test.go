@@ -298,7 +298,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 	)
 	ns := client.Namespace("ns")
 	_, err := ns.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
-		String:         turbopuffer.String("string"),
+		Namespace:      turbopuffer.String("string"),
 		DeleteByFilter: turbopuffer.NewFilterEq("id", "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		Deletes:        []any{"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"},
 		CopyFromNamespace: turbopuffer.NamespaceWriteParamsCopyFromNamespace{
