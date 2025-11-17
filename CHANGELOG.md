@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.6.0 (2025-11-17)
+
+Full Changelog: [v1.5.0...v1.6.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.5.0...v1.6.0)
+
+### Features
+
+* Add vector attribute schema to metadata endpoint ([0982efc](https://github.com/turbopuffer/turbopuffer-go/commit/0982efcce52f5673a5f6568f784c316ff7ed7ba9))
+* Allow for a CMEK key to be specified in copy_from_namespace ([399c479](https://github.com/turbopuffer/turbopuffer-go/commit/399c4798d27deb3ba77e4ebb54a1cb7fcadfceac))
+* Make `type` required on `AttributeSchemaConfig` ([c14032b](https://github.com/turbopuffer/turbopuffer-go/commit/c14032bf2bf52d2ba755e3563618163e401e45ff))
+* openapi: Fix stainless warnings ([9abc646](https://github.com/turbopuffer/turbopuffer-go/commit/9abc646dd97cb3d1d3d0f099a7bc2a02a5abd1f2))
+* openapi: name variants of `NamespaceMetadata.index` ([1f60a82](https://github.com/turbopuffer/turbopuffer-go/commit/1f60a82df018bac74a562af87a102577cb328faa))
+* spec: add support for cross-org CFN to SDKs ([0793e8f](https://github.com/turbopuffer/turbopuffer-go/commit/0793e8f4c757d18be19374a39978e9b4f32a2287))
+
+
+### Chores
+
+* bump gjson version ([a19c027](https://github.com/turbopuffer/turbopuffer-go/commit/a19c027b6e58e9e128d91137ab1011fa5db12cd6))
+* **internal:** grammar fix (it's -&gt; its) ([efdbc92](https://github.com/turbopuffer/turbopuffer-go/commit/efdbc92fe118ae50a5e07ae17e8563ffbfcc9b73))
+
 ## 1.5.0 (2025-10-22)
 
 Full Changelog: [v1.3.0...v1.5.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.3.0...v1.5.0)
