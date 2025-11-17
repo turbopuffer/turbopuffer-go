@@ -310,10 +310,12 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 	)
 	_, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
-		Namespace:         turbopuffer.String("namespace"),
-		CopyFromNamespace: turbopuffer.String("copy_from_namespace"),
-		DeleteByFilter:    map[string]interface{}{},
-		DeleteCondition:   map[string]interface{}{},
+		Namespace: turbopuffer.String("namespace"),
+		CopyFromNamespace: turbopuffer.NamespaceWriteParamsCopyFromNamespace{
+			String: turbopuffer.String("string"),
+		},
+		DeleteByFilter:  map[string]interface{}{},
+		DeleteCondition: map[string]interface{}{},
 		Deletes: []turbopuffer.IDParam{{
 			String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		}},
