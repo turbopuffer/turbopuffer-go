@@ -298,9 +298,12 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 	)
 	ns := client.Namespace("ns")
 	_, err := ns.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
-		CopyFromNamespace:   turbopuffer.String("copy_from_namespace"),
-		DeleteByFilter:      turbopuffer.NewFilterEq("id", "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Deletes:             []any{"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"},
+		String:         turbopuffer.String("string"),
+		DeleteByFilter: turbopuffer.NewFilterEq("id", "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		Deletes:        []any{"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"},
+		CopyFromNamespace: turbopuffer.NamespaceWriteParamsCopyFromNamespace{
+			String: turbopuffer.String("string"),
+		},
 		DistanceMetric:      turbopuffer.DistanceMetricCosineDistance,
 		DisableBackpressure: turbopuffer.Bool(true),
 		Encryption: turbopuffer.NamespaceWriteParamsEncryption{

@@ -1440,12 +1440,10 @@ func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
 
 type NamespaceWriteParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
-	// The namespace to copy documents from. When copying, you can optionally specify
-	// an `encryption` parameter to encrypt the destination namespace with a different
-	// CMEK key than the source namespace.
-	CopyFromNamespace param.Opt[string] `json:"copy_from_namespace,omitzero"`
 	// Disables write throttling (HTTP 429 responses) during high-volume ingestion.
 	DisableBackpressure param.Opt[bool] `json:"disable_backpressure,omitzero"`
+	// The namespace to copy documents from.
+	CopyFromNamespace NamespaceWriteParamsCopyFromNamespace `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
 	DeleteByFilter Filter `json:"delete_by_filter,omitzero"`
 	// A condition evaluated against the current value of each document targeted by a
@@ -1484,6 +1482,48 @@ func (r NamespaceWriteParams) MarshalJSON() (data []byte, err error) {
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *NamespaceWriteParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type NamespaceWriteParamsCopyFromNamespace struct {
+	String                  param.Opt[string]                                             `json:",omitzero,inline"`
+	CopyFromNamespaceConfig *NamespaceWriteParamsCopyFromNamespaceCopyFromNamespaceConfig `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u NamespaceWriteParamsCopyFromNamespace) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.String, u.CopyFromNamespaceConfig)
+}
+func (u *NamespaceWriteParamsCopyFromNamespace) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *NamespaceWriteParamsCopyFromNamespace) asAny() any {
+	if !param.IsOmitted(u.String) {
+		return &u.String.Value
+	} else if !param.IsOmitted(u.CopyFromNamespaceConfig) {
+		return u.CopyFromNamespaceConfig
+	}
+	return nil
+}
+
+// The properties SourceAPIKey, SourceNamespace are required.
+type NamespaceWriteParamsCopyFromNamespaceCopyFromNamespaceConfig struct {
+	// An API key for the organization containing the source namespace
+	SourceAPIKey string `json:"source_api_key,required"`
+	// The namespace to copy documents from.
+	SourceNamespace string `json:"source_namespace,required"`
+	paramObj
+}
+
+func (r NamespaceWriteParamsCopyFromNamespaceCopyFromNamespaceConfig) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceWriteParamsCopyFromNamespaceCopyFromNamespaceConfig
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceWriteParamsCopyFromNamespaceCopyFromNamespaceConfig) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
