@@ -61,12 +61,12 @@ func TestNamespaceExplainQueryWithOptionalParams(t *testing.T) {
 		},
 		DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 		ExcludeAttributes: []string{"string"},
-		Filters:           map[string]interface{}{},
+		Filters:           map[string]any{},
 		GroupBy:           []string{"string"},
 		IncludeAttributes: turbopuffer.IncludeAttributesParam{
 			Bool: turbopuffer.Bool(true),
 		},
-		RankBy:         map[string]interface{}{},
+		RankBy:         map[string]any{},
 		TopK:           turbopuffer.Int(0),
 		VectorEncoding: turbopuffer.VectorEncodingFloat,
 	})
@@ -150,12 +150,12 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 			},
 			DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 			ExcludeAttributes: []string{"string"},
-			Filters:           map[string]interface{}{},
+			Filters:           map[string]any{},
 			GroupBy:           []string{"string"},
 			IncludeAttributes: turbopuffer.IncludeAttributesParam{
 				Bool: turbopuffer.Bool(true),
 			},
-			RankBy: map[string]interface{}{},
+			RankBy: map[string]any{},
 			TopK:   turbopuffer.Int(0),
 		}},
 		Consistency: turbopuffer.NamespaceMultiQueryParamsConsistency{
@@ -195,12 +195,12 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		},
 		DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 		ExcludeAttributes: []string{"string"},
-		Filters:           map[string]interface{}{},
+		Filters:           map[string]any{},
 		GroupBy:           []string{"string"},
 		IncludeAttributes: turbopuffer.IncludeAttributesParam{
 			Bool: turbopuffer.Bool(true),
 		},
-		RankBy:         map[string]interface{}{},
+		RankBy:         map[string]any{},
 		TopK:           turbopuffer.Int(0),
 		VectorEncoding: turbopuffer.VectorEncodingFloat,
 	})
@@ -228,7 +228,7 @@ func TestNamespaceRecallWithOptionalParams(t *testing.T) {
 	)
 	_, err := client.Namespaces.Recall(context.TODO(), turbopuffer.NamespaceRecallParams{
 		Namespace:          turbopuffer.String("namespace"),
-		Filters:            map[string]interface{}{},
+		Filters:            map[string]any{},
 		IncludeGroundTruth: turbopuffer.Bool(true),
 		Num:                turbopuffer.Int(0),
 		Queries:            []float64{0},
@@ -314,8 +314,8 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		CopyFromNamespace: turbopuffer.NamespaceWriteParamsCopyFromNamespace{
 			String: turbopuffer.String("string"),
 		},
-		DeleteByFilter:  map[string]interface{}{},
-		DeleteCondition: map[string]interface{}{},
+		DeleteByFilter:  map[string]any{},
+		DeleteCondition: map[string]any{},
 		Deletes: []turbopuffer.IDParam{{
 			String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		}},
@@ -327,7 +327,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 			},
 		},
 		PatchByFilter: turbopuffer.NamespaceWriteParamsPatchByFilter{
-			Filters: map[string]interface{}{},
+			Filters: map[string]any{},
 			Patch: map[string]any{
 				"foo": "bar",
 			},
@@ -342,7 +342,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 				}},
 			},
 		},
-		PatchCondition: map[string]interface{}{},
+		PatchCondition: map[string]any{},
 		PatchRows: []turbopuffer.RowParam{{
 			ID: turbopuffer.IDParam{
 				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
@@ -364,7 +364,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 				}},
 			},
 		},
-		UpsertCondition: map[string]interface{}{},
+		UpsertCondition: map[string]any{},
 		UpsertRows: []turbopuffer.RowParam{{
 			ID: turbopuffer.IDParam{
 				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
