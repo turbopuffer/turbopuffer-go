@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.7.0 (2025-11-25)
+
+Full Changelog: [v1.6.0...v1.7.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.6.0...v1.7.0)
+
+### Features
+
+* site: add ascii_folding to docs and SDKs ([e194058](https://github.com/turbopuffer/turbopuffer-go/commit/e194058219658aca34e3429049b89dc85a44f8d7))
+
 ## 1.6.0 (2025-11-17)
 
 Full Changelog: [v1.5.0...v1.6.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.5.0...v1.6.0)
