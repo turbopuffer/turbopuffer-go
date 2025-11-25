@@ -414,6 +414,9 @@ const (
 
 // Configuration options for full-text search.
 type FullTextSearchConfig struct {
+	// Whether to convert each non-ASCII character in a token to its ASCII equivalent,
+	// if one exists (e.g., à -> a). Defaults to `false` (i.e., no folding).
+	AsciiFolding bool `json:"ascii_folding"`
 	// The `b` document length normalization parameter for BM25. Defaults to `0.75`.
 	B float64 `json:"b"`
 	// Whether searching is case-sensitive. Defaults to `false` (i.e.
@@ -444,6 +447,7 @@ type FullTextSearchConfig struct {
 	Tokenizer Tokenizer `json:"tokenizer"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
+		AsciiFolding    respjson.Field
 		B               respjson.Field
 		CaseSensitive   respjson.Field
 		K1              respjson.Field
@@ -474,6 +478,9 @@ func (r FullTextSearchConfig) ToParam() FullTextSearchConfigParam {
 
 // Configuration options for full-text search.
 type FullTextSearchConfigParam struct {
+	// Whether to convert each non-ASCII character in a token to its ASCII equivalent,
+	// if one exists (e.g., à -> a). Defaults to `false` (i.e., no folding).
+	AsciiFolding param.Opt[bool] `json:"ascii_folding,omitzero"`
 	// The `b` document length normalization parameter for BM25. Defaults to `0.75`.
 	B param.Opt[float64] `json:"b,omitzero"`
 	// Whether searching is case-sensitive. Defaults to `false` (i.e.
