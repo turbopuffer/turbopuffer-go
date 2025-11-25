@@ -9,6 +9,7 @@ type AggregateBy interface {
 }
 
 func (v AggregateByCount) sealed_AggregateBy() {}
+func (v AggregateBySum) sealed_AggregateBy()   {}
 
 type AggregateByCount struct {
 }
@@ -19,6 +20,24 @@ func NewAggregateByCount() AggregateByCount {
 func (v AggregateByCount) MarshalJSON() ([]byte, error) {
 	return shimjson.Marshal([]any{
 		"Count",
+	})
+}
+
+type AggregateBySum struct {
+	attr string
+}
+
+func NewAggregateBySum(
+	attr string,
+) AggregateBySum {
+	return AggregateBySum{
+		attr,
+	}
+}
+func (v AggregateBySum) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		"Sum",
+		v.attr,
 	})
 }
 
@@ -74,6 +93,8 @@ func (v FilterContainsAllTokens) sealed_Filter()                {}
 func (v FilterContainsAllTokensArray) sealed_Filter()           {}
 func (v FilterContainsAllTokensWithParams) sealed_Filter()      {}
 func (v FilterContainsAllTokensArrayWithParams) sealed_Filter() {}
+func (v FilterContainsTokenSequence) sealed_Filter()            {}
+func (v FilterContainsTokenSequenceArray) sealed_Filter()       {}
 func (v FilterNot) sealed_Filter()                              {}
 func (v FilterAnd) sealed_Filter()                              {}
 func (v FilterOr) sealed_Filter()                               {}
@@ -320,6 +341,50 @@ func (v FilterContainsAny[T]) MarshalJSON() ([]byte, error) {
 	return shimjson.Marshal([]any{
 		v.attr,
 		"ContainsAny",
+		v.value,
+	})
+}
+
+type FilterContainsTokenSequence struct {
+	attr  string
+	value string
+}
+
+func NewFilterContainsTokenSequence(
+	attr string,
+	value string,
+) FilterContainsTokenSequence {
+	return FilterContainsTokenSequence{
+		attr,
+		value,
+	}
+}
+func (v FilterContainsTokenSequence) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"ContainsTokenSequence",
+		v.value,
+	})
+}
+
+type FilterContainsTokenSequenceArray struct {
+	attr  string
+	value []string
+}
+
+func NewFilterContainsTokenSequenceArray(
+	attr string,
+	value []string,
+) FilterContainsTokenSequenceArray {
+	return FilterContainsTokenSequenceArray{
+		attr,
+		value,
+	}
+}
+func (v FilterContainsTokenSequenceArray) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"ContainsTokenSequence",
 		v.value,
 	})
 }
