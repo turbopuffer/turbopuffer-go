@@ -216,7 +216,7 @@ func TestNamespaceRecallWithOptionalParams(t *testing.T) {
 	ns := client.Namespace("ns")
 	_, err := ns.Recall(context.TODO(), turbopuffer.NamespaceRecallParams{
 		Namespace:          turbopuffer.String("namespace"),
-		Filters:            map[string]interface{}{},
+		Filters:            map[string]any{},
 		IncludeGroundTruth: turbopuffer.Bool(true),
 		Num:                turbopuffer.Int(0),
 		Queries:            []float32{0},
@@ -304,6 +304,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		CopyFromNamespace: turbopuffer.NamespaceWriteParamsCopyFromNamespace{
 			String: turbopuffer.String("string"),
 		},
+		DisableBackpressure: turbopuffer.Bool(true),
 		DistanceMetric:      turbopuffer.DistanceMetricCosineDistance,
 		DisableBackpressure: turbopuffer.Bool(true),
 		Encryption: turbopuffer.NamespaceWriteParamsEncryption{
