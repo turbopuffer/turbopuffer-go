@@ -317,10 +317,10 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 				"foo": "bar",
 			},
 		},
-		PatchColumns: turbopuffer.ColumnsParam{},
-		PatchRows:    []turbopuffer.RowParam{},
+		PatchColumns:               turbopuffer.ColumnsParam{},
+		PatchRows:                  []turbopuffer.RowParam{},
 		DeleteByFilterAllowPartial: turbopuffer.Bool(true),
-		PatchByFilterAllowPartial: turbopuffer.Bool(true),
+		PatchByFilterAllowPartial:  turbopuffer.Bool(true),
 		Schema: map[string]turbopuffer.AttributeSchemaConfigParam{
 			"foo": {Ann: turbopuffer.AttributeSchemaConfigAnnParam{DistanceMetric: turbopuffer.DistanceMetricCosineDistance}, Filterable: turbopuffer.Bool(true), FullTextSearch: &turbopuffer.FullTextSearchConfigParam{B: turbopuffer.Float(0), CaseSensitive: turbopuffer.Bool(true), K1: turbopuffer.Float(0), Language: turbopuffer.LanguageArabic, RemoveStopwords: turbopuffer.Bool(true), Stemming: turbopuffer.Bool(true), Tokenizer: turbopuffer.TokenizerPreTokenizedArray}, Type: turbopuffer.AttributeType("string")},
 		},
