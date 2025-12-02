@@ -1608,12 +1608,14 @@ func (u *NamespaceWriteParamsCopyFromNamespace) asAny() any {
 	return nil
 }
 
-// The properties SourceAPIKey, SourceNamespace are required.
+// The property SourceNamespace is required.
 type NamespaceWriteParamsCopyFromNamespaceCopyFromNamespaceConfig struct {
-	// An API key for the organization containing the source namespace
-	SourceAPIKey string `json:"source_api_key,required"`
 	// The namespace to copy documents from.
 	SourceNamespace string `json:"source_namespace,required"`
+	// (Optional) An API key for the organization containing the source namespace
+	SourceAPIKey param.Opt[string] `json:"source_api_key,omitzero"`
+	// (Optional) The region of the source namespace.
+	SourceRegion param.Opt[string] `json:"source_region,omitzero"`
 	paramObj
 }
 
