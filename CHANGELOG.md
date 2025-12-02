@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.8.1 (2025-12-02)
+
+Full Changelog: [v1.8.0...v1.8.1](https://github.com/turbopuffer/turbopuffer-go/compare/v1.8.0...v1.8.1)
+
+### Documentation
+
+* add cross-region copy_from_namespace to write API docs ([e6a308a](https://github.com/turbopuffer/turbopuffer-go/commit/e6a308ad645b2e9c3aa0b5a7af61367e5eb3b5b1))
+
 ## 1.8.0 (2025-12-02)
 
 Full Changelog: [v1.7.0...v1.8.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.7.0...v1.8.0)
