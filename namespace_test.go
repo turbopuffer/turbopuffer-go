@@ -314,8 +314,9 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		CopyFromNamespace: turbopuffer.NamespaceWriteParamsCopyFromNamespace{
 			String: turbopuffer.String("string"),
 		},
-		DeleteByFilter:  map[string]any{},
-		DeleteCondition: map[string]any{},
+		DeleteByFilter:             map[string]any{},
+		DeleteByFilterAllowPartial: turbopuffer.Bool(true),
+		DeleteCondition:            map[string]any{},
 		Deletes: []turbopuffer.IDParam{{
 			String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		}},
@@ -332,6 +333,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 				"foo": "bar",
 			},
 		},
+		PatchByFilterAllowPartial: turbopuffer.Bool(true),
 		PatchColumns: turbopuffer.ColumnsParam{
 			ID: []turbopuffer.IDParam{{
 				String: turbopuffer.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
