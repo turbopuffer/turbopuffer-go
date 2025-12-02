@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.8.0 (2025-12-02)
+
+Full Changelog: [v1.7.0...v1.8.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.7.0...v1.8.0)
+
+### Features
+
+* sdks: add &lt;patch|delete&gt;_by_filter_allow_partial options ([31d7603](https://github.com/turbopuffer/turbopuffer-go/commit/31d7603c751f661623d879e8045cd10df93239c8))
+
+
+### Chores
+
+* fix empty interfaces ([00873f0](https://github.com/turbopuffer/turbopuffer-go/commit/00873f0f842927c55c20bd9078c713002d92f7bf))
+
 ## 1.7.0 (2025-11-25)
 
 Full Changelog: [v1.6.0...v1.7.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.6.0...v1.7.0)
