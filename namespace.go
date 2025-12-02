@@ -1187,19 +1187,22 @@ type NamespaceWriteResponse struct {
 	RowsDeleted int64 `json:"rows_deleted"`
 	// The number of rows patched by the write request.
 	RowsPatched int64 `json:"rows_patched"`
+	// Whether more documents match the filter for partial operations.
+	RowsRemaining bool `json:"rows_remaining"`
 	// The number of rows upserted by the write request.
 	RowsUpserted int64 `json:"rows_upserted"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Billing      respjson.Field
-		Message      respjson.Field
-		RowsAffected respjson.Field
-		Status       respjson.Field
-		RowsDeleted  respjson.Field
-		RowsPatched  respjson.Field
-		RowsUpserted respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
+		Billing       respjson.Field
+		Message       respjson.Field
+		RowsAffected  respjson.Field
+		Status        respjson.Field
+		RowsDeleted   respjson.Field
+		RowsPatched   respjson.Field
+		RowsRemaining respjson.Field
+		RowsUpserted  respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
 	} `json:"-"`
 }
 
@@ -1447,8 +1450,12 @@ func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
 
 type NamespaceWriteParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	// Allow partial completion when filter matches too many documents.
+	DeleteByFilterAllowPartial param.Opt[bool] `json:"delete_by_filter_allow_partial,omitzero"`
 	// Disables write throttling (HTTP 429 responses) during high-volume ingestion.
 	DisableBackpressure param.Opt[bool] `json:"disable_backpressure,omitzero"`
+	// Allow partial completion when filter matches too many documents.
+	PatchByFilterAllowPartial param.Opt[bool] `json:"patch_by_filter_allow_partial,omitzero"`
 	// The namespace to copy documents from.
 	CopyFromNamespace NamespaceWriteParamsCopyFromNamespace `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
