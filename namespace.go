@@ -1528,9 +1528,9 @@ func (u *NamespaceWriteParamsCopyFromNamespace) asAny() any {
 type NamespaceWriteParamsCopyFromNamespaceCopyFromNamespaceConfig struct {
 	// The namespace to copy documents from.
 	SourceNamespace string `json:"source_namespace,required"`
-	// (Optional) An API key for the organization containing the source namespace
+	// An API key for the organization containing the source namespace
 	SourceAPIKey param.Opt[string] `json:"source_api_key,omitzero"`
-	// (Optional) The region of the source namespace.
+	// The region of the source namespace.
 	SourceRegion param.Opt[string] `json:"source_region,omitzero"`
 	paramObj
 }
