@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.8.2 (2025-12-05)
+
+Full Changelog: [v1.8.1...v1.8.2](https://github.com/turbopuffer/turbopuffer-go/compare/v1.8.1...v1.8.2)
+
+### Bug Fixes
+
+* **mcp:** correct code tool API endpoint ([57db013](https://github.com/turbopuffer/turbopuffer-go/commit/57db013f2dc4104ead835246fe079f4746b32f4b))
+* rename param to avoid collision ([76aaed3](https://github.com/turbopuffer/turbopuffer-go/commit/76aaed355e99d06af78e2bd937e0f6e1b165803e))
+
+
+### Chores
+
+* codegen updates ([46fb461](https://github.com/turbopuffer/turbopuffer-go/commit/46fb461b63ac9123550505ef9e037cca68588287))
+* elide duplicate aliases ([280bb3d](https://github.com/turbopuffer/turbopuffer-go/commit/280bb3d701917eeafdea4a3fecf9d4c8616fbd72))
+* **internal:** codegen related update ([381360f](https://github.com/turbopuffer/turbopuffer-go/commit/381360f0d7a4fc3283b0a2411f9ae0728d6a09d0))
+
 ## 1.8.1 (2025-12-02)
 
 Full Changelog: [v1.8.0...v1.8.1](https://github.com/turbopuffer/turbopuffer-go/compare/v1.8.0...v1.8.1)
