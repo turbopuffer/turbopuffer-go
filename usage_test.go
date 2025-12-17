@@ -24,6 +24,7 @@ func TestUsage(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
 	)
+	t.Skip("Prism tests are disabled")
 	response, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
 		Namespace:      turbopuffer.String("products"),
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
