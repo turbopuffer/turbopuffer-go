@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.9.1 (2025-12-20)
+
+Full Changelog: [v1.9.0...v1.9.1](https://github.com/turbopuffer/turbopuffer-go/compare/v1.9.0...v1.9.1)
+
+### Bug Fixes
+
+* skip usage tests that don't work with Prism ([8d223e2](https://github.com/turbopuffer/turbopuffer-go/commit/8d223e28f870012a43c913ffbb55351acdb79f65))
+
+
+### Chores
+
+* add float64 to valid types for RegisterFieldValidator ([544caf7](https://github.com/turbopuffer/turbopuffer-go/commit/544caf777bf49f49ecb12182779630b06e870c9b))
+
 ## 1.9.0 (2025-12-11)
 
 Full Changelog: [v1.8.1...v1.9.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.8.1...v1.9.0)
