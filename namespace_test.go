@@ -277,7 +277,7 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 					DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
 				},
 				Filterable: turbopuffer.Bool(true),
-				FullTextSearch: turbopuffer.FullTextSearchConfigParam{
+				FullTextSearch: &turbopuffer.FullTextSearchConfigParam{
 					AsciiFolding:    turbopuffer.Bool(true),
 					B:               turbopuffer.Float(0),
 					CaseSensitive:   turbopuffer.Bool(true),
