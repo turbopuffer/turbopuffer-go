@@ -768,6 +768,7 @@ func (v RankByTextSum) sealed_RankBy()                 {}
 func (v RankByTextMax) sealed_RankBy()                 {}
 func (v RankByTextProduct) sealed_RankBy()             {}
 func (v RankByAttribute) sealed_RankBy()               {}
+func (v RankByAttributes) sealed_RankBy()              {}
 
 type RankByAttribute struct {
 	attr  string
@@ -797,6 +798,7 @@ const (
 	RankByAttributeOrderDesc RankByAttributeOrder = "desc"
 )
 
+type RankByAttributes []RankByAttribute
 type RankByText interface {
 	sealed_RankByText()
 }
