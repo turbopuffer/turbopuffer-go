@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.9.2 (2026-01-09)
+
+Full Changelog: [v1.9.1...v1.9.2](https://github.com/turbopuffer/turbopuffer-go/compare/v1.9.1...v1.9.2)
+
+### Chores
+
+* **internal:** codegen related update ([a379399](https://github.com/turbopuffer/turbopuffer-go/commit/a3793990b62d7057f8ee3b868fb9e8ce419488cf))
+* **internal:** use different example values for some enums ([49e22d7](https://github.com/turbopuffer/turbopuffer-go/commit/49e22d738215613abc9ae650ff99618385ff40cc))
+
 ## 1.9.1 (2025-12-20)
 
 Full Changelog: [v1.9.0...v1.9.1](https://github.com/turbopuffer/turbopuffer-go/compare/v1.9.0...v1.9.1)
