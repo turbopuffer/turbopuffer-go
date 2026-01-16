@@ -310,3 +310,11 @@ func WithDefaultNamespace(value string) RequestOption {
 		return nil
 	})
 }
+
+// WithCompression enables or disables compressed responses. Defaults to false.
+func WithCompression(enabled bool) RequestOption {
+	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) error {
+		r.Compression = &enabled
+		return nil
+	})
+}
