@@ -1184,6 +1184,12 @@ type NamespaceWriteResponse struct {
 	RowsAffected int64 `json:"rows_affected,required"`
 	// The status of the request.
 	Status constant.Ok `json:"status,required"`
+	// The IDs of documents that were deleted. Only included when `return_affected_ids`
+	// is true and at least one document was deleted.
+	DeletedIDs []ID `json:"deleted_ids" format:"uuid"`
+	// The IDs of documents that were patched. Only included when `return_affected_ids`
+	// is true and at least one document was patched.
+	PatchedIDs []ID `json:"patched_ids" format:"uuid"`
 	// The number of rows deleted by the write request.
 	RowsDeleted int64 `json:"rows_deleted"`
 	// The number of rows patched by the write request.
@@ -1192,16 +1198,22 @@ type NamespaceWriteResponse struct {
 	RowsRemaining bool `json:"rows_remaining"`
 	// The number of rows upserted by the write request.
 	RowsUpserted int64 `json:"rows_upserted"`
+	// The IDs of documents that were upserted. Only included when
+	// `return_affected_ids` is true and at least one document was upserted.
+	UpsertedIDs []ID `json:"upserted_ids" format:"uuid"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Billing       respjson.Field
 		Message       respjson.Field
 		RowsAffected  respjson.Field
 		Status        respjson.Field
+		DeletedIDs    respjson.Field
+		PatchedIDs    respjson.Field
 		RowsDeleted   respjson.Field
 		RowsPatched   respjson.Field
 		RowsRemaining respjson.Field
 		RowsUpserted  respjson.Field
+		UpsertedIDs   respjson.Field
 		ExtraFields   map[string]respjson.Field
 		raw           string
 	} `json:"-"`
@@ -1457,6 +1469,10 @@ type NamespaceWriteParams struct {
 	DisableBackpressure param.Opt[bool] `json:"disable_backpressure,omitzero"`
 	// Allow partial completion when filter matches too many documents.
 	PatchByFilterAllowPartial param.Opt[bool] `json:"patch_by_filter_allow_partial,omitzero"`
+	// If true, return the IDs of affected rows (deleted, patched, upserted) in the
+	// response. For filtered and conditional writes, only IDs for writes that
+	// succeeded will be included.
+	ReturnAffectedIDs param.Opt[bool] `json:"return_affected_ids,omitzero"`
 	// The namespace to copy documents from.
 	CopyFromNamespace NamespaceWriteParamsCopyFromNamespace `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
