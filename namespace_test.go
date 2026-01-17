@@ -371,6 +371,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 				FloatArray: []float64{0},
 			},
 		}},
+		ReturnAffectedIDs: turbopuffer.Bool(true),
 		Schema: map[string]turbopuffer.AttributeSchemaConfigParam{
 			"foo": {
 				Type: "string",
