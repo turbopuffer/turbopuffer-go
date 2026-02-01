@@ -182,14 +182,13 @@ func NewRequestConfig(ctx context.Context, method string, u string, body any, ds
 	for k, v := range getPlatformProperties() {
 		req.Header.Add(k, v)
 	}
-	compressionDefault := false
 	cfg := RequestConfig{
 		MaxRetries:  4,
 		Context:     ctx,
 		Request:     req,
 		HTTPClient:  http.DefaultClient,
 		Body:        reader,
-		Compression: &compressionDefault,
+		Compression: false,
 	}
 	cfg.ResponseBodyInto = dst
 	err = cfg.Apply(opts...)
@@ -223,7 +222,7 @@ func NewRequestConfig(ctx context.Context, method string, u string, body any, ds
 		}
 	}
 
-	if cfg.Compression != nil && !*cfg.Compression {
+	if !cfg.Compression {
 		req.Header.Set("Accept-Encoding", "identity")
 	}
 
@@ -262,7 +261,7 @@ type RequestConfig struct {
 	Region           string
 	DefaultNamespace *string
 	// Compression indicates whether to request compressed responses. Defaults to false.
-	Compression *bool
+	Compression bool
 	// If ResponseBodyInto not nil, then we will attempt to deserialize into
 	// ResponseBodyInto. If Destination is a []byte, then it will return the body as
 	// is.
