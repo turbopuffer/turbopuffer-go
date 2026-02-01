@@ -451,6 +451,16 @@ client.Namespaces(
 )
 ```
 
+### Compression
+
+By default, the client does not request compressed responses. To enable compression:
+
+```go
+client := turbopuffer.NewClient(
+	option.WithCompression(true),
+)
+```
+
 ### Accessing raw response data (e.g. response headers)
 
 You can access the raw HTTP response data by using the `option.WithResponseInto()` request option. This is useful when
