@@ -1,5 +1,32 @@
 # Changelog
 
+## 1.10.0 (2026-02-01)
+
+Full Changelog: [v1.9.2...v1.10.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.9.2...v1.10.0)
+
+### Features
+
+* [TPUF-1097] tpuf: return failed IDs for conditional writes ([7d3ca6d](https://github.com/turbopuffer/turbopuffer-go/commit/7d3ca6da169ab367c60700ffc9712a09d8d6eb0c))
+* add ContainsAnyToken and RankByKnn ([150b93d](https://github.com/turbopuffer/turbopuffer-go/commit/150b93dd0116b017927de8b1b2b95bb83b7b577b))
+* Apigen integration ([ea11d4f](https://github.com/turbopuffer/turbopuffer-go/commit/ea11d4f58dac413b4a1d41f8e70a1f3a7d05bf75))
+* **client:** add a convenient param.SetJSON helper ([90b3e5c](https://github.com/turbopuffer/turbopuffer-go/commit/90b3e5c94b664be6058c82a279cac46a4d691b1e))
+* disable response compression by default ([#82](https://github.com/turbopuffer/turbopuffer-go/issues/82)) ([12c7229](https://github.com/turbopuffer/turbopuffer-go/commit/12c722941503807c9b46365648019a8c900190aa))
+
+
+### Bug Fixes
+
+* **docs:** add missing pointer prefix to api.md return types ([4c9d77e](https://github.com/turbopuffer/turbopuffer-go/commit/4c9d77ed4b1e83b9e77b8d0b9e342ff1cc093205))
+* **docs:** fix mcp installation instructions for remote servers ([e5ca2f9](https://github.com/turbopuffer/turbopuffer-go/commit/e5ca2f92c135e4c3ddb75bea6c44d499cd2cb2d0))
+* fix for namespace collisions with client and resource test methods ([94df670](https://github.com/turbopuffer/turbopuffer-go/commit/94df670bc96fdf0151d8a2e1ba5cf2158d86746f))
+
+
+### Chores
+
+* configure new SDK language ([53f0bff](https://github.com/turbopuffer/turbopuffer-go/commit/53f0bff8ce220fb9b5492ea138bef3e7641511f6))
+* fix automatic type regeneration ([209063b](https://github.com/turbopuffer/turbopuffer-go/commit/209063bc9b350984968528609521ac69328fd110))
+* format ([d3e6135](https://github.com/turbopuffer/turbopuffer-go/commit/d3e613512aff4fa38a3b1fefe42d0108ecba2a9e))
+* **internal:** update `actions/checkout` version ([ad49beb](https://github.com/turbopuffer/turbopuffer-go/commit/ad49beb49ec5ff7d1ec5b543b38e98ce377ee0e2))
+
 ## 1.9.2 (2026-01-09)
 
 Full Changelog: [v1.9.1...v1.9.2](https://github.com/turbopuffer/turbopuffer-go/compare/v1.9.1...v1.9.2)
