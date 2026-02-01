@@ -93,6 +93,8 @@ func (v FilterContainsAllTokens) sealed_Filter()                {}
 func (v FilterContainsAllTokensArray) sealed_Filter()           {}
 func (v FilterContainsAllTokensWithParams) sealed_Filter()      {}
 func (v FilterContainsAllTokensArrayWithParams) sealed_Filter() {}
+func (v FilterContainsAnyToken) sealed_Filter()                 {}
+func (v FilterContainsAnyTokenArray) sealed_Filter()            {}
 func (v FilterContainsTokenSequence) sealed_Filter()            {}
 func (v FilterContainsTokenSequenceArray) sealed_Filter()       {}
 func (v FilterNot) sealed_Filter()                              {}
@@ -341,6 +343,50 @@ func (v FilterContainsAny[T]) MarshalJSON() ([]byte, error) {
 	return shimjson.Marshal([]any{
 		v.attr,
 		"ContainsAny",
+		v.value,
+	})
+}
+
+type FilterContainsAnyToken struct {
+	attr  string
+	value string
+}
+
+func NewFilterContainsAnyToken(
+	attr string,
+	value string,
+) FilterContainsAnyToken {
+	return FilterContainsAnyToken{
+		attr,
+		value,
+	}
+}
+func (v FilterContainsAnyToken) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"ContainsAnyToken",
+		v.value,
+	})
+}
+
+type FilterContainsAnyTokenArray struct {
+	attr  string
+	value []string
+}
+
+func NewFilterContainsAnyTokenArray(
+	attr string,
+	value []string,
+) FilterContainsAnyTokenArray {
+	return FilterContainsAnyTokenArray{
+		attr,
+		value,
+	}
+}
+func (v FilterContainsAnyTokenArray) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"ContainsAnyToken",
 		v.value,
 	})
 }
@@ -759,16 +805,49 @@ type RankBy interface {
 	sealed_RankBy()
 }
 
-func (v RankByVector) sealed_RankBy()                  {}
-func (v RankByTextBM25) sealed_RankBy()                {}
-func (v RankByTextBM25Array) sealed_RankBy()           {}
-func (v RankByTextBM25WithParams) sealed_RankBy()      {}
-func (v RankByTextBM25ArrayWithParams) sealed_RankBy() {}
-func (v RankByTextSum) sealed_RankBy()                 {}
-func (v RankByTextMax) sealed_RankBy()                 {}
-func (v RankByTextProduct) sealed_RankBy()             {}
-func (v RankByAttribute) sealed_RankBy()               {}
-func (v RankByAttributes) sealed_RankBy()              {}
+func (v RankByVector) sealed_RankBy()                           {}
+func (v RankByKnn) sealed_RankBy()                              {}
+func (v RankByTextBM25) sealed_RankBy()                         {}
+func (v RankByTextBM25Array) sealed_RankBy()                    {}
+func (v RankByTextBM25WithParams) sealed_RankBy()               {}
+func (v RankByTextBM25ArrayWithParams) sealed_RankBy()          {}
+func (v RankByTextSum) sealed_RankBy()                          {}
+func (v RankByTextMax) sealed_RankBy()                          {}
+func (v RankByTextProduct) sealed_RankBy()                      {}
+func (v FilterEq) sealed_RankBy()                               {}
+func (v FilterNotEq) sealed_RankBy()                            {}
+func (v FilterIn[T]) sealed_RankBy()                            {}
+func (v FilterNotIn[T]) sealed_RankBy()                         {}
+func (v FilterContains) sealed_RankBy()                         {}
+func (v FilterNotContains) sealed_RankBy()                      {}
+func (v FilterContainsAny[T]) sealed_RankBy()                   {}
+func (v FilterNotContainsAny[T]) sealed_RankBy()                {}
+func (v FilterLt) sealed_RankBy()                               {}
+func (v FilterLte) sealed_RankBy()                              {}
+func (v FilterGt) sealed_RankBy()                               {}
+func (v FilterGte) sealed_RankBy()                              {}
+func (v FilterAnyLt) sealed_RankBy()                            {}
+func (v FilterAnyLte) sealed_RankBy()                           {}
+func (v FilterAnyGt) sealed_RankBy()                            {}
+func (v FilterAnyGte) sealed_RankBy()                           {}
+func (v FilterGlob) sealed_RankBy()                             {}
+func (v FilterNotGlob) sealed_RankBy()                          {}
+func (v FilterIGlob) sealed_RankBy()                            {}
+func (v FilterNotIGlob) sealed_RankBy()                         {}
+func (v FilterRegex) sealed_RankBy()                            {}
+func (v FilterContainsAllTokens) sealed_RankBy()                {}
+func (v FilterContainsAllTokensArray) sealed_RankBy()           {}
+func (v FilterContainsAllTokensWithParams) sealed_RankBy()      {}
+func (v FilterContainsAllTokensArrayWithParams) sealed_RankBy() {}
+func (v FilterContainsAnyToken) sealed_RankBy()                 {}
+func (v FilterContainsAnyTokenArray) sealed_RankBy()            {}
+func (v FilterContainsTokenSequence) sealed_RankBy()            {}
+func (v FilterContainsTokenSequenceArray) sealed_RankBy()       {}
+func (v FilterNot) sealed_RankBy()                              {}
+func (v FilterAnd) sealed_RankBy()                              {}
+func (v FilterOr) sealed_RankBy()                               {}
+func (v RankByAttribute) sealed_RankBy()                        {}
+func (v RankByAttributes) sealed_RankBy()                       {}
 
 type RankByAttribute struct {
 	attr  string
@@ -799,17 +878,71 @@ const (
 )
 
 type RankByAttributes []RankByAttribute
+type RankByKnn struct {
+	attr  string
+	value []float32
+}
+
+func NewRankByKnn(
+	attr string,
+	value []float32,
+) RankByKnn {
+	return RankByKnn{
+		attr,
+		value,
+	}
+}
+func (v RankByKnn) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"kNN",
+		v.value,
+	})
+}
+
 type RankByText interface {
 	sealed_RankByText()
 }
 
-func (v RankByTextBM25) sealed_RankByText()                {}
-func (v RankByTextBM25Array) sealed_RankByText()           {}
-func (v RankByTextBM25WithParams) sealed_RankByText()      {}
-func (v RankByTextBM25ArrayWithParams) sealed_RankByText() {}
-func (v RankByTextSum) sealed_RankByText()                 {}
-func (v RankByTextMax) sealed_RankByText()                 {}
-func (v RankByTextProduct) sealed_RankByText()             {}
+func (v RankByTextBM25) sealed_RankByText()                         {}
+func (v RankByTextBM25Array) sealed_RankByText()                    {}
+func (v RankByTextBM25WithParams) sealed_RankByText()               {}
+func (v RankByTextBM25ArrayWithParams) sealed_RankByText()          {}
+func (v RankByTextSum) sealed_RankByText()                          {}
+func (v RankByTextMax) sealed_RankByText()                          {}
+func (v RankByTextProduct) sealed_RankByText()                      {}
+func (v FilterEq) sealed_RankByText()                               {}
+func (v FilterNotEq) sealed_RankByText()                            {}
+func (v FilterIn[T]) sealed_RankByText()                            {}
+func (v FilterNotIn[T]) sealed_RankByText()                         {}
+func (v FilterContains) sealed_RankByText()                         {}
+func (v FilterNotContains) sealed_RankByText()                      {}
+func (v FilterContainsAny[T]) sealed_RankByText()                   {}
+func (v FilterNotContainsAny[T]) sealed_RankByText()                {}
+func (v FilterLt) sealed_RankByText()                               {}
+func (v FilterLte) sealed_RankByText()                              {}
+func (v FilterGt) sealed_RankByText()                               {}
+func (v FilterGte) sealed_RankByText()                              {}
+func (v FilterAnyLt) sealed_RankByText()                            {}
+func (v FilterAnyLte) sealed_RankByText()                           {}
+func (v FilterAnyGt) sealed_RankByText()                            {}
+func (v FilterAnyGte) sealed_RankByText()                           {}
+func (v FilterGlob) sealed_RankByText()                             {}
+func (v FilterNotGlob) sealed_RankByText()                          {}
+func (v FilterIGlob) sealed_RankByText()                            {}
+func (v FilterNotIGlob) sealed_RankByText()                         {}
+func (v FilterRegex) sealed_RankByText()                            {}
+func (v FilterContainsAllTokens) sealed_RankByText()                {}
+func (v FilterContainsAllTokensArray) sealed_RankByText()           {}
+func (v FilterContainsAllTokensWithParams) sealed_RankByText()      {}
+func (v FilterContainsAllTokensArrayWithParams) sealed_RankByText() {}
+func (v FilterContainsAnyToken) sealed_RankByText()                 {}
+func (v FilterContainsAnyTokenArray) sealed_RankByText()            {}
+func (v FilterContainsTokenSequence) sealed_RankByText()            {}
+func (v FilterContainsTokenSequenceArray) sealed_RankByText()       {}
+func (v FilterNot) sealed_RankByText()                              {}
+func (v FilterAnd) sealed_RankByText()                              {}
+func (v FilterOr) sealed_RankByText()                               {}
 
 type RankByTextBM25 struct {
 	attr  string

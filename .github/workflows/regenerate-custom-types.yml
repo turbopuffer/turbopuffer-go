@@ -1,0 +1,38 @@
+name: Regenerate Custom Types
+
+on:
+  push:
+    branches:
+      - next
+
+jobs:
+  regenerate:
+    name: regenerate custom types
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: next
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ./go.mod
+
+      - name: Regenerate custom types
+        run: ./scripts/gen
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/resources/custom.ts
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: regenerate custom types"
+            git push
+          else
+            echo "No changes to custom types"
+          fi
