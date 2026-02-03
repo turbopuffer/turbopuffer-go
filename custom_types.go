@@ -95,6 +95,8 @@ func (v FilterContainsAllTokensWithParams) sealed_Filter()      {}
 func (v FilterContainsAllTokensArrayWithParams) sealed_Filter() {}
 func (v FilterContainsAnyToken) sealed_Filter()                 {}
 func (v FilterContainsAnyTokenArray) sealed_Filter()            {}
+func (v FilterContainsAnyTokenWithParams) sealed_Filter()       {}
+func (v FilterContainsAnyTokenArrayWithParams) sealed_Filter()  {}
 func (v FilterContainsTokenSequence) sealed_Filter()            {}
 func (v FilterContainsTokenSequenceArray) sealed_Filter()       {}
 func (v FilterNot) sealed_Filter()                              {}
@@ -388,6 +390,58 @@ func (v FilterContainsAnyTokenArray) MarshalJSON() ([]byte, error) {
 		v.attr,
 		"ContainsAnyToken",
 		v.value,
+	})
+}
+
+type FilterContainsAnyTokenArrayWithParams struct {
+	attr   string
+	value  []string
+	params ContainsAnyTokenFilterParams
+}
+
+func NewFilterContainsAnyTokenArrayWithParams(
+	attr string,
+	value []string,
+	params ContainsAnyTokenFilterParams,
+) FilterContainsAnyTokenArrayWithParams {
+	return FilterContainsAnyTokenArrayWithParams{
+		attr,
+		value,
+		params,
+	}
+}
+func (v FilterContainsAnyTokenArrayWithParams) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"ContainsAnyToken",
+		v.value,
+		v.params,
+	})
+}
+
+type FilterContainsAnyTokenWithParams struct {
+	attr   string
+	value  string
+	params ContainsAnyTokenFilterParams
+}
+
+func NewFilterContainsAnyTokenWithParams(
+	attr string,
+	value string,
+	params ContainsAnyTokenFilterParams,
+) FilterContainsAnyTokenWithParams {
+	return FilterContainsAnyTokenWithParams{
+		attr,
+		value,
+		params,
+	}
+}
+func (v FilterContainsAnyTokenWithParams) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"ContainsAnyToken",
+		v.value,
+		v.params,
 	})
 }
 
@@ -841,6 +895,8 @@ func (v FilterContainsAllTokensWithParams) sealed_RankBy()      {}
 func (v FilterContainsAllTokensArrayWithParams) sealed_RankBy() {}
 func (v FilterContainsAnyToken) sealed_RankBy()                 {}
 func (v FilterContainsAnyTokenArray) sealed_RankBy()            {}
+func (v FilterContainsAnyTokenWithParams) sealed_RankBy()       {}
+func (v FilterContainsAnyTokenArrayWithParams) sealed_RankBy()  {}
 func (v FilterContainsTokenSequence) sealed_RankBy()            {}
 func (v FilterContainsTokenSequenceArray) sealed_RankBy()       {}
 func (v FilterNot) sealed_RankBy()                              {}
@@ -938,6 +994,8 @@ func (v FilterContainsAllTokensWithParams) sealed_RankByText()      {}
 func (v FilterContainsAllTokensArrayWithParams) sealed_RankByText() {}
 func (v FilterContainsAnyToken) sealed_RankByText()                 {}
 func (v FilterContainsAnyTokenArray) sealed_RankByText()            {}
+func (v FilterContainsAnyTokenWithParams) sealed_RankByText()       {}
+func (v FilterContainsAnyTokenArrayWithParams) sealed_RankByText()  {}
 func (v FilterContainsTokenSequence) sealed_RankByText()            {}
 func (v FilterContainsTokenSequenceArray) sealed_RankByText()       {}
 func (v FilterNot) sealed_RankByText()                              {}
