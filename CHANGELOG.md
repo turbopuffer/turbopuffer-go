@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.11.0 (2026-02-03)
+
+Full Changelog: [v1.10.0...v1.11.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.10.0...v1.11.0)
+
+### Features
+
+* ContainsAnyToken last_as_prefix docs ([b83360c](https://github.com/turbopuffer/turbopuffer-go/commit/b83360cfe97a271cf887b30213b6f59c56674c27))
+
+
+### Chores
+
+* regenerate custom types ([a07c028](https://github.com/turbopuffer/turbopuffer-go/commit/a07c028235f3b1c0dde4c1d826a5f1dd6944c226))
+
 ## 1.10.0 (2026-02-01)
 
 Full Changelog: [v1.9.2...v1.10.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.9.2...v1.10.0)
