@@ -367,6 +367,21 @@ func (r *ContainsAllTokensFilterParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Additional (optional) parameters for the ContainsAnyToken filter.
+type ContainsAnyTokenFilterParams struct {
+	// Whether to treat the last token in the query input as a literal prefix.
+	LastAsPrefix param.Opt[bool] `json:"last_as_prefix,omitzero"`
+	paramObj
+}
+
+func (r ContainsAnyTokenFilterParams) MarshalJSON() (data []byte, err error) {
+	type shadow ContainsAnyTokenFilterParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ContainsAnyTokenFilterParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // A function used to calculate vector similarity.
 type DistanceMetric string
 
