@@ -653,6 +653,46 @@ const (
 	LanguageTurkish    Language = "turkish"
 )
 
+// Limits the documents returned by a query.
+//
+// The property Total is required.
+type LimitParam struct {
+	// Limits the total number of documents returned.
+	Total int64 `json:"total,required"`
+	// Limits the number of documents with the same value for a set of attributes (the
+	// "limit key") that can appear in the results.
+	Per LimitPerParam `json:"per,omitzero"`
+	paramObj
+}
+
+func (r LimitParam) MarshalJSON() (data []byte, err error) {
+	type shadow LimitParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *LimitParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Limits the number of documents with the same value for a set of attributes (the
+// "limit key") that can appear in the results.
+//
+// The properties Attributes, Limit are required.
+type LimitPerParam struct {
+	// The attributes to include in the limit key.
+	Attributes []string `json:"attributes,omitzero,required"`
+	// The maximum number of documents to return for each value of the limit key.
+	Limit int64 `json:"limit,required"`
+	paramObj
+}
+
+func (r LimitPerParam) MarshalJSON() (data []byte, err error) {
+	type shadow LimitPerParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *LimitPerParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Metadata about a namespace.
 type NamespaceMetadata struct {
 	// The approximate number of logical bytes in the namespace.
@@ -864,7 +904,7 @@ type QueryParam struct {
 	GroupBy []string `json:"group_by,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
-	// Limit configuration for query results.
+	// Limits the documents returned by a query.
 	Limit QueryLimitParam `json:"limit,omitzero"`
 	// How to rank the documents in the namespace.
 	RankBy any `json:"rank_by,omitzero"`
@@ -883,8 +923,8 @@ func (r *QueryParam) UnmarshalJSON(data []byte) error {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type QueryLimitParam struct {
-	Int   param.Opt[int64]      `json:",omitzero,inline"`
-	Limit *QueryLimitLimitParam `json:",omitzero,inline"`
+	Int   param.Opt[int64] `json:",omitzero,inline"`
+	Limit *LimitParam      `json:",omitzero,inline"`
 	paramUnion
 }
 
@@ -902,37 +942,6 @@ func (u *QueryLimitParam) asAny() any {
 		return u.Limit
 	}
 	return nil
-}
-
-// The property Total is required.
-type QueryLimitLimitParam struct {
-	// The total number of results to return.
-	Total int64                   `json:"total,required"`
-	Per   QueryLimitLimitPerParam `json:"per,omitzero"`
-	paramObj
-}
-
-func (r QueryLimitLimitParam) MarshalJSON() (data []byte, err error) {
-	type shadow QueryLimitLimitParam
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *QueryLimitLimitParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// The properties Attributes, Limit are required.
-type QueryLimitLimitPerParam struct {
-	Attributes []string `json:"attributes,omitzero,required"`
-	Limit      int64    `json:"limit,required"`
-	paramObj
-}
-
-func (r QueryLimitLimitPerParam) MarshalJSON() (data []byte, err error) {
-	type shadow QueryLimitLimitPerParam
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *QueryLimitLimitPerParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
 }
 
 // The billing information for a query.
@@ -1411,7 +1420,7 @@ type NamespaceExplainQueryParams struct {
 	GroupBy []string `json:"group_by,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
-	// Limit configuration for query results.
+	// Limits the documents returned by a query.
 	Limit NamespaceExplainQueryParamsLimit `json:"limit,omitzero"`
 	// How to rank the documents in the namespace.
 	RankBy any `json:"rank_by,omitzero"`
@@ -1459,8 +1468,8 @@ const (
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type NamespaceExplainQueryParamsLimit struct {
-	Int   param.Opt[int64]                       `json:",omitzero,inline"`
-	Limit *NamespaceExplainQueryParamsLimitLimit `json:",omitzero,inline"`
+	Int   param.Opt[int64] `json:",omitzero,inline"`
+	Limit *LimitParam      `json:",omitzero,inline"`
 	paramUnion
 }
 
@@ -1478,37 +1487,6 @@ func (u *NamespaceExplainQueryParamsLimit) asAny() any {
 		return u.Limit
 	}
 	return nil
-}
-
-// The property Total is required.
-type NamespaceExplainQueryParamsLimitLimit struct {
-	// The total number of results to return.
-	Total int64                                    `json:"total,required"`
-	Per   NamespaceExplainQueryParamsLimitLimitPer `json:"per,omitzero"`
-	paramObj
-}
-
-func (r NamespaceExplainQueryParamsLimitLimit) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceExplainQueryParamsLimitLimit
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *NamespaceExplainQueryParamsLimitLimit) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// The properties Attributes, Limit are required.
-type NamespaceExplainQueryParamsLimitLimitPer struct {
-	Attributes []string `json:"attributes,omitzero,required"`
-	Limit      int64    `json:"limit,required"`
-	paramObj
-}
-
-func (r NamespaceExplainQueryParamsLimitLimitPer) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceExplainQueryParamsLimitLimitPer
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *NamespaceExplainQueryParamsLimitLimitPer) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
 }
 
 type NamespaceHintCacheWarmParams struct {
@@ -1590,7 +1568,7 @@ type NamespaceQueryParams struct {
 	GroupBy []string `json:"group_by,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
-	// Limit configuration for query results.
+	// Limits the documents returned by a query.
 	Limit NamespaceQueryParamsLimit `json:"limit,omitzero"`
 	// How to rank the documents in the namespace.
 	RankBy any `json:"rank_by,omitzero"`
@@ -1638,8 +1616,8 @@ const (
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type NamespaceQueryParamsLimit struct {
-	Int   param.Opt[int64]                `json:",omitzero,inline"`
-	Limit *NamespaceQueryParamsLimitLimit `json:",omitzero,inline"`
+	Int   param.Opt[int64] `json:",omitzero,inline"`
+	Limit *LimitParam      `json:",omitzero,inline"`
 	paramUnion
 }
 
@@ -1657,37 +1635,6 @@ func (u *NamespaceQueryParamsLimit) asAny() any {
 		return u.Limit
 	}
 	return nil
-}
-
-// The property Total is required.
-type NamespaceQueryParamsLimitLimit struct {
-	// The total number of results to return.
-	Total int64                             `json:"total,required"`
-	Per   NamespaceQueryParamsLimitLimitPer `json:"per,omitzero"`
-	paramObj
-}
-
-func (r NamespaceQueryParamsLimitLimit) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceQueryParamsLimitLimit
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *NamespaceQueryParamsLimitLimit) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// The properties Attributes, Limit are required.
-type NamespaceQueryParamsLimitLimitPer struct {
-	Attributes []string `json:"attributes,omitzero,required"`
-	Limit      int64    `json:"limit,required"`
-	paramObj
-}
-
-func (r NamespaceQueryParamsLimitLimitPer) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceQueryParamsLimitLimitPer
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *NamespaceQueryParamsLimitLimitPer) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
 }
 
 type NamespaceRecallParams struct {
