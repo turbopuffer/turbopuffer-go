@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.12.0 (2026-02-08)
+
+Full Changelog: [v1.11.0...v1.12.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.11.0...v1.12.0)
+
+### Features
+
+* add support for `limit` query parameter ([6cedf33](https://github.com/turbopuffer/turbopuffer-go/commit/6cedf33af1cbfe9d57b4bf8b3b3db8822c67a303))
+* spec: clean up limit codegen ([bc7c81e](https://github.com/turbopuffer/turbopuffer-go/commit/bc7c81e2c71c554ba6ff0717af8316b2b4fd6cb5))
+
 ## 1.11.0 (2026-02-03)
 
 Full Changelog: [v1.10.0...v1.11.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.10.0...v1.11.0)
