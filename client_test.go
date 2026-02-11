@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
+	"sync"
 	"testing"
 	"time"
 
@@ -352,5 +353,45 @@ func TestRegionSpecifiedWithCompleteOverriddenURL(t *testing.T) {
 	expectedMsg := "region is set, but would be ignored (baseURL does not contain REGION placeholder: https://tpuf.example.com)"
 	if err.Error() != expectedMsg {
 		t.Errorf("expected error message: %s, got: %s", expectedMsg, err.Error())
+	}
+}
+
+// TestNamespaceConcurrentRace verifies that concurrent calls to Client.Namespace
+// each resolve to the correct namespace. This guards against a slice-aliasing
+// bug where append(r.Options, ...) reuses the backing array's spare capacity,
+// causing concurrent callers to overwrite each other's namespace option.
+func TestNamespaceConcurrentRace(t *testing.T) {
+	client := turbopuffer.NewClient(
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithRegion("testing"),
+	)
+
+	namespaces := []string{
+		"ns_alpha",
+		"ns_bravo",
+		"ns_charlie",
+		"ns_delta",
+		"ns_echo",
+		"ns_foxtrot",
+	}
+
+	for i := range 500 {
+		var wg sync.WaitGroup
+		handles := make([]turbopuffer.Namespace, len(namespaces))
+
+		for j, ns := range namespaces {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				handles[j] = client.Namespace(ns)
+			}()
+		}
+		wg.Wait()
+
+		for j, ns := range namespaces {
+			if got := handles[j].ID(); got != ns {
+				t.Fatalf("iteration %d: Namespace(%q).ID() = %q; concurrent append aliased the backing array", i, ns, got)
+			}
+		}
 	}
 }
