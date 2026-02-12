@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.12.2 (2026-02-12)
+
+Full Changelog: [v1.12.1...v1.12.2](https://github.com/turbopuffer/turbopuffer-go/compare/v1.12.1...v1.12.2)
+
+### Bug Fixes
+
+* report incidence of client sharing in user-agent header ([#89](https://github.com/turbopuffer/turbopuffer-go/issues/89)) ([88504be](https://github.com/turbopuffer/turbopuffer-go/commit/88504bef482c08d04f974ffc01c367e5e855b1ae))
+
 ## 1.12.1 (2026-02-12)
 
 Full Changelog: [v1.12.0...v1.12.1](https://github.com/turbopuffer/turbopuffer-go/compare/v1.12.0...v1.12.1)
