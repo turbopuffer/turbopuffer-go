@@ -56,7 +56,7 @@ type Namespace struct {
 
 // Namespace creates a new namespace resource.
 func (r *Client) Namespace(namespace string) Namespace {
-	opts := append(r.Options, option.WithDefaultNamespace(namespace))
+	opts := append(slices.Clone(r.Options), option.WithDefaultNamespace(namespace))
 	return Namespace{newNamespaceService(opts...)}
 }
 
