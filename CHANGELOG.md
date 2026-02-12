@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.12.1 (2026-02-12)
+
+Full Changelog: [v1.12.0...v1.12.1](https://github.com/turbopuffer/turbopuffer-go/compare/v1.12.0...v1.12.1)
+
+### Bug Fixes
+
+* data race in Client.Namespace caused by slice aliasing ([#88](https://github.com/turbopuffer/turbopuffer-go/issues/88)) ([3acb3ef](https://github.com/turbopuffer/turbopuffer-go/commit/3acb3ef9f2051fbacc05b9cd6808ef122611dabb))
+* **encoder:** correctly serialize NullStruct ([4023b4e](https://github.com/turbopuffer/turbopuffer-go/commit/4023b4ee28276f56696289b9481863a2bdf8bc44))
+
 ## 1.12.0 (2026-02-08)
 
 Full Changelog: [v1.11.0...v1.12.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.11.0...v1.12.0)
