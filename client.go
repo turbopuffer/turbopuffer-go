@@ -4,10 +4,13 @@ package turbopuffer
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"slices"
+	"sync/atomic"
 
+	"github.com/turbopuffer/turbopuffer-go/internal"
 	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
 	"github.com/turbopuffer/turbopuffer-go/option"
 	"github.com/turbopuffer/turbopuffer-go/packages/pagination"
@@ -18,6 +21,10 @@ import (
 // directly, and instead use the [NewClient] method instead.
 type Client struct {
 	Options []option.RequestOption
+	// In a past version of the Go client, the `Options` slice could be
+	// incorrectly shared between `Namespace` objects. This counter tracks
+	// the number of times this situation might have occurred.
+	shareCount atomic.Int64
 }
 
 // DefaultClientOptions read from the environment (TURBOPUFFER_API_KEY,
@@ -56,8 +63,21 @@ type Namespace struct {
 
 // Namespace creates a new namespace resource.
 func (r *Client) Namespace(namespace string) Namespace {
-	opts := append(slices.Clone(r.Options), option.WithDefaultNamespace(namespace))
-	return Namespace{newNamespaceService(opts...)}
+	if len(r.Options) != cap(r.Options) {
+		// If the options slice is not at its capacity, past versions of the Go
+		// SDK would fail to create a copy below.
+		r.shareCount.Add(1)
+	}
+	sendShareCount := requestconfig.RequestOptionFunc(func(c *requestconfig.RequestConfig) error {
+		// Embed the share count in the User-Agent header to help determine
+		// impact of past bug.
+		shareCount := r.shareCount.Load()
+		userAgent := fmt.Sprintf("Turbopuffer/Go %s (share-count=%d)", internal.PackageVersion, shareCount)
+		c.Request.Header.Set("User-Agent", userAgent)
+		return nil
+	})
+	opts := append(slices.Clone(r.Options), option.WithDefaultNamespace(namespace), sendShareCount)
+	return Namespace{NamespaceService: newNamespaceService(opts...)}
 }
 
 // Execute makes a request with the given context, method, URL, request params,
