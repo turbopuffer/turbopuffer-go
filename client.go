@@ -24,7 +24,7 @@ type Client struct {
 	// In a past version of the Go client, the `Options` slice could be
 	// incorrectly shared between `Namespace` objects. This counter tracks
 	// the number of times this situation might have occurred.
-	shareCount atomic.Int64
+	shareCount *atomic.Int64
 }
 
 // DefaultClientOptions read from the environment (TURBOPUFFER_API_KEY,
@@ -51,7 +51,10 @@ func DefaultClientOptions() []option.RequestOption {
 func NewClient(opts ...option.RequestOption) (r Client) {
 	opts = append(DefaultClientOptions(), opts...)
 
-	r = Client{Options: opts}
+	r = Client{
+		Options:    opts,
+		shareCount: &atomic.Int64{},
+	}
 
 	return
 }
