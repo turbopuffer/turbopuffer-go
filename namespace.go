@@ -382,6 +382,23 @@ func (r *ContainsAnyTokenFilterParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Additional parameters for the Decay operator.
+type DecayParams struct {
+	// An exponent that helps further control the shape of the Decay function.
+	Exponent param.Opt[float64] `json:"exponent,omitzero"`
+	// The midpoint of the Decay operator.
+	Midpoint any `json:"midpoint,omitzero"`
+	paramObj
+}
+
+func (r DecayParams) MarshalJSON() (data []byte, err error) {
+	type shadow DecayParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *DecayParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // A function used to calculate vector similarity.
 type DistanceMetric string
 
@@ -966,6 +983,23 @@ func (r *QueryPerformance) UnmarshalJSON(data []byte) error {
 // A single document, in a row-based format.
 type Row map[string]any
 type RowParam Row
+
+// Additional parameters for the Saturate operator.
+type SaturateParams struct {
+	// An exponent that helps further control the shape of the Saturate function.
+	Exponent param.Opt[float64] `json:"exponent,omitzero"`
+	// The midpoint of the Saturate operator.
+	Midpoint any `json:"midpoint,omitzero"`
+	paramObj
+}
+
+func (r SaturateParams) MarshalJSON() (data []byte, err error) {
+	type shadow SaturateParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SaturateParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 // The tokenizer to use for full-text search on an attribute. Defaults to
 // `word_v3`.
