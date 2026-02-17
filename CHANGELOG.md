@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.14.0 (2026-02-17)
+
+Full Changelog: [v1.12.2...v1.14.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.12.2...v1.14.0)
+
+### Features
+
+* Add ranking-by-attribute to the spec. ([e186f45](https://github.com/turbopuffer/turbopuffer-go/commit/e186f45c8503aff4d901d08b7b7922400fbc60fd))
+
+
+### Bug Fixes
+
+* improve tracking of client sharing when client is copied by value ([#96](https://github.com/turbopuffer/turbopuffer-go/issues/96)) ([fddc1bb](https://github.com/turbopuffer/turbopuffer-go/commit/fddc1bb9e3a550b3336cf6523e36b58ee8f0072d))
+* remove a heap allocation from Client.Namespace ([#97](https://github.com/turbopuffer/turbopuffer-go/issues/97)) ([142c213](https://github.com/turbopuffer/turbopuffer-go/commit/142c213ee807cd49789f84902f907fbdae7127b0))
+
 ## 1.12.2 (2026-02-12)
 
 Full Changelog: [v1.12.1...v1.12.2](https://github.com/turbopuffer/turbopuffer-go/compare/v1.12.1...v1.12.2)
