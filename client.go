@@ -79,7 +79,11 @@ func (r *Client) Namespace(namespace string) Namespace {
 		c.Request.Header.Set("User-Agent", userAgent)
 		return nil
 	})
-	opts := append(slices.Clone(r.Options), option.WithDefaultNamespace(namespace), sendShareCount)
+	// IMPORTANT: must append to a copy of r.Options. slices.Clip forces this
+	// with only a single heap allocation. (Most other patterns for this result
+	// in a clone operation and then a resize operation.)
+	opts := slices.Clip(r.Options)
+	opts = append(opts, option.WithDefaultNamespace(namespace), sendShareCount)
 	return Namespace{NamespaceService: newNamespaceService(opts...)}
 }
 
