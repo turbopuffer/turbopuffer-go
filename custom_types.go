@@ -902,6 +902,10 @@ func (v FilterContainsTokenSequenceArray) sealed_RankBy()       {}
 func (v FilterNot) sealed_RankBy()                              {}
 func (v FilterAnd) sealed_RankBy()                              {}
 func (v FilterOr) sealed_RankBy()                               {}
+func (v RankByTextAttribute) sealed_RankBy()                    {}
+func (v RankByTextSaturate) sealed_RankBy()                     {}
+func (v RankByTextDecay) sealed_RankBy()                        {}
+func (v RankByTextDist) sealed_RankBy()                         {}
 func (v RankByAttribute) sealed_RankBy()                        {}
 func (v RankByAttributes) sealed_RankBy()                       {}
 
@@ -1001,6 +1005,28 @@ func (v FilterContainsTokenSequenceArray) sealed_RankByText()       {}
 func (v FilterNot) sealed_RankByText()                              {}
 func (v FilterAnd) sealed_RankByText()                              {}
 func (v FilterOr) sealed_RankByText()                               {}
+func (v RankByTextAttribute) sealed_RankByText()                    {}
+func (v RankByTextSaturate) sealed_RankByText()                     {}
+func (v RankByTextDecay) sealed_RankByText()                        {}
+func (v RankByTextDist) sealed_RankByText()                         {}
+
+type RankByTextAttribute struct {
+	attr string
+}
+
+func NewRankByTextAttribute(
+	attr string,
+) RankByTextAttribute {
+	return RankByTextAttribute{
+		attr,
+	}
+}
+func (v RankByTextAttribute) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		"Attribute",
+		v.attr,
+	})
+}
 
 type RankByTextBM25 struct {
 	attr  string
@@ -1098,6 +1124,50 @@ func (v RankByTextBM25WithParams) MarshalJSON() ([]byte, error) {
 	})
 }
 
+type RankByTextDecay struct {
+	subquery RankByText
+	params   DecayParams
+}
+
+func NewRankByTextDecay(
+	subquery RankByText,
+	params DecayParams,
+) RankByTextDecay {
+	return RankByTextDecay{
+		subquery,
+		params,
+	}
+}
+func (v RankByTextDecay) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		"Decay",
+		v.subquery,
+		v.params,
+	})
+}
+
+type RankByTextDist struct {
+	subquery RankByText
+	origin   any
+}
+
+func NewRankByTextDist(
+	subquery RankByText,
+	origin any,
+) RankByTextDist {
+	return RankByTextDist{
+		subquery,
+		origin,
+	}
+}
+func (v RankByTextDist) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		"Dist",
+		v.subquery,
+		v.origin,
+	})
+}
+
 type RankByTextMax struct {
 	subqueries []RankByText
 }
@@ -1135,6 +1205,28 @@ func (v RankByTextProduct) MarshalJSON() ([]byte, error) {
 		"Product",
 		v.weight,
 		v.subquery,
+	})
+}
+
+type RankByTextSaturate struct {
+	subquery RankByText
+	params   SaturateParams
+}
+
+func NewRankByTextSaturate(
+	subquery RankByText,
+	params SaturateParams,
+) RankByTextSaturate {
+	return RankByTextSaturate{
+		subquery,
+		params,
+	}
+}
+func (v RankByTextSaturate) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		"Saturate",
+		v.subquery,
+		v.params,
 	})
 }
 
