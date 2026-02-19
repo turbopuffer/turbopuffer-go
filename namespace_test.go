@@ -14,7 +14,7 @@ import (
 )
 
 func TestNamespaceDeleteAll(t *testing.T) {
-	t.Skip("Prism tests are disabled")
+	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -39,7 +39,7 @@ func TestNamespaceDeleteAll(t *testing.T) {
 }
 
 func TestNamespaceExplainQueryWithOptionalParams(t *testing.T) {
-	t.Skip("Prism tests are disabled")
+	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -83,7 +83,7 @@ func TestNamespaceExplainQueryWithOptionalParams(t *testing.T) {
 }
 
 func TestNamespaceHintCacheWarm(t *testing.T) {
-	t.Skip("Prism tests are disabled")
+	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -108,7 +108,7 @@ func TestNamespaceHintCacheWarm(t *testing.T) {
 }
 
 func TestNamespaceMetadata(t *testing.T) {
-	t.Skip("Prism tests are disabled")
+	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -133,7 +133,7 @@ func TestNamespaceMetadata(t *testing.T) {
 }
 
 func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
-	t.Skip("Prism tests are disabled")
+	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -179,7 +179,7 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 }
 
 func TestNamespaceQueryWithOptionalParams(t *testing.T) {
-	t.Skip("Prism tests are disabled")
+	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -223,7 +223,7 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 }
 
 func TestNamespaceRecallWithOptionalParams(t *testing.T) {
-	t.Skip("Prism tests are disabled")
+	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -253,7 +253,7 @@ func TestNamespaceRecallWithOptionalParams(t *testing.T) {
 }
 
 func TestNamespaceSchema(t *testing.T) {
-	t.Skip("Prism tests are disabled")
+	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -278,7 +278,7 @@ func TestNamespaceSchema(t *testing.T) {
 }
 
 func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
-	t.Skip("Prism tests are disabled")
+	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -324,7 +324,7 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 }
 
 func TestNamespaceWriteWithOptionalParams(t *testing.T) {
-	t.Skip("Prism tests are disabled")
+	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
