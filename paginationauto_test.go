@@ -27,7 +27,7 @@ func TestAutoPagination(t *testing.T) {
 	iter := client.NamespacesAutoPaging(context.TODO(), turbopuffer.NamespacesParams{
 		Prefix: turbopuffer.String("products"),
 	})
-	// Prism mock isn't going to give us real pagination
+	// The mock server isn't going to give us real pagination
 	for i := 0; i < 3 && iter.Next(); i++ {
 		client := iter.Current()
 		t.Logf("%+v\n", client.ID)
