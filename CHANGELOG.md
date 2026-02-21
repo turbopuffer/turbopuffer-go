@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.14.1 (2026-02-21)
+
+Full Changelog: [v1.14.0...v1.14.1](https://github.com/turbopuffer/turbopuffer-go/compare/v1.14.0...v1.14.1)
+
+### Bug Fixes
+
+* allow canceling a request while it is waiting to retry ([c8d8de4](https://github.com/turbopuffer/turbopuffer-go/commit/c8d8de4932a7daf9da4f15469c5279363d5c3ddf))
+* **internal:** skip tests that depend on mock server ([7212688](https://github.com/turbopuffer/turbopuffer-go/commit/7212688d30966588be71754f379b7d3de7634a3f))
+
+
+### Chores
+
+* **internal:** remove mock server code ([47e426a](https://github.com/turbopuffer/turbopuffer-go/commit/47e426acbf8f16e2e610fa8df6edd2b97b651947))
+* update mock server docs ([afdbcca](https://github.com/turbopuffer/turbopuffer-go/commit/afdbcca2137baa710f6302280f9d656dd0d86a8a))
+
 ## 1.14.0 (2026-02-17)
 
 Full Changelog: [v1.12.2...v1.14.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.12.2...v1.14.0)
