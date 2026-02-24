@@ -217,7 +217,7 @@ type AttributeSchemaConfig struct {
 	// The data type of the attribute. Valid values: string, int, uint, float, uuid,
 	// datetime, bool, []string, []int, []uint, []float, []uuid, []datetime, []bool,
 	// [DIMS]f16, [DIMS]f32.
-	Type AttributeType `json:"type,required"`
+	Type AttributeType `json:"type" api:"required"`
 	// Whether to create an approximate nearest neighbor index for the attribute. Can
 	// be a boolean or a detailed configuration object.
 	Ann AttributeSchemaConfigAnn `json:"ann"`
@@ -283,7 +283,7 @@ type AttributeSchemaConfigParam struct {
 	// The data type of the attribute. Valid values: string, int, uint, float, uuid,
 	// datetime, bool, []string, []int, []uint, []float, []uuid, []datetime, []bool,
 	// [DIMS]f16, [DIMS]f32.
-	Type AttributeType `json:"type,required"`
+	Type AttributeType `json:"type" api:"required"`
 	// Whether or not the attributes can be used in filters.
 	Filterable param.Opt[bool] `json:"filterable,omitzero"`
 	// Whether to enable Regex filters on this attribute.
@@ -346,7 +346,7 @@ func (r *Bm25ClauseParams) UnmarshalJSON(data []byte) error {
 // The property ID is required.
 type ColumnsParam struct {
 	// The IDs of the documents.
-	ID []IDParam `json:"id,omitzero,required" format:"uuid"`
+	ID []IDParam `json:"id,omitzero" api:"required" format:"uuid"`
 	// The vector embeddings of the documents.
 	Vector      ColumnsVectorParam `json:"vector,omitzero"`
 	ExtraFields map[string][]any   `json:"-"`
@@ -675,7 +675,7 @@ const (
 // The property Total is required.
 type LimitParam struct {
 	// Limits the total number of documents returned.
-	Total int64 `json:"total,required"`
+	Total int64 `json:"total" api:"required"`
 	// Limits the number of documents with the same value for a set of attributes (the
 	// "limit key") that can appear in the results.
 	Per LimitPerParam `json:"per,omitzero"`
@@ -696,9 +696,9 @@ func (r *LimitParam) UnmarshalJSON(data []byte) error {
 // The properties Attributes, Limit are required.
 type LimitPerParam struct {
 	// The attributes to include in the limit key.
-	Attributes []string `json:"attributes,omitzero,required"`
+	Attributes []string `json:"attributes,omitzero" api:"required"`
 	// The maximum number of documents to return for each value of the limit key.
-	Limit int64 `json:"limit,required"`
+	Limit int64 `json:"limit" api:"required"`
 	paramObj
 }
 
@@ -713,19 +713,19 @@ func (r *LimitPerParam) UnmarshalJSON(data []byte) error {
 // Metadata about a namespace.
 type NamespaceMetadata struct {
 	// The approximate number of logical bytes in the namespace.
-	ApproxLogicalBytes int64 `json:"approx_logical_bytes,required"`
+	ApproxLogicalBytes int64 `json:"approx_logical_bytes" api:"required"`
 	// The approximate number of rows in the namespace.
-	ApproxRowCount int64 `json:"approx_row_count,required"`
+	ApproxRowCount int64 `json:"approx_row_count" api:"required"`
 	// The timestamp when the namespace was created.
-	CreatedAt time.Time `json:"created_at,required" format:"date-time"`
+	CreatedAt time.Time `json:"created_at" api:"required" format:"date-time"`
 	// Indicates that the namespace is encrypted with a customer-managed encryption key
 	// (CMEK).
-	Encryption NamespaceMetadataEncryption `json:"encryption,required"`
-	Index      NamespaceMetadataIndex      `json:"index,required"`
+	Encryption NamespaceMetadataEncryption `json:"encryption" api:"required"`
+	Index      NamespaceMetadataIndex      `json:"index" api:"required"`
 	// The schema of the namespace.
-	Schema map[string]AttributeSchemaConfig `json:"schema,required"`
+	Schema map[string]AttributeSchemaConfig `json:"schema" api:"required"`
 	// The timestamp when the namespace was last modified by a write operation.
-	UpdatedAt time.Time `json:"updated_at,required" format:"date-time"`
+	UpdatedAt time.Time `json:"updated_at" api:"required" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ApproxLogicalBytes respjson.Field
@@ -781,7 +781,7 @@ func (r *NamespaceMetadataEncryption) UnmarshalJSON(data []byte) error {
 
 type NamespaceMetadataEncryptionSse struct {
 	// Always true. Indicates that the namespace is encrypted with SSE.
-	Sse bool `json:"sse,required"`
+	Sse bool `json:"sse" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Sse         respjson.Field
@@ -799,7 +799,7 @@ func (r *NamespaceMetadataEncryptionSse) UnmarshalJSON(data []byte) error {
 // Indicates that the namespace is encrypted with a customer-managed encryption key
 // (CMEK).
 type NamespaceMetadataEncryptionCmek struct {
-	Cmek NamespaceMetadataEncryptionCmekCmek `json:"cmek,required"`
+	Cmek NamespaceMetadataEncryptionCmekCmek `json:"cmek" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Cmek        respjson.Field
@@ -816,7 +816,7 @@ func (r *NamespaceMetadataEncryptionCmek) UnmarshalJSON(data []byte) error {
 
 type NamespaceMetadataEncryptionCmekCmek struct {
 	// The name of the CMEK key in use.
-	KeyName string `json:"key_name,required"`
+	KeyName string `json:"key_name" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		KeyName     respjson.Field
@@ -864,7 +864,7 @@ func (r *NamespaceMetadataIndex) UnmarshalJSON(data []byte) error {
 }
 
 type NamespaceMetadataIndexIndexUpToDate struct {
-	Status constant.UpToDate `json:"status,required"`
+	Status constant.UpToDate `json:"status" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Status      respjson.Field
@@ -880,10 +880,10 @@ func (r *NamespaceMetadataIndexIndexUpToDate) UnmarshalJSON(data []byte) error {
 }
 
 type NamespaceMetadataIndexIndexUpdating struct {
-	Status constant.Updating `json:"status,required"`
+	Status constant.Updating `json:"status" api:"required"`
 	// The number of bytes in the namespace that are in the write-ahead log but have
 	// not yet been indexed.
-	UnindexedBytes int64 `json:"unindexed_bytes,required"`
+	UnindexedBytes int64 `json:"unindexed_bytes" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Status         respjson.Field
@@ -964,9 +964,9 @@ func (u *QueryLimitParam) asAny() any {
 // The billing information for a query.
 type QueryBilling struct {
 	// The number of billable logical bytes queried from the namespace.
-	BillableLogicalBytesQueried int64 `json:"billable_logical_bytes_queried,required"`
+	BillableLogicalBytesQueried int64 `json:"billable_logical_bytes_queried" api:"required"`
 	// The number of billable logical bytes returned from the query.
-	BillableLogicalBytesReturned int64 `json:"billable_logical_bytes_returned,required"`
+	BillableLogicalBytesReturned int64 `json:"billable_logical_bytes_returned" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		BillableLogicalBytesQueried  respjson.Field
@@ -985,19 +985,19 @@ func (r *QueryBilling) UnmarshalJSON(data []byte) error {
 // The performance information for a query.
 type QueryPerformance struct {
 	// the approximate number of documents in the namespace.
-	ApproxNamespaceSize int64 `json:"approx_namespace_size,required"`
+	ApproxNamespaceSize int64 `json:"approx_namespace_size" api:"required"`
 	// The ratio of cache hits to total cache lookups.
-	CacheHitRatio float64 `json:"cache_hit_ratio,required"`
+	CacheHitRatio float64 `json:"cache_hit_ratio" api:"required"`
 	// A qualitative description of the cache hit ratio (`hot`, `warm`, or `cold`).
-	CacheTemperature string `json:"cache_temperature,required"`
+	CacheTemperature string `json:"cache_temperature" api:"required"`
 	// The number of unindexed documents processed by the query.
-	ExhaustiveSearchCount int64 `json:"exhaustive_search_count,required"`
+	ExhaustiveSearchCount int64 `json:"exhaustive_search_count" api:"required"`
 	// Request time measured on the server, excluding time spent waiting due to the
 	// namespace concurrency limit.
-	QueryExecutionMs int64 `json:"query_execution_ms,required"`
+	QueryExecutionMs int64 `json:"query_execution_ms" api:"required"`
 	// Request time measured on the server, including time spent waiting for other
 	// queries to complete if the namespace was at its concurrency limit.
-	ServerTotalMs int64 `json:"server_total_ms,required"`
+	ServerTotalMs int64 `json:"server_total_ms" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ApproxNamespaceSize   respjson.Field
@@ -1020,10 +1020,10 @@ func (r *QueryPerformance) UnmarshalJSON(data []byte) error {
 // A single document, in a row-based format.
 type Row struct {
 	// An identifier for a document.
-	ID ID `json:"id,required" format:"uuid"`
+	ID ID `json:"id" api:"required" format:"uuid"`
 	// A vector embedding associated with a document.
 	Vector      Vector         `json:"vector"`
-	ExtraFields map[string]any `json:",extras"`
+	ExtraFields map[string]any `json:"" api:"extrafields"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID          respjson.Field
@@ -1053,7 +1053,7 @@ func (r Row) ToParam() RowParam {
 // The property ID is required.
 type RowParam struct {
 	// An identifier for a document.
-	ID IDParam `json:"id,omitzero,required" format:"uuid"`
+	ID IDParam `json:"id,omitzero" api:"required" format:"uuid"`
 	// A vector embedding associated with a document.
 	Vector      VectorParam    `json:"vector,omitzero"`
 	ExtraFields map[string]any `json:"-"`
@@ -1177,7 +1177,7 @@ const (
 // The billing information for a write request.
 type WriteBilling struct {
 	// The number of billable logical bytes written to the namespace.
-	BillableLogicalBytesWritten int64 `json:"billable_logical_bytes_written,required"`
+	BillableLogicalBytesWritten int64 `json:"billable_logical_bytes_written" api:"required"`
 	// The billing information for a query.
 	Query QueryBilling `json:"query"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -1198,7 +1198,7 @@ func (r *WriteBilling) UnmarshalJSON(data []byte) error {
 // The response to a successful namespace deletion request.
 type NamespaceDeleteAllResponse struct {
 	// The status of the request.
-	Status constant.Ok `json:"status,required"`
+	Status constant.Ok `json:"status" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Status      respjson.Field
@@ -1234,7 +1234,7 @@ func (r *NamespaceExplainQueryResponse) UnmarshalJSON(data []byte) error {
 // The response to a successful cache warm request.
 type NamespaceHintCacheWarmResponse struct {
 	// The status of the request.
-	Status  constant.Accepted `json:"status,required"`
+	Status  constant.Accepted `json:"status" api:"required"`
 	Message string            `json:"message"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -1254,10 +1254,10 @@ func (r *NamespaceHintCacheWarmResponse) UnmarshalJSON(data []byte) error {
 // The result of a multi-query.
 type NamespaceMultiQueryResponse struct {
 	// The billing information for a query.
-	Billing QueryBilling `json:"billing,required"`
+	Billing QueryBilling `json:"billing" api:"required"`
 	// The performance information for a query.
-	Performance QueryPerformance                    `json:"performance,required"`
-	Results     []NamespaceMultiQueryResponseResult `json:"results,required"`
+	Performance QueryPerformance                    `json:"performance" api:"required"`
+	Results     []NamespaceMultiQueryResponseResult `json:"results" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Billing     respjson.Field
@@ -1297,9 +1297,9 @@ func (r *NamespaceMultiQueryResponseResult) UnmarshalJSON(data []byte) error {
 // The result of a query.
 type NamespaceQueryResponse struct {
 	// The billing information for a query.
-	Billing QueryBilling `json:"billing,required"`
+	Billing QueryBilling `json:"billing" api:"required"`
 	// The performance information for a query.
-	Performance       QueryPerformance   `json:"performance,required"`
+	Performance       QueryPerformance   `json:"performance" api:"required"`
 	AggregationGroups []AggregationGroup `json:"aggregation_groups"`
 	Aggregations      map[string]any     `json:"aggregations"`
 	Rows              []Row              `json:"rows"`
@@ -1325,11 +1325,11 @@ func (r *NamespaceQueryResponse) UnmarshalJSON(data []byte) error {
 type NamespaceRecallResponse struct {
 	// The average number of documents retrieved by the approximate nearest neighbor
 	// searches.
-	AvgAnnCount float64 `json:"avg_ann_count,required"`
+	AvgAnnCount float64 `json:"avg_ann_count" api:"required"`
 	// The average number of documents retrieved by the exhaustive searches.
-	AvgExhaustiveCount float64 `json:"avg_exhaustive_count,required"`
+	AvgExhaustiveCount float64 `json:"avg_exhaustive_count" api:"required"`
 	// The average recall of the queries.
-	AvgRecall float64 `json:"avg_recall,required"`
+	AvgRecall float64 `json:"avg_recall" api:"required"`
 	// Ground truth data including query vectors and true nearest neighbors. Only
 	// included when include_ground_truth is true.
 	GroundTruth []NamespaceRecallResponseGroundTruth `json:"ground_truth"`
@@ -1352,9 +1352,9 @@ func (r *NamespaceRecallResponse) UnmarshalJSON(data []byte) error {
 
 type NamespaceRecallResponseGroundTruth struct {
 	// The true nearest neighbors with their distances and vectors.
-	NearestNeighbors []Row `json:"nearest_neighbors,required"`
+	NearestNeighbors []Row `json:"nearest_neighbors" api:"required"`
 	// The query vector used for this search.
-	QueryVector []float64 `json:"query_vector,required"`
+	QueryVector []float64 `json:"query_vector" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		NearestNeighbors respjson.Field
@@ -1377,13 +1377,13 @@ type NamespaceUpdateSchemaResponse map[string]AttributeSchemaConfig
 // The response to a successful write request.
 type NamespaceWriteResponse struct {
 	// The billing information for a write request.
-	Billing WriteBilling `json:"billing,required"`
+	Billing WriteBilling `json:"billing" api:"required"`
 	// A message describing the result of the write request.
-	Message string `json:"message,required"`
+	Message string `json:"message" api:"required"`
 	// The number of rows affected by the write request.
-	RowsAffected int64 `json:"rows_affected,required"`
+	RowsAffected int64 `json:"rows_affected" api:"required"`
 	// The status of the request.
-	Status constant.Ok `json:"status,required"`
+	Status constant.Ok `json:"status" api:"required"`
 	// The IDs of documents that were deleted. Only included when `return_affected_ids`
 	// is true and at least one document was deleted.
 	DeletedIDs []ID `json:"deleted_ids" format:"uuid"`
@@ -1426,12 +1426,12 @@ func (r *NamespaceWriteResponse) UnmarshalJSON(data []byte) error {
 }
 
 type NamespaceDeleteAllParams struct {
-	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
 	paramObj
 }
 
 type NamespaceExplainQueryParams struct {
-	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
 	// The number of results to return.
 	TopK param.Opt[int64] `json:"top_k,omitzero"`
 	// Aggregations to compute over all documents in the namespace that match the
@@ -1524,18 +1524,18 @@ func (u *NamespaceExplainQueryParamsLimit) asAny() any {
 }
 
 type NamespaceHintCacheWarmParams struct {
-	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
 	paramObj
 }
 
 type NamespaceMetadataParams struct {
-	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
 	paramObj
 }
 
 type NamespaceMultiQueryParams struct {
-	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
-	Queries   []QueryParam      `json:"queries,omitzero,required"`
+	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
+	Queries   []QueryParam      `json:"queries,omitzero" api:"required"`
 	// The consistency level for a query.
 	Consistency NamespaceMultiQueryParamsConsistency `json:"consistency,omitzero"`
 	// The encoding to use for vectors in the response.
@@ -1579,7 +1579,7 @@ const (
 )
 
 type NamespaceQueryParams struct {
-	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
 	// The number of results to return.
 	TopK param.Opt[int64] `json:"top_k,omitzero"`
 	// Aggregations to compute over all documents in the namespace that match the
@@ -1672,7 +1672,7 @@ func (u *NamespaceQueryParamsLimit) asAny() any {
 }
 
 type NamespaceRecallParams struct {
-	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
 	// Include ground truth data (query vectors and true nearest neighbors) in the
 	// response.
 	IncludeGroundTruth param.Opt[bool] `json:"include_ground_truth,omitzero"`
@@ -1697,12 +1697,12 @@ func (r *NamespaceRecallParams) UnmarshalJSON(data []byte) error {
 }
 
 type NamespaceSchemaParams struct {
-	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
 	paramObj
 }
 
 type NamespaceUpdateSchemaParams struct {
-	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
 	// The desired schema for the namespace.
 	Schema map[string]AttributeSchemaConfigParam
 	paramObj
@@ -1716,7 +1716,7 @@ func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
 }
 
 type NamespaceWriteParams struct {
-	Namespace param.Opt[string] `path:"namespace,omitzero,required" json:"-"`
+	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
 	// Allow partial completion when filter matches too many documents.
 	DeleteByFilterAllowPartial param.Opt[bool] `json:"delete_by_filter_allow_partial,omitzero"`
 	// Disables write throttling (HTTP 429 responses) during high-volume ingestion.
@@ -1798,7 +1798,7 @@ func (u *NamespaceWriteParamsCopyFromNamespace) asAny() any {
 // The property SourceNamespace is required.
 type NamespaceWriteParamsCopyFromNamespaceCopyFromNamespaceConfig struct {
 	// The namespace to copy documents from.
-	SourceNamespace string `json:"source_namespace,required"`
+	SourceNamespace string `json:"source_namespace" api:"required"`
 	// (Optional) An API key for the organization containing the source namespace
 	SourceAPIKey param.Opt[string] `json:"source_api_key,omitzero"`
 	// (Optional) The region of the source namespace.
@@ -1832,7 +1832,7 @@ func (r *NamespaceWriteParamsEncryption) UnmarshalJSON(data []byte) error {
 type NamespaceWriteParamsEncryptionCmek struct {
 	// The identifier of the CMEK key to use for encryption. For GCP, the
 	// fully-qualified resource name of the key. For AWS, the ARN of the key.
-	KeyName string `json:"key_name,required"`
+	KeyName string `json:"key_name" api:"required"`
 	paramObj
 }
 
@@ -1849,8 +1849,8 @@ func (r *NamespaceWriteParamsEncryptionCmek) UnmarshalJSON(data []byte) error {
 // The properties Filters, Patch are required.
 type NamespaceWriteParamsPatchByFilter struct {
 	// Filter by attributes. Same syntax as the query endpoint.
-	Filters any            `json:"filters,omitzero,required"`
-	Patch   map[string]any `json:"patch,omitzero,required"`
+	Filters any            `json:"filters,omitzero" api:"required"`
+	Patch   map[string]any `json:"patch,omitzero" api:"required"`
 	paramObj
 }
 
