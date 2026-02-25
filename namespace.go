@@ -1682,9 +1682,6 @@ type NamespaceRecallParams struct {
 	TopK param.Opt[int64] `json:"top_k,omitzero"`
 	// Filter by attributes. Same syntax as the query endpoint.
 	Filters any `json:"filters,omitzero"`
-	// Use specific query vectors for the measurement. If omitted, sampled from the
-	// index.
-	Queries []float64 `json:"queries,omitzero"`
 	paramObj
 }
 
