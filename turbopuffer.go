@@ -14,7 +14,7 @@ import (
 // A summary of a namespace.
 type NamespaceSummary struct {
 	// The namespace ID.
-	ID string `json:"id,required"`
+	ID string `json:"id" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID          respjson.Field
