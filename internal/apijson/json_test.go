@@ -41,12 +41,12 @@ type DateTime struct {
 
 type AdditionalProperties struct {
 	A           bool           `json:"a"`
-	ExtraFields map[string]any `json:"-,extras"`
+	ExtraFields map[string]any `json:"-" api:"extrafields"`
 }
 
 type TypedAdditionalProperties struct {
 	A           bool           `json:"a"`
-	ExtraFields map[string]int `json:"-,extras"`
+	ExtraFields map[string]int `json:"-" api:"extrafields"`
 }
 
 type EmbeddedStruct struct {
@@ -66,7 +66,7 @@ type EmbeddedStructJSON struct {
 type EmbeddedStructs struct {
 	EmbeddedStruct
 	A           *int           `json:"a"`
-	ExtraFields map[string]any `json:"-,extras"`
+	ExtraFields map[string]any `json:"-" api:"extrafields"`
 
 	JSON EmbeddedStructsJSON
 }
@@ -87,7 +87,7 @@ type JSONFieldStruct struct {
 	B           int64               `json:"b"`
 	C           string              `json:"c"`
 	D           string              `json:"d"`
-	ExtraFields map[string]int64    `json:",extras"`
+	ExtraFields map[string]int64    `json:"" api:"extrafields"`
 	JSON        JSONFieldStructJSON `json:",metadata"`
 }
 
