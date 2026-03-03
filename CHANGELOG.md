@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.15.0 (2026-03-03)
+
+Full Changelog: [v1.14.1...v1.15.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.14.1...v1.15.0)
+
+### Features
+
+* Remove `queries` from recall endpoint ([8c8c382](https://github.com/turbopuffer/turbopuffer-go/commit/8c8c3828946e47c9a4560e354699979987b78d09))
+
+
+### Chores
+
+* **ci:** add build step ([9d83d22](https://github.com/turbopuffer/turbopuffer-go/commit/9d83d222d0ef6841bc0bad1d19f03a4c60b67f79))
+* **internal:** move custom custom `json` tags to `api` ([7c92765](https://github.com/turbopuffer/turbopuffer-go/commit/7c92765c4d48dcfc8fd2617c7b4a1d17e0b9698c))
+
 ## 1.14.1 (2026-02-21)
 
 Full Changelog: [v1.14.0...v1.14.1](https://github.com/turbopuffer/turbopuffer-go/compare/v1.14.0...v1.14.1)
