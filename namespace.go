@@ -1762,7 +1762,7 @@ func (r *NamespaceWriteParamsEncryptionCmek) UnmarshalJSON(data []byte) error {
 // The properties Filters, Patch are required.
 type NamespaceWriteParamsPatchByFilter struct {
 	// Filter by attributes. Same syntax as the query endpoint.
-	Filters Filter            `json:"filters,omitzero" api:"required"`
+	Filters Filter         `json:"filters,omitzero" api:"required"`
 	Patch   map[string]any `json:"patch,omitzero" api:"required"`
 	paramObj
 }
