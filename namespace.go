@@ -53,16 +53,16 @@ func (r *NamespaceService) DeleteAll(ctx context.Context, body NamespaceDeleteAl
 	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
-		return
+		return nil, err
 	}
 	requestconfig.UseDefaultParam(&body.Namespace, precfg.DefaultNamespace)
 	if body.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v2/namespaces/%s", url.PathEscape(body.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, &res, opts...)
-	return
+	return res, err
 }
 
 // Explain a query plan.
@@ -70,16 +70,16 @@ func (r *NamespaceService) ExplainQuery(ctx context.Context, params NamespaceExp
 	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
-		return
+		return nil, err
 	}
 	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
 	if params.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v2/namespaces/%s/explain_query", url.PathEscape(params.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return
+	return res, err
 }
 
 // Signal turbopuffer to prepare for low-latency requests.
@@ -87,16 +87,16 @@ func (r *NamespaceService) HintCacheWarm(ctx context.Context, query NamespaceHin
 	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
-		return
+		return nil, err
 	}
 	requestconfig.UseDefaultParam(&query.Namespace, precfg.DefaultNamespace)
 	if query.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v1/namespaces/%s/hint_cache_warm", url.PathEscape(query.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
-	return
+	return res, err
 }
 
 // Get metadata about a namespace.
@@ -104,16 +104,16 @@ func (r *NamespaceService) Metadata(ctx context.Context, query NamespaceMetadata
 	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
-		return
+		return nil, err
 	}
 	requestconfig.UseDefaultParam(&query.Namespace, precfg.DefaultNamespace)
 	if query.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v1/namespaces/%s/metadata", url.PathEscape(query.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
-	return
+	return res, err
 }
 
 // Issue multiple concurrent queries filter or search documents.
@@ -121,16 +121,16 @@ func (r *NamespaceService) MultiQuery(ctx context.Context, params NamespaceMulti
 	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
-		return
+		return nil, err
 	}
 	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
 	if params.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v2/namespaces/%s/query?stainless_overload=multiQuery", url.PathEscape(params.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return
+	return res, err
 }
 
 // Query, filter, full-text search and vector search documents.
@@ -138,16 +138,16 @@ func (r *NamespaceService) Query(ctx context.Context, params NamespaceQueryParam
 	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
-		return
+		return nil, err
 	}
 	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
 	if params.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v2/namespaces/%s/query", url.PathEscape(params.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return
+	return res, err
 }
 
 // Evaluate recall.
@@ -155,16 +155,16 @@ func (r *NamespaceService) Recall(ctx context.Context, params NamespaceRecallPar
 	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
-		return
+		return nil, err
 	}
 	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
 	if params.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v1/namespaces/%s/_debug/recall", url.PathEscape(params.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return
+	return res, err
 }
 
 // Get namespace schema.
@@ -172,16 +172,16 @@ func (r *NamespaceService) Schema(ctx context.Context, query NamespaceSchemaPara
 	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
-		return
+		return nil, err
 	}
 	requestconfig.UseDefaultParam(&query.Namespace, precfg.DefaultNamespace)
 	if query.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v1/namespaces/%s/schema", url.PathEscape(query.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
-	return
+	return res, err
 }
 
 // Update namespace schema.
@@ -189,16 +189,16 @@ func (r *NamespaceService) UpdateSchema(ctx context.Context, params NamespaceUpd
 	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
-		return
+		return nil, err
 	}
 	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
 	if params.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v1/namespaces/%s/schema", url.PathEscape(params.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return
+	return res, err
 }
 
 // Create, update, or delete documents.
@@ -206,16 +206,16 @@ func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParam
 	opts = slices.Concat(r.Options, opts)
 	precfg, err := requestconfig.PreRequestOptions(opts...)
 	if err != nil {
-		return
+		return nil, err
 	}
 	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
 	if params.Namespace.Value == "" {
 		err = errors.New("missing required namespace parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v2/namespaces/%s", url.PathEscape(params.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return
+	return res, err
 }
 
 type AggregationGroup map[string]any
