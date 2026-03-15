@@ -40,7 +40,7 @@ func TestUserAgentHeader(t *testing.T) {
 			},
 		}),
 	)
-	client.Namespaces(context.Background(), turbopuffer.NamespacesParams{
+	_, _ = client.Namespaces(context.Background(), turbopuffer.NamespacesParams{
 		Prefix: turbopuffer.String("foo"),
 	})
 	if userAgent != fmt.Sprintf("Turbopuffer/Go %s", internal.PackageVersion) {
