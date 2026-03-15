@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.16.0 (2026-03-15)
+
+Full Changelog: [v1.15.0...v1.16.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.15.0...v1.16.0)
+
+### Features
+
+* spec: host MCP on stainless ([c650252](https://github.com/turbopuffer/turbopuffer-go/commit/c650252a12316c755752ce2c45b72d6a069d5679))
+
+
+### Bug Fixes
+
+* fix request delays for retrying to be more respectful of high requested delays ([dcc553b](https://github.com/turbopuffer/turbopuffer-go/commit/dcc553b286b8aee9197a96761bdb1574b0da5eb6))
+
+
+### Chores
+
+* **ci:** skip uploading artifacts on stainless-internal branches ([4e23c73](https://github.com/turbopuffer/turbopuffer-go/commit/4e23c736f4f7b034d879c5d7956925eeeeecc276))
+* **internal:** minor cleanup ([1cd5f3a](https://github.com/turbopuffer/turbopuffer-go/commit/1cd5f3a48b9711e96ec79eed6f03600e1a7f003d))
+* **internal:** use explicit returns ([5fb8758](https://github.com/turbopuffer/turbopuffer-go/commit/5fb8758b84daafe3676b16a660bcd4b34619b278))
+* **internal:** use explicit returns in more places ([c58fa2f](https://github.com/turbopuffer/turbopuffer-go/commit/c58fa2f190cd829f6d765083bab22881ea3fbedd))
+
 ## 1.15.0 (2026-03-03)
 
 Full Changelog: [v1.14.1...v1.15.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.14.1...v1.15.0)
