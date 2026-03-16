@@ -885,7 +885,7 @@ type QueryParam struct {
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
 	// Limits the documents returned by a query.
-	Limit QueryLimitParam `json:"limit,omitzero"`
+	Limit LimitParam `json:"limit,omitzero"`
 	// How to rank the documents in the namespace.
 	RankBy RankBy `json:"rank_by,omitzero"`
 	paramObj
@@ -897,31 +897,6 @@ func (r QueryParam) MarshalJSON() (data []byte, err error) {
 }
 func (r *QueryParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type QueryLimitParam struct {
-	Int   param.Opt[int64] `json:",omitzero,inline"`
-	Limit *LimitParam      `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u QueryLimitParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.Int, u.Limit)
-}
-func (u *QueryLimitParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *QueryLimitParam) asAny() any {
-	if !param.IsOmitted(u.Int) {
-		return &u.Int.Value
-	} else if !param.IsOmitted(u.Limit) {
-		return u.Limit
-	}
-	return nil
 }
 
 // The billing information for a query.
@@ -1371,7 +1346,7 @@ type NamespaceExplainQueryParams struct {
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
 	// Limits the documents returned by a query.
-	Limit NamespaceExplainQueryParamsLimit `json:"limit,omitzero"`
+	Limit LimitParam `json:"limit,omitzero"`
 	// How to rank the documents in the namespace.
 	RankBy RankBy `json:"rank_by,omitzero"`
 	// The encoding to use for vectors in the response.
@@ -1413,31 +1388,6 @@ const (
 	NamespaceExplainQueryParamsConsistencyLevelStrong   NamespaceExplainQueryParamsConsistencyLevel = "strong"
 	NamespaceExplainQueryParamsConsistencyLevelEventual NamespaceExplainQueryParamsConsistencyLevel = "eventual"
 )
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type NamespaceExplainQueryParamsLimit struct {
-	Int   param.Opt[int64] `json:",omitzero,inline"`
-	Limit *LimitParam      `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u NamespaceExplainQueryParamsLimit) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.Int, u.Limit)
-}
-func (u *NamespaceExplainQueryParamsLimit) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *NamespaceExplainQueryParamsLimit) asAny() any {
-	if !param.IsOmitted(u.Int) {
-		return &u.Int.Value
-	} else if !param.IsOmitted(u.Limit) {
-		return u.Limit
-	}
-	return nil
-}
 
 type NamespaceHintCacheWarmParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
@@ -1519,7 +1469,7 @@ type NamespaceQueryParams struct {
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
 	// Limits the documents returned by a query.
-	Limit NamespaceQueryParamsLimit `json:"limit,omitzero"`
+	Limit LimitParam `json:"limit,omitzero"`
 	// How to rank the documents in the namespace.
 	RankBy RankBy `json:"rank_by,omitzero"`
 	// The encoding to use for vectors in the response.
@@ -1561,31 +1511,6 @@ const (
 	NamespaceQueryParamsConsistencyLevelStrong   NamespaceQueryParamsConsistencyLevel = "strong"
 	NamespaceQueryParamsConsistencyLevelEventual NamespaceQueryParamsConsistencyLevel = "eventual"
 )
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type NamespaceQueryParamsLimit struct {
-	Int   param.Opt[int64] `json:",omitzero,inline"`
-	Limit *LimitParam      `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u NamespaceQueryParamsLimit) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.Int, u.Limit)
-}
-func (u *NamespaceQueryParamsLimit) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *NamespaceQueryParamsLimit) asAny() any {
-	if !param.IsOmitted(u.Int) {
-		return &u.Int.Value
-	} else if !param.IsOmitted(u.Limit) {
-		return u.Limit
-	}
-	return nil
-}
 
 type NamespaceRecallParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
