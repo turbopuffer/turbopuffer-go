@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.18.0 (2026-03-16)
+
+Full Changelog: [v1.17.0...v1.18.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.17.0...v1.18.0)
+
+### Features
+
+* retract versions before v1.12.2 ([#102](https://github.com/turbopuffer/turbopuffer-go/issues/102)) ([b7a7581](https://github.com/turbopuffer/turbopuffer-go/commit/b7a75817fb612d9607c892073985a4f4e434524a))
+
+
+### Chores
+
+* **internal:** tweak CI branches ([5d65824](https://github.com/turbopuffer/turbopuffer-go/commit/5d65824fef8050d63d2964c0d46f2564816652aa))
+
 ## 1.17.0 (2026-03-16)
 
 Full Changelog: [v1.16.0...v1.17.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.16.0...v1.17.0)
