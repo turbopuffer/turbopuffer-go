@@ -66,8 +66,12 @@ func TestNamespaceExplainQueryWithOptionalParams(t *testing.T) {
 		IncludeAttributes: turbopuffer.IncludeAttributesParam{
 			Bool: turbopuffer.Bool(true),
 		},
-		Limit: turbopuffer.NamespaceExplainQueryParamsLimit{
-			Int: turbopuffer.Int(0),
+		Limit: turbopuffer.LimitParam{
+			Total: 0,
+			Per: turbopuffer.LimitPerParam{
+				Attributes: []string{"string"},
+				Limit:      0,
+			},
 		},
 		RankBy:         map[string]any{},
 		TopK:           turbopuffer.Int(0),
@@ -158,8 +162,12 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 			IncludeAttributes: turbopuffer.IncludeAttributesParam{
 				Bool: turbopuffer.Bool(true),
 			},
-			Limit: turbopuffer.QueryLimitParam{
-				Int: turbopuffer.Int(0),
+			Limit: turbopuffer.LimitParam{
+				Total: 0,
+				Per: turbopuffer.LimitPerParam{
+					Attributes: []string{"string"},
+					Limit:      0,
+				},
 			},
 			RankBy: map[string]any{},
 			TopK:   turbopuffer.Int(0),
@@ -206,8 +214,12 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		IncludeAttributes: turbopuffer.IncludeAttributesParam{
 			Bool: turbopuffer.Bool(true),
 		},
-		Limit: turbopuffer.NamespaceQueryParamsLimit{
-			Int: turbopuffer.Int(0),
+		Limit: turbopuffer.LimitParam{
+			Total: 0,
+			Per: turbopuffer.LimitPerParam{
+				Attributes: []string{"string"},
+				Limit:      0,
+			},
 		},
 		RankBy:         map[string]any{},
 		TopK:           turbopuffer.Int(0),
