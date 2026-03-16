@@ -561,14 +561,23 @@ func (cfg *RequestConfig) Execute() (err error) {
 	}
 
 	_, intoCustomResponseBody := cfg.ResponseBodyInto.(**http.Response)
-	if cfg.ResponseBodyInto == nil || intoCustomResponseBody {
-		// We aren't reading the response body in this scope, but whoever is will need the
-		// cancel func from the context to observe request timeouts.
-		// Put the cancel function in the response body so it can be handled elsewhere.
+	if intoCustomResponseBody || cfg.ResponseInto != nil {
+		// The caller takes ownership of the response (including the body) and
+		// will need the cancel func from the context to observe request
+		// timeouts.
 		if cancel != nil {
 			res.Body = &bodyWithTimeout{rc: res.Body, stop: cancel}
 			cancel = nil
 		}
+		return nil
+	}
+	if cfg.ResponseBodyInto == nil {
+		// Nobody will read this response body. Drain and close it so the
+		// underlying TCP connection can be reused and the transport doesn't
+		// retain a reference to the *http.Response (which pins the
+		// *http.Request).
+		io.Copy(io.Discard, res.Body)
+		res.Body.Close()
 		return nil
 	}
 
