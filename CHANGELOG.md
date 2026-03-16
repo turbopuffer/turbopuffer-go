@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.17.0 (2026-03-16)
+
+Full Changelog: [v1.16.0...v1.17.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.16.0...v1.17.0)
+
+### Features
+
+* skip generating Go integer alias for Limit ([d500cb3](https://github.com/turbopuffer/turbopuffer-go/commit/d500cb3feef7a7ca3d6d7da62f84fc248420ac13))
+
 ## 1.16.0 (2026-03-15)
 
 Full Changelog: [v1.15.0...v1.16.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.15.0...v1.16.0)
