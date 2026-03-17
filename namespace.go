@@ -1086,6 +1086,24 @@ func (r *WriteBilling) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The performance information for a write request.
+type WritePerformance struct {
+	// Request time measured on the server, in milliseconds.
+	ServerTotalMs int64 `json:"server_total_ms" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ServerTotalMs respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r WritePerformance) RawJSON() string { return r.JSON.raw }
+func (r *WritePerformance) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // The response to a successful namespace deletion request.
 type NamespaceDeleteAllResponse struct {
 	// The status of the request.
@@ -1281,6 +1299,8 @@ type NamespaceWriteResponse struct {
 	// The IDs of documents that were patched. Only included when `return_affected_ids`
 	// is true and at least one document was patched.
 	PatchedIDs []ID `json:"patched_ids" format:"uuid"`
+	// The performance information for a write request.
+	Performance WritePerformance `json:"performance"`
 	// The number of rows deleted by the write request.
 	RowsDeleted int64 `json:"rows_deleted"`
 	// The number of rows patched by the write request.
@@ -1300,6 +1320,7 @@ type NamespaceWriteResponse struct {
 		Status        respjson.Field
 		DeletedIDs    respjson.Field
 		PatchedIDs    respjson.Field
+		Performance   respjson.Field
 		RowsDeleted   respjson.Field
 		RowsPatched   respjson.Field
 		RowsRemaining respjson.Field
