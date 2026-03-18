@@ -1576,6 +1576,8 @@ func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
 
 type NamespaceWriteParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
+	// The namespace to create an instant, copy-on-write clone of.
+	BranchFromNamespace param.Opt[string] `json:"branch_from_namespace,omitzero"`
 	// Allow partial completion when filter matches too many documents.
 	DeleteByFilterAllowPartial param.Opt[bool] `json:"delete_by_filter_allow_partial,omitzero"`
 	// Disables write throttling (HTTP 429 responses) during high-volume ingestion.
