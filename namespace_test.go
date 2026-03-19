@@ -339,7 +339,9 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		Namespace:      turbopuffer.String("string"),
 		DeleteByFilter: turbopuffer.NewFilterEq("id", "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		Deletes:        []any{"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"},
-		BranchFromNamespace: turbopuffer.String("branch_from_namespace"),
+		BranchFromNamespace: turbopuffer.BranchFromNamespaceParams{
+			SourceNamespace: "source_namespace",
+		},
 		CopyFromNamespace: turbopuffer.NamespaceWriteParamsCopyFromNamespace{
 			String: turbopuffer.String("string"),
 		},

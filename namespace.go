@@ -348,6 +348,21 @@ func (r *Bm25ClauseParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The property SourceNamespace is required.
+type BranchFromNamespaceParams struct {
+	// The namespace to create an instant, copy-on-write clone of.
+	SourceNamespace string `json:"source_namespace" api:"required"`
+	paramObj
+}
+
+func (r BranchFromNamespaceParams) MarshalJSON() (data []byte, err error) {
+	type shadow BranchFromNamespaceParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *BranchFromNamespaceParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // A list of documents in columnar format. Each key is a column name, mapped to an
 // array of values for that column.
 type ColumnsParam map[string][]any
@@ -1576,8 +1591,6 @@ func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
 
 type NamespaceWriteParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
-	// The namespace to create an instant, copy-on-write clone of.
-	BranchFromNamespace param.Opt[string] `json:"branch_from_namespace,omitzero"`
 	// Allow partial completion when filter matches too many documents.
 	DeleteByFilterAllowPartial param.Opt[bool] `json:"delete_by_filter_allow_partial,omitzero"`
 	// Disables write throttling (HTTP 429 responses) during high-volume ingestion.
@@ -1587,7 +1600,8 @@ type NamespaceWriteParams struct {
 	// If true, return the IDs of affected rows (deleted, patched, upserted) in the
 	// response. For filtered and conditional writes, only IDs for writes that
 	// succeeded will be included.
-	ReturnAffectedIDs param.Opt[bool] `json:"return_affected_ids,omitzero"`
+	ReturnAffectedIDs   param.Opt[bool]           `json:"return_affected_ids,omitzero"`
+	BranchFromNamespace BranchFromNamespaceParams `json:"branch_from_namespace,omitzero"`
 	// The namespace to copy documents from.
 	CopyFromNamespace NamespaceWriteParamsCopyFromNamespace `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
