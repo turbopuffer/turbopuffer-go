@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.19.0 (2026-03-19)
+
+Full Changelog: [v1.18.0...v1.19.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.18.0...v1.19.0)
+
+### Features
+
+* Response performance object ([7331c39](https://github.com/turbopuffer/turbopuffer-go/commit/7331c394370919c6a22a9608845ca2dac9f7f4bb))
+* tpuf-engine: add verbose form of branch_from_namespace ([3e7d6fc](https://github.com/turbopuffer/turbopuffer-go/commit/3e7d6fca031d394a4b8969fbf4d3461d9edb53ca))
+* tpuf: add branching to openapi spec ([9d35d3c](https://github.com/turbopuffer/turbopuffer-go/commit/9d35d3cf53808069e8e2edb843b40f726c9a40c7))
+
 ## 1.18.0 (2026-03-16)
 
 Full Changelog: [v1.17.0...v1.18.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.17.0...v1.18.0)
