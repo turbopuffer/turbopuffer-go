@@ -348,8 +348,10 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 	)
 	_, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
-		Namespace:           turbopuffer.String("namespace"),
-		BranchFromNamespace: turbopuffer.String("branch_from_namespace"),
+		Namespace: turbopuffer.String("namespace"),
+		BranchFromNamespace: turbopuffer.BranchFromNamespaceParams{
+			SourceNamespace: "source_namespace",
+		},
 		CopyFromNamespace: turbopuffer.NamespaceWriteParamsCopyFromNamespace{
 			String: turbopuffer.String("string"),
 		},
