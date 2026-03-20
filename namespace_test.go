@@ -352,8 +352,10 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		BranchFromNamespace: turbopuffer.BranchFromNamespaceParams{
 			SourceNamespace: "source_namespace",
 		},
-		CopyFromNamespace: turbopuffer.NamespaceWriteParamsCopyFromNamespace{
-			String: turbopuffer.String("string"),
+		CopyFromNamespace: turbopuffer.CopyFromNamespaceParams{
+			SourceNamespace: "source_namespace",
+			SourceAPIKey:    turbopuffer.String("source_api_key"),
+			SourceRegion:    turbopuffer.String("source_region"),
 		},
 		DeleteByFilter:             map[string]any{},
 		DeleteByFilterAllowPartial: turbopuffer.Bool(true),
