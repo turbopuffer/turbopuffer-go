@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.20.0 (2026-03-20)
+
+Full Changelog: [v1.19.0...v1.20.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.19.0...v1.20.0)
+
+### Features
+
+* spec: disable CopyFromNamespace syntax sugar in Go ([ebf43a1](https://github.com/turbopuffer/turbopuffer-go/commit/ebf43a187a6a58cd74da5cfaf2a20757f9a625a7))
+
 ## 1.19.0 (2026-03-19)
 
 Full Changelog: [v1.18.0...v1.19.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.18.0...v1.19.0)
