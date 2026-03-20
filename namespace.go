@@ -397,6 +397,25 @@ func (r *ContainsAnyTokenFilterParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The property SourceNamespace is required.
+type CopyFromNamespaceParams struct {
+	// The namespace to copy documents from.
+	SourceNamespace string `json:"source_namespace" api:"required"`
+	// (Optional) An API key for the organization containing the source namespace
+	SourceAPIKey param.Opt[string] `json:"source_api_key,omitzero"`
+	// (Optional) The region of the source namespace.
+	SourceRegion param.Opt[string] `json:"source_region,omitzero"`
+	paramObj
+}
+
+func (r CopyFromNamespaceParams) MarshalJSON() (data []byte, err error) {
+	type shadow CopyFromNamespaceParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *CopyFromNamespaceParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Additional parameters for the Decay operator.
 type DecayParams struct {
 	// An exponent that helps further control the shape of the Decay function.
@@ -1602,8 +1621,7 @@ type NamespaceWriteParams struct {
 	// succeeded will be included.
 	ReturnAffectedIDs   param.Opt[bool]           `json:"return_affected_ids,omitzero"`
 	BranchFromNamespace BranchFromNamespaceParams `json:"branch_from_namespace,omitzero"`
-	// The namespace to copy documents from.
-	CopyFromNamespace NamespaceWriteParamsCopyFromNamespace `json:"copy_from_namespace,omitzero"`
+	CopyFromNamespace   CopyFromNamespaceParams   `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
 	DeleteByFilter Filter `json:"delete_by_filter,omitzero"`
 	// A condition evaluated against the current value of each document targeted by a
@@ -1642,50 +1660,6 @@ func (r NamespaceWriteParams) MarshalJSON() (data []byte, err error) {
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *NamespaceWriteParams) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type NamespaceWriteParamsCopyFromNamespace struct {
-	String                  param.Opt[string]                                             `json:",omitzero,inline"`
-	CopyFromNamespaceConfig *NamespaceWriteParamsCopyFromNamespaceCopyFromNamespaceConfig `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u NamespaceWriteParamsCopyFromNamespace) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.String, u.CopyFromNamespaceConfig)
-}
-func (u *NamespaceWriteParamsCopyFromNamespace) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *NamespaceWriteParamsCopyFromNamespace) asAny() any {
-	if !param.IsOmitted(u.String) {
-		return &u.String.Value
-	} else if !param.IsOmitted(u.CopyFromNamespaceConfig) {
-		return u.CopyFromNamespaceConfig
-	}
-	return nil
-}
-
-// The property SourceNamespace is required.
-type NamespaceWriteParamsCopyFromNamespaceCopyFromNamespaceConfig struct {
-	// The namespace to copy documents from.
-	SourceNamespace string `json:"source_namespace" api:"required"`
-	// (Optional) An API key for the organization containing the source namespace
-	SourceAPIKey param.Opt[string] `json:"source_api_key,omitzero"`
-	// (Optional) The region of the source namespace.
-	SourceRegion param.Opt[string] `json:"source_region,omitzero"`
-	paramObj
-}
-
-func (r NamespaceWriteParamsCopyFromNamespaceCopyFromNamespaceConfig) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceWriteParamsCopyFromNamespaceCopyFromNamespaceConfig
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *NamespaceWriteParamsCopyFromNamespaceCopyFromNamespaceConfig) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
