@@ -898,7 +898,7 @@ func (r *NamespaceMetadataIndex) UnmarshalJSON(data []byte) error {
 }
 
 type NamespaceMetadataIndexIndexUpToDate struct {
-	Status constant.UpToDate `json:"status" api:"required"`
+	Status constant.UpToDate `json:"status" default:"up-to-date"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Status      respjson.Field
@@ -914,7 +914,7 @@ func (r *NamespaceMetadataIndexIndexUpToDate) UnmarshalJSON(data []byte) error {
 }
 
 type NamespaceMetadataIndexIndexUpdating struct {
-	Status constant.Updating `json:"status" api:"required"`
+	Status constant.Updating `json:"status" default:"updating"`
 	// The number of bytes in the namespace that are in the write-ahead log but have
 	// not yet been indexed.
 	UnindexedBytes int64 `json:"unindexed_bytes" api:"required"`
@@ -1225,7 +1225,7 @@ func (r *WritePerformance) UnmarshalJSON(data []byte) error {
 // The response to a successful namespace deletion request.
 type NamespaceDeleteAllResponse struct {
 	// The status of the request.
-	Status constant.Ok `json:"status" api:"required"`
+	Status constant.Ok `json:"status" default:"OK"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Status      respjson.Field
@@ -1261,7 +1261,7 @@ func (r *NamespaceExplainQueryResponse) UnmarshalJSON(data []byte) error {
 // The response to a successful cache warm request.
 type NamespaceHintCacheWarmResponse struct {
 	// The status of the request.
-	Status  constant.Accepted `json:"status" api:"required"`
+	Status  constant.Accepted `json:"status" default:"ACCEPTED"`
 	Message string            `json:"message"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -1410,7 +1410,7 @@ type NamespaceWriteResponse struct {
 	// The number of rows affected by the write request.
 	RowsAffected int64 `json:"rows_affected" api:"required"`
 	// The status of the request.
-	Status constant.Ok `json:"status" api:"required"`
+	Status constant.Ok `json:"status" default:"OK"`
 	// The IDs of documents that were deleted. Only included when `return_affected_ids`
 	// is true and at least one document was deleted.
 	DeletedIDs []ID `json:"deleted_ids" format:"uuid"`
