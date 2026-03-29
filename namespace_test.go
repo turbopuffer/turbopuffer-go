@@ -308,6 +308,7 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 					Stemming:        turbopuffer.Bool(true),
 					Tokenizer:       turbopuffer.TokenizerPreTokenizedArray,
 				},
+				Glob:  turbopuffer.Bool(true),
 				Regex: turbopuffer.Bool(true),
 			},
 		},
@@ -366,7 +367,8 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		PatchByFilterAllowPartial:  turbopuffer.Bool(true),
 		ReturnAffectedIDs:          turbopuffer.Bool(true),
 		Schema: map[string]turbopuffer.AttributeSchemaConfigParam{
-			"foo": {Ann: turbopuffer.AttributeSchemaConfigAnnParam{DistanceMetric: turbopuffer.DistanceMetricCosineDistance}, Filterable: turbopuffer.Bool(true), FullTextSearch: &turbopuffer.FullTextSearchConfigParam{B: turbopuffer.Float(0), CaseSensitive: turbopuffer.Bool(true), K1: turbopuffer.Float(0), Language: turbopuffer.LanguageArabic, RemoveStopwords: turbopuffer.Bool(true), Stemming: turbopuffer.Bool(true), Tokenizer: turbopuffer.TokenizerPreTokenizedArray}, Type: turbopuffer.AttributeType("string")},
+			"foo": {Ann: turbopuffer.AttributeSchemaConfigAnnParam{DistanceMetric: turbopuffer.DistanceMetricCosineDistance}, Filterable: turbopuffer.Bool(true), FullTextSearch: &turbopuffer.FullTextSearchConfigParam{B: turbopuffer.Float(0), CaseSensitive: turbopuffer.Bool(true), K1: turbopuffer.Float(0), Language: turbopuffer.LanguageArabic, RemoveStopwords: turbopuffer.Bool(true), Stemming: turbopuffer.Bool(true), Tokenizer: turbopuffer.TokenizerPreTokenizedArray},
+				Glob:  turbopuffer.Bool(true), Type: turbopuffer.AttributeType("string")},
 		},
 		UpsertColumns:   turbopuffer.ColumnsParam{},
 		UpsertRows:      []turbopuffer.RowParam{},
