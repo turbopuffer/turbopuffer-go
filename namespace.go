@@ -235,6 +235,8 @@ type AttributeSchemaConfig struct {
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
 	// filterable. You can override this by setting `filterable: true`.
 	FullTextSearch FullTextSearchConfig `json:"full_text_search"`
+	// Whether to enable Glob filters on this attribute.
+	Glob bool `json:"glob"`
 	// Whether to enable Regex filters on this attribute.
 	Regex bool `json:"regex"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -243,6 +245,7 @@ type AttributeSchemaConfig struct {
 		Ann            respjson.Field
 		Filterable     respjson.Field
 		FullTextSearch respjson.Field
+		Glob           respjson.Field
 		Regex          respjson.Field
 		ExtraFields    map[string]respjson.Field
 		raw            string
@@ -294,6 +297,8 @@ type AttributeSchemaConfigParam struct {
 	Type AttributeType `json:"type" api:"required"`
 	// Whether or not the attributes can be used in filters.
 	Filterable param.Opt[bool] `json:"filterable,omitzero"`
+	// Whether to enable Glob filters on this attribute.
+	Glob param.Opt[bool] `json:"glob,omitzero"`
 	// Whether to enable Regex filters on this attribute.
 	Regex param.Opt[bool] `json:"regex,omitzero"`
 	// Whether to create an approximate nearest neighbor index for the attribute. Can
