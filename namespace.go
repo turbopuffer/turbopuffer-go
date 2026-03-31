@@ -176,6 +176,23 @@ func (r *NamespaceService) Schema(ctx context.Context, query NamespaceSchemaPara
 	return res, err
 }
 
+// Update metadata configuration for a namespace.
+func (r *NamespaceService) UpdateMetadata(ctx context.Context, params NamespaceUpdateMetadataParams, opts ...option.RequestOption) (res *NamespaceMetadata, err error) {
+	opts = slices.Concat(r.Options, opts)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return nil, err
+	}
+	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
+	if params.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("v1/namespaces/%s/metadata", url.PathEscape(params.Namespace.Value))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPatch, path, params, &res, opts...)
+	return res, err
+}
+
 // Update namespace schema.
 func (r *NamespaceService) UpdateSchema(ctx context.Context, params NamespaceUpdateSchemaParams, opts ...option.RequestOption) (res *NamespaceUpdateSchemaResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -765,6 +782,8 @@ type NamespaceMetadata struct {
 	Schema map[string]AttributeSchemaConfig `json:"schema" api:"required"`
 	// The timestamp when the namespace was last modified by a write operation.
 	UpdatedAt time.Time `json:"updated_at" api:"required" format:"date-time"`
+	// Configuration for namespace pinning.
+	Pinning PinningConfig `json:"pinning"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ApproxLogicalBytes respjson.Field
@@ -774,6 +793,7 @@ type NamespaceMetadata struct {
 		Index              respjson.Field
 		Schema             respjson.Field
 		UpdatedAt          respjson.Field
+		Pinning            respjson.Field
 		ExtraFields        map[string]respjson.Field
 		raw                string
 	} `json:"-"`
@@ -935,6 +955,68 @@ type NamespaceMetadataIndexIndexUpdating struct {
 // Returns the unmodified JSON received from the API
 func (r NamespaceMetadataIndexIndexUpdating) RawJSON() string { return r.JSON.raw }
 func (r *NamespaceMetadataIndexIndexUpdating) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Request to update namespace metadata configuration.
+type NamespaceMetadataPatchParam struct {
+	// Configuration for namespace pinning.
+	//
+	// - Missing field: no change to pinning configuration
+	// - `null` or `false`: explicitly remove pinning
+	// - `true`: enable pinning with default configuration
+	// - Object: set pinning configuration
+	Pinning PinningConfigParam `json:"pinning,omitzero"`
+	paramObj
+}
+
+func (r NamespaceMetadataPatchParam) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceMetadataPatchParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceMetadataPatchParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Configuration for namespace pinning.
+type PinningConfig struct {
+	// The number of read replicas to provision. Defaults to 1 if not specified.
+	Replicas int64 `json:"replicas"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Replicas    respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r PinningConfig) RawJSON() string { return r.JSON.raw }
+func (r *PinningConfig) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// ToParam converts this PinningConfig to a PinningConfigParam.
+//
+// Warning: the fields of the param type will not be present. ToParam should only
+// be used at the last possible moment before sending a request. Test for this with
+// PinningConfigParam.Overrides()
+func (r PinningConfig) ToParam() PinningConfigParam {
+	return param.Override[PinningConfigParam](json.RawMessage(r.RawJSON()))
+}
+
+// Configuration for namespace pinning.
+type PinningConfigParam struct {
+	// The number of read replicas to provision. Defaults to 1 if not specified.
+	Replicas param.Opt[int64] `json:"replicas,omitzero"`
+	paramObj
+}
+
+func (r PinningConfigParam) MarshalJSON() (data []byte, err error) {
+	type shadow PinningConfigParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *PinningConfigParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -1681,6 +1763,20 @@ func (r *NamespaceRecallParams) UnmarshalJSON(data []byte) error {
 type NamespaceSchemaParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
 	paramObj
+}
+
+type NamespaceUpdateMetadataParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
+	// Request to update namespace metadata configuration.
+	NamespaceMetadataPatch NamespaceMetadataPatchParam
+	paramObj
+}
+
+func (r NamespaceUpdateMetadataParams) MarshalJSON() (data []byte, err error) {
+	return shimjson.Marshal(r.NamespaceMetadataPatch)
+}
+func (r *NamespaceUpdateMetadataParams) UnmarshalJSON(data []byte) error {
+	return json.Unmarshal(data, &r.NamespaceMetadataPatch)
 }
 
 type NamespaceUpdateSchemaParams struct {
