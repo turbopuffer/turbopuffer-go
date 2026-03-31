@@ -1692,7 +1692,7 @@ func (r NamespaceUpdateMetadataParams) MarshalJSON() (data []byte, err error) {
 	return shimjson.Marshal(r.NamespaceMetadataPatch)
 }
 func (r *NamespaceUpdateMetadataParams) UnmarshalJSON(data []byte) error {
-	return json.Unmarshal(data, &r.NamespaceMetadataPatch)
+	return apijson.UnmarshalRoot(data, r)
 }
 
 type NamespaceUpdateSchemaParams struct {
@@ -1706,7 +1706,7 @@ func (r NamespaceUpdateSchemaParams) MarshalJSON() (data []byte, err error) {
 	return shimjson.Marshal(r.Schema)
 }
 func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
-	return json.Unmarshal(data, &r.Schema)
+	return apijson.UnmarshalRoot(data, r)
 }
 
 type NamespaceWriteParams struct {
