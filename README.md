@@ -272,7 +272,7 @@ object variants.
 To convert it to a variant use the `.AsFooVariant()` method or the `.AsAny()` method if present.
 
 If a response value union contains primitive values, primitive fields will be alongside
-the properties but prefixed with `Of` and feature the tag `json:"...,inline"`.
+the properties and feature the tag `json:"...,inline"`.
 
 ```go
 type Animal struct {
