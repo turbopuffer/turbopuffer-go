@@ -1749,6 +1749,9 @@ type NamespaceRecallParams struct {
 	TopK param.Opt[int64] `json:"top_k,omitzero"`
 	// Filter by attributes. Same syntax as the query endpoint.
 	Filters any `json:"filters,omitzero"`
+	// The ranking function to evaluate recall for. If provided, `num` must be either
+	// null or 1.
+	RankBy any `json:"rank_by,omitzero"`
 	paramObj
 }
 
