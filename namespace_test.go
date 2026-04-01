@@ -240,6 +240,7 @@ func TestNamespaceRecallWithOptionalParams(t *testing.T) {
 		Filters:            map[string]any{},
 		IncludeGroundTruth: turbopuffer.Bool(true),
 		Num:                turbopuffer.Int(0),
+		RankBy:             map[string]any{},
 		TopK:               turbopuffer.Int(0),
 	})
 	if err != nil {
