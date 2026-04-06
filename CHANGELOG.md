@@ -1,5 +1,34 @@
 # Changelog
 
+## 1.21.0 (2026-04-06)
+
+Full Changelog: [v1.20.0...v1.21.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.20.0...v1.21.0)
+
+### Features
+
+* add update_metadata method to configure pinning ([de29524](https://github.com/turbopuffer/turbopuffer-go/commit/de29524032d37453a9af5702f7ae5612112d3e70))
+* docs for glob/regex acceleration ([a880af7](https://github.com/turbopuffer/turbopuffer-go/commit/a880af7389e23fb1957504d98401849d4c08c6ad))
+* **internal:** support comma format in multipart form encoding ([2a346e6](https://github.com/turbopuffer/turbopuffer-go/commit/2a346e6d6b926e595296480da957074be70b7a34))
+* Multiple Vector Columns Docs ([8f99599](https://github.com/turbopuffer/turbopuffer-go/commit/8f99599eaf1a9018d2bbcbe820fdd85e10a1c603))
+* spec: include pinning status in /metadata response ([5ab6247](https://github.com/turbopuffer/turbopuffer-go/commit/5ab624789d4c5a22164e8de7bc1ec1af4b1fd114))
+
+
+### Bug Fixes
+
+* fix issue with unmarshaling in some cases ([b8ebac3](https://github.com/turbopuffer/turbopuffer-go/commit/b8ebac3f7926a044cc31d3ade972409497abb5d5))
+* prevent duplicate ? in query params ([7580361](https://github.com/turbopuffer/turbopuffer-go/commit/758036150ec2eca94ce1e8327632324fe4d91bd8))
+
+
+### Chores
+
+* **ci:** skip lint on metadata-only changes ([3c881e6](https://github.com/turbopuffer/turbopuffer-go/commit/3c881e67100d3959cc9bd7de5505f452601bb793))
+* **ci:** support opting out of skipping builds on metadata-only commits ([2c2f689](https://github.com/turbopuffer/turbopuffer-go/commit/2c2f6894548a26e5219da3723055fe0c23998ff0))
+* **client:** fix multipart serialisation of Default() fields ([f761f6c](https://github.com/turbopuffer/turbopuffer-go/commit/f761f6cca5136185651cf095d159f52701afbd1e))
+* **internal:** support default value struct tag ([439a79d](https://github.com/turbopuffer/turbopuffer-go/commit/439a79d67c3dfae0fcc073230f6bbbb028a1d365))
+* **internal:** update gitignore ([1d43b62](https://github.com/turbopuffer/turbopuffer-go/commit/1d43b62c9271e1cc537e785136eba2ed2931fc16))
+* remove unnecessary error check for url parsing ([dd0abf0](https://github.com/turbopuffer/turbopuffer-go/commit/dd0abf038b4f9cd5d4ade1007ec497a6ddb2fb6a))
+* update docs for api:"required" ([0922544](https://github.com/turbopuffer/turbopuffer-go/commit/09225440cf918718677821bf248dc0fe98efadc5))
+
 ## 1.20.0 (2026-03-20)
 
 Full Changelog: [v1.19.0...v1.20.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.19.0...v1.20.0)
