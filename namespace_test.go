@@ -289,8 +289,8 @@ func TestNamespaceUpdateMetadataWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
 	)
-	_, err := client.Namespaces.UpdateMetadata(context.TODO(), turbopuffer.NamespaceUpdateMetadataParams{
-		Namespace: turbopuffer.String("namespace"),
+	ns := client.Namespace("ns")
+	_, err := ns.UpdateMetadata(context.TODO(), turbopuffer.NamespaceUpdateMetadataParams{
 		NamespaceMetadataPatch: turbopuffer.NamespaceMetadataPatchParam{
 			Pinning: turbopuffer.PinningConfigParam{
 				Replicas: turbopuffer.Int(1),
