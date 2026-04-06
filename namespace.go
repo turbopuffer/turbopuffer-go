@@ -745,8 +745,9 @@ type NamespaceMetadata struct {
 	Schema map[string]AttributeSchemaConfig `json:"schema" api:"required"`
 	// The timestamp when the namespace was last modified by a write operation.
 	UpdatedAt time.Time `json:"updated_at" api:"required" format:"date-time"`
-	// Configuration for namespace pinning.
-	Pinning PinningConfig `json:"pinning"`
+	// Configuration for namespace pinning, along with the current status of the pinned
+	// namespace.
+	Pinning NamespaceMetadataPinning `json:"pinning"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ApproxLogicalBytes respjson.Field
@@ -918,6 +919,51 @@ type NamespaceMetadataIndexIndexUpdating struct {
 // Returns the unmodified JSON received from the API
 func (r NamespaceMetadataIndexIndexUpdating) RawJSON() string { return r.JSON.raw }
 func (r *NamespaceMetadataIndexIndexUpdating) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Configuration for namespace pinning, along with the current status of the pinned
+// namespace.
+type NamespaceMetadataPinning struct {
+	// Operational status for a pinned namespace.
+	Status NamespaceMetadataPinningStatus `json:"status"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Status      respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+	PinningConfig
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceMetadataPinning) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceMetadataPinning) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Operational status for a pinned namespace.
+type NamespaceMetadataPinningStatus struct {
+	// The number of replicas that are warm and serving traffic.
+	ReadyReplicas int64 `json:"ready_replicas" api:"required"`
+	// The timestamp of the latest pinning status snapshot.
+	UpdatedAt time.Time `json:"updated_at" api:"required" format:"date-time"`
+	// Aggregate utilization for the pinned namespace, reported as a value between 0.0
+	// and 1.0.
+	Utilization float64 `json:"utilization" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ReadyReplicas respjson.Field
+		UpdatedAt     respjson.Field
+		Utilization   respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceMetadataPinningStatus) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceMetadataPinningStatus) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
