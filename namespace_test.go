@@ -57,7 +57,7 @@ func TestNamespaceExplainQueryWithOptionalParams(t *testing.T) {
 			"foo": "bar",
 		},
 		Consistency: turbopuffer.NamespaceExplainQueryParamsConsistency{
-			Level: turbopuffer.NamespaceExplainQueryParamsConsistencyLevelStrong,
+			Level: "strong",
 		},
 		DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 		ExcludeAttributes: []string{"string"},
@@ -151,7 +151,7 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 	)
 	_, err := client.Namespaces.MultiQuery(context.TODO(), turbopuffer.NamespaceMultiQueryParams{
 		Namespace: turbopuffer.String("namespace"),
-		Queries: []turbopuffer.QueryParam{{
+		Queries: []turbopuffer.NamespaceMultiQueryParamsQuery{{
 			AggregateBy: map[string]any{
 				"foo": "bar",
 			},
@@ -173,7 +173,7 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 			TopK:   turbopuffer.Int(0),
 		}},
 		Consistency: turbopuffer.NamespaceMultiQueryParamsConsistency{
-			Level: turbopuffer.NamespaceMultiQueryParamsConsistencyLevelStrong,
+			Level: "strong",
 		},
 		VectorEncoding: turbopuffer.VectorEncodingFloat,
 	})
@@ -205,7 +205,7 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 			"foo": "bar",
 		},
 		Consistency: turbopuffer.NamespaceQueryParamsConsistency{
-			Level: turbopuffer.NamespaceQueryParamsConsistencyLevelStrong,
+			Level: "strong",
 		},
 		DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 		ExcludeAttributes: []string{"string"},
