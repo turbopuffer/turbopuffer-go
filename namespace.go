@@ -40,6 +40,40 @@ func NewNamespaceService(opts ...option.RequestOption) (r NamespaceService) {
 	return
 }
 
+// Creates an instant, copy-on-write clone of a namespace.
+func (r *NamespaceService) BranchFrom(ctx context.Context, params NamespaceBranchFromParams, opts ...option.RequestOption) (res *NamespaceBranchFromResponse, err error) {
+	opts = slices.Concat(r.Options, opts)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return nil, err
+	}
+	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
+	if params.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("v2/namespaces/%s?stainless_overload=branchFrom", url.PathEscape(params.Namespace.Value))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	return res, err
+}
+
+// Copy all documents from another namespace into this one.
+func (r *NamespaceService) CopyFrom(ctx context.Context, params NamespaceCopyFromParams, opts ...option.RequestOption) (res *NamespaceCopyFromResponse, err error) {
+	opts = slices.Concat(r.Options, opts)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return nil, err
+	}
+	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
+	if params.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("v2/namespaces/%s?stainless_overload=copyFrom", url.PathEscape(params.Namespace.Value))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	return res, err
+}
+
 // Delete namespace.
 func (r *NamespaceService) DeleteAll(ctx context.Context, body NamespaceDeleteAllParams, opts ...option.RequestOption) (res *NamespaceDeleteAllResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -1320,6 +1354,114 @@ func (r *WritePerformance) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The response to a successful write request.
+type NamespaceBranchFromResponse struct {
+	// The billing information for a write request.
+	Billing WriteBilling `json:"billing" api:"required"`
+	// A message describing the result of the write request.
+	Message string `json:"message" api:"required"`
+	// The number of rows affected by the write request.
+	RowsAffected int64 `json:"rows_affected" api:"required"`
+	// The status of the request.
+	Status constant.Ok `json:"status" default:"OK"`
+	// The IDs of documents that were deleted. Only included when `return_affected_ids`
+	// is true and at least one document was deleted.
+	DeletedIDs []ID `json:"deleted_ids" format:"uuid"`
+	// The IDs of documents that were patched. Only included when `return_affected_ids`
+	// is true and at least one document was patched.
+	PatchedIDs []ID `json:"patched_ids" format:"uuid"`
+	// The performance information for a write request.
+	Performance WritePerformance `json:"performance"`
+	// The number of rows deleted by the write request.
+	RowsDeleted int64 `json:"rows_deleted"`
+	// The number of rows patched by the write request.
+	RowsPatched int64 `json:"rows_patched"`
+	// Whether more documents match the filter for partial operations.
+	RowsRemaining bool `json:"rows_remaining"`
+	// The number of rows upserted by the write request.
+	RowsUpserted int64 `json:"rows_upserted"`
+	// The IDs of documents that were upserted. Only included when
+	// `return_affected_ids` is true and at least one document was upserted.
+	UpsertedIDs []ID `json:"upserted_ids" format:"uuid"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Billing       respjson.Field
+		Message       respjson.Field
+		RowsAffected  respjson.Field
+		Status        respjson.Field
+		DeletedIDs    respjson.Field
+		PatchedIDs    respjson.Field
+		Performance   respjson.Field
+		RowsDeleted   respjson.Field
+		RowsPatched   respjson.Field
+		RowsRemaining respjson.Field
+		RowsUpserted  respjson.Field
+		UpsertedIDs   respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceBranchFromResponse) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceBranchFromResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The response to a successful write request.
+type NamespaceCopyFromResponse struct {
+	// The billing information for a write request.
+	Billing WriteBilling `json:"billing" api:"required"`
+	// A message describing the result of the write request.
+	Message string `json:"message" api:"required"`
+	// The number of rows affected by the write request.
+	RowsAffected int64 `json:"rows_affected" api:"required"`
+	// The status of the request.
+	Status constant.Ok `json:"status" default:"OK"`
+	// The IDs of documents that were deleted. Only included when `return_affected_ids`
+	// is true and at least one document was deleted.
+	DeletedIDs []ID `json:"deleted_ids" format:"uuid"`
+	// The IDs of documents that were patched. Only included when `return_affected_ids`
+	// is true and at least one document was patched.
+	PatchedIDs []ID `json:"patched_ids" format:"uuid"`
+	// The performance information for a write request.
+	Performance WritePerformance `json:"performance"`
+	// The number of rows deleted by the write request.
+	RowsDeleted int64 `json:"rows_deleted"`
+	// The number of rows patched by the write request.
+	RowsPatched int64 `json:"rows_patched"`
+	// Whether more documents match the filter for partial operations.
+	RowsRemaining bool `json:"rows_remaining"`
+	// The number of rows upserted by the write request.
+	RowsUpserted int64 `json:"rows_upserted"`
+	// The IDs of documents that were upserted. Only included when
+	// `return_affected_ids` is true and at least one document was upserted.
+	UpsertedIDs []ID `json:"upserted_ids" format:"uuid"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Billing       respjson.Field
+		Message       respjson.Field
+		RowsAffected  respjson.Field
+		Status        respjson.Field
+		DeletedIDs    respjson.Field
+		PatchedIDs    respjson.Field
+		Performance   respjson.Field
+		RowsDeleted   respjson.Field
+		RowsPatched   respjson.Field
+		RowsRemaining respjson.Field
+		RowsUpserted  respjson.Field
+		UpsertedIDs   respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceCopyFromResponse) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceCopyFromResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // The response to a successful namespace deletion request.
 type NamespaceDeleteAllResponse struct {
 	// The status of the request.
@@ -1550,6 +1692,34 @@ type NamespaceWriteResponse struct {
 // Returns the unmodified JSON received from the API
 func (r NamespaceWriteResponse) RawJSON() string { return r.JSON.raw }
 func (r *NamespaceWriteResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type NamespaceBranchFromParams struct {
+	Namespace           param.Opt[string]         `path:"namespace,omitzero" api:"required" json:"-"`
+	BranchFromNamespace BranchFromNamespaceParams `json:"branch_from_namespace,omitzero" api:"required"`
+	paramObj
+}
+
+func (r NamespaceBranchFromParams) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceBranchFromParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceBranchFromParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type NamespaceCopyFromParams struct {
+	Namespace         param.Opt[string]       `path:"namespace,omitzero" api:"required" json:"-"`
+	CopyFromNamespace CopyFromNamespaceParams `json:"copy_from_namespace,omitzero" api:"required"`
+	paramObj
+}
+
+func (r NamespaceCopyFromParams) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceCopyFromParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceCopyFromParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
