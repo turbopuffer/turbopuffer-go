@@ -9,6 +9,7 @@ import (
 	"os"
 	"slices"
 	"sync/atomic"
+	"strings"
 
 	"github.com/turbopuffer/turbopuffer-go/internal"
 	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
@@ -40,6 +41,14 @@ func DefaultClientOptions() []option.RequestOption {
 	}
 	if o, ok := os.LookupEnv("TURBOPUFFER_REGION"); ok {
 		defaults = append(defaults, option.WithRegion(o))
+	}
+	if o, ok := os.LookupEnv("TURBOPUFFER_CUSTOM_HEADERS"); ok {
+		for _, line := range strings.Split(o, "\n") {
+			colon := strings.Index(line, ":")
+			if colon >= 0 {
+				defaults = append(defaults, option.WithHeader(strings.TrimSpace(line[:colon]), strings.TrimSpace(line[colon+1:])))
+			}
+		}
 	}
 	return defaults
 }
