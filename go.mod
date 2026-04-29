@@ -1,10 +1,11 @@
-module github.com/turbopuffer/turbopuffer-go
+module github.com/turbopuffer/turbopuffer-go/v2
 
 go 1.22
 
 require (
 	github.com/tidwall/gjson v1.18.0
 	github.com/tidwall/sjson v1.2.5
+	github.com/turbopuffer/turbopuffer-go v1.21.0
 )
 
 require (

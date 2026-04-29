@@ -2,7 +2,7 @@
 
 <!-- x-release-please-start-version -->
 
-<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go"><img src="https://pkg.go.dev/badge/github.com/turbopuffer/turbopuffer-go.svg" alt="Go Reference"></a>
+<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2"><img src="https://pkg.go.dev/badge/github.com/turbopuffer/turbopuffer-go/v2.svg" alt="Go Reference"></a>
 
 <!-- x-release-please-end -->
 
@@ -26,7 +26,7 @@ Use the Turbopuffer MCP Server to enable AI assistants to interact with this API
 
 ```go
 import (
-	"github.com/turbopuffer/turbopuffer-go" // imported as turbopuffer
+	"github.com/turbopuffer/turbopuffer-go/v2" // imported as turbopuffer
 )
 ```
 
@@ -37,7 +37,7 @@ Or to pin the version:
 <!-- x-release-please-start-version -->
 
 ```sh
-go get -u 'github.com/turbopuffer/turbopuffer-go@v1.21.0'
+go get -u 'github.com/turbopuffer/turbopuffer-go/v2@v2.0.0-alpha.1'
 ```
 
 <!-- x-release-please-end -->
@@ -57,8 +57,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/turbopuffer/turbopuffer-go"
-	"github.com/turbopuffer/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go/v2"
+	"github.com/turbopuffer/turbopuffer-go/v2/option"
 )
 
 func main() {
@@ -296,7 +296,7 @@ client.Namespaces(context.TODO(), ...,
 
 The request option `option.WithDebugLog(nil)` may be helpful while debugging.
 
-See the [full list of request options](https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/option).
+See the [full list of request options](https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2/option).
 
 ### Pagination
 

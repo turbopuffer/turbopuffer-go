@@ -12,13 +12,13 @@ import (
 	"slices"
 	"time"
 
-	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
-	shimjson "github.com/turbopuffer/turbopuffer-go/internal/encoding/json"
-	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
-	"github.com/turbopuffer/turbopuffer-go/option"
-	"github.com/turbopuffer/turbopuffer-go/packages/param"
-	"github.com/turbopuffer/turbopuffer-go/packages/respjson"
-	"github.com/turbopuffer/turbopuffer-go/shared/constant"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/apijson"
+	shimjson "github.com/turbopuffer/turbopuffer-go/v2/internal/encoding/json"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/requestconfig"
+	"github.com/turbopuffer/turbopuffer-go/v2/option"
+	"github.com/turbopuffer/turbopuffer-go/v2/packages/param"
+	"github.com/turbopuffer/turbopuffer-go/v2/packages/respjson"
+	"github.com/turbopuffer/turbopuffer-go/v2/shared/constant"
 )
 
 // NamespaceService contains methods and other services that help with interacting

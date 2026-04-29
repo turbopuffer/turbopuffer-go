@@ -2,8 +2,8 @@ package apijson_test
 
 import (
 	"encoding/json"
-	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
-	"github.com/turbopuffer/turbopuffer-go/packages/respjson"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/apijson"
+	"github.com/turbopuffer/turbopuffer-go/v2/packages/respjson"
 	"testing"
 )
 

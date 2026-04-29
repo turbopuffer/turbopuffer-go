@@ -1,7 +1,7 @@
 package apiquery
 
 import (
-	"github.com/turbopuffer/turbopuffer-go/packages/param"
+	"github.com/turbopuffer/turbopuffer-go/v2/packages/param"
 	"net/url"
 	"testing"
 	"time"

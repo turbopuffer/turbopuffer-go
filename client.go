@@ -9,9 +9,9 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
-	"github.com/turbopuffer/turbopuffer-go/option"
-	"github.com/turbopuffer/turbopuffer-go/packages/pagination"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/requestconfig"
+	"github.com/turbopuffer/turbopuffer-go/v2/option"
+	"github.com/turbopuffer/turbopuffer-go/v2/packages/pagination"
 )
 
 // Client creates a struct with services and top level methods that help with

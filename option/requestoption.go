@@ -12,14 +12,14 @@ import (
 	"time"
 
 	"github.com/tidwall/sjson"
-	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/requestconfig"
 )
 
 // RequestOption is an option for the requests made by the turbopuffer API Client
 // which can be supplied to clients, services, and methods. You can read more about this functional
 // options pattern in our [README].
 //
-// [README]: https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go#readme-requestoptions
+// [README]: https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#readme-requestoptions
 type RequestOption = requestconfig.RequestOption
 
 // WithBaseURL returns a RequestOption that sets the BaseURL for the client.

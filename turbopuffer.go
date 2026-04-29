@@ -5,10 +5,10 @@ package turbopuffer
 import (
 	"net/url"
 
-	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
-	"github.com/turbopuffer/turbopuffer-go/internal/apiquery"
-	"github.com/turbopuffer/turbopuffer-go/packages/param"
-	"github.com/turbopuffer/turbopuffer-go/packages/respjson"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/apijson"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/apiquery"
+	"github.com/turbopuffer/turbopuffer-go/v2/packages/param"
+	"github.com/turbopuffer/turbopuffer-go/v2/packages/respjson"
 )
 
 // A summary of a namespace.

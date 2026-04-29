@@ -18,11 +18,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/turbopuffer/turbopuffer-go/internal"
-	"github.com/turbopuffer/turbopuffer-go/internal/apierror"
-	"github.com/turbopuffer/turbopuffer-go/internal/apiform"
-	"github.com/turbopuffer/turbopuffer-go/internal/apiquery"
-	"github.com/turbopuffer/turbopuffer-go/packages/param"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/apierror"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/apiform"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/apiquery"
+	"github.com/turbopuffer/turbopuffer-go/v2/packages/param"
 )
 
 func getDefaultHeaders() map[string]string {
