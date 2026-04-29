@@ -3,7 +3,7 @@ package param
 import (
 	"encoding/json"
 	"fmt"
-	shimjson "github.com/turbopuffer/turbopuffer-go/internal/encoding/json"
+	shimjson "github.com/turbopuffer/turbopuffer-go/v2/internal/encoding/json"
 	"time"
 )
 

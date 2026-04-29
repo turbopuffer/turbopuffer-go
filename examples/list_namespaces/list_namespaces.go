@@ -8,8 +8,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/turbopuffer/turbopuffer-go"
-	"github.com/turbopuffer/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go/v2"
+	"github.com/turbopuffer/turbopuffer-go/v2/option"
 )
 
 func main() {

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/tidwall/gjson"
-	"github.com/turbopuffer/turbopuffer-go/packages/respjson"
+	"github.com/turbopuffer/turbopuffer-go/v2/packages/respjson"
 )
 
 func P[T any](v T) *T { return &v }

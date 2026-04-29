@@ -2,7 +2,7 @@ package apiform
 
 import (
 	"bytes"
-	"github.com/turbopuffer/turbopuffer-go/packages/param"
+	"github.com/turbopuffer/turbopuffer-go/v2/packages/param"
 	"io"
 	"mime/multipart"
 	"strings"

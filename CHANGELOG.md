@@ -1,5 +1,33 @@
 # Changelog
 
+## 2.0.0-alpha.1 (2026-04-29)
+
+Full Changelog: [v1.21.0...v2.0.0-alpha.1](https://github.com/turbopuffer/turbopuffer-go/compare/v1.21.0...v2.0.0-alpha.1)
+
+### Features
+
+* Add sparse vectors to the spec. ([58682b3](https://github.com/turbopuffer/turbopuffer-go/commit/58682b3a40d4663667d6570d5a1f5a678f7bcfd1))
+* Enable Stainless normalizer v2 while keeping Query inlined ([a1db134](https://github.com/turbopuffer/turbopuffer-go/commit/a1db134f535862fb56d4709d79e294abf2e7d4ba))
+* Enable Stainless normalizer v2 while keeping Query inlined ([dd7f4f5](https://github.com/turbopuffer/turbopuffer-go/commit/dd7f4f5582fc40975d6bdff4bf406e2fe0bda1d6))
+* **go:** add default http client with timeout ([7c99444](https://github.com/turbopuffer/turbopuffer-go/commit/7c99444fd9c4e40e8a716528ab5e9c86941b722d))
+* Require `fuzzy: true` in the schema to use the `Fuzzy` filter ([904a15f](https://github.com/turbopuffer/turbopuffer-go/commit/904a15fc7c200f5cb6b74e40a4d4d3f25ae4df87))
+* set up branchFrom and copyFrom sugar in the OpenAPI spec ([52262b4](https://github.com/turbopuffer/turbopuffer-go/commit/52262b4b325ba3006603b3172523c76ba220ba3a))
+* spec: flatten branchFrom/copyFrom sugar endpoint params ([c4a8a79](https://github.com/turbopuffer/turbopuffer-go/commit/c4a8a792239a7183c08d70fc2f1a479befe77007))
+* spec: update OpenAPI spec for v2 encryption API ([836e30d](https://github.com/turbopuffer/turbopuffer-go/commit/836e30d92d2881575616f699b3c2e17c8c6769db))
+* support setting headers via env ([bbe8e4f](https://github.com/turbopuffer/turbopuffer-go/commit/bbe8e4f09612f18e5a5ca176188f61bda4e46319))
+
+
+### Bug Fixes
+
+* pretty print error messages ([#107](https://github.com/turbopuffer/turbopuffer-go/issues/107)) ([d112cc1](https://github.com/turbopuffer/turbopuffer-go/commit/d112cc11e286f7c430a12e1428e8fb102d2d87c0))
+
+
+### Chores
+
+* bump apigen and regenerate ([a642525](https://github.com/turbopuffer/turbopuffer-go/commit/a642525905b6efb290c52a70484077129feba173))
+* **internal:** more robust bootstrap script ([6f4283a](https://github.com/turbopuffer/turbopuffer-go/commit/6f4283aa5c27d6149e06265934673e60bd741a61))
+* regenerate custom types ([40f4dca](https://github.com/turbopuffer/turbopuffer-go/commit/40f4dcac0a1b429333a80da614df5df1ffed618f))
+
 ## 1.21.0 (2026-04-06)
 
 Full Changelog: [v1.20.0...v1.21.0](https://github.com/turbopuffer/turbopuffer-go/compare/v1.20.0...v1.21.0)

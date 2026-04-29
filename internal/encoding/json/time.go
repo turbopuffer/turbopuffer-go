@@ -2,7 +2,7 @@
 package json
 
 import (
-	"github.com/turbopuffer/turbopuffer-go/internal/encoding/json/shims"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/encoding/json/shims"
 	"reflect"
 	"time"
 )

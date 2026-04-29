@@ -7,8 +7,8 @@ package apijson
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/turbopuffer/turbopuffer-go/packages/param"
-	"github.com/turbopuffer/turbopuffer-go/packages/respjson"
+	"github.com/turbopuffer/turbopuffer-go/v2/packages/param"
+	"github.com/turbopuffer/turbopuffer-go/v2/packages/respjson"
 	"reflect"
 	"strconv"
 	"sync"

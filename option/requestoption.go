@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/tidwall/sjson"
-	"github.com/turbopuffer/turbopuffer-go/internal/requestconfig"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/requestconfig"
 )
 
 // RequestOption is an option for the requests made by the turbopuffer API Client

@@ -2,7 +2,7 @@
 
 package turbopuffer
 
-import shimjson "github.com/turbopuffer/turbopuffer-go/internal/encoding/json"
+import shimjson "github.com/turbopuffer/turbopuffer-go/v2/internal/encoding/json"
 
 type AggregateBy interface {
 	sealed_AggregateBy()
