@@ -27,10 +27,8 @@ func TestNamespaceBranchFrom(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 	)
 	_, err := client.Namespaces.BranchFrom(context.TODO(), turbopuffer.NamespaceBranchFromParams{
-		Namespace: turbopuffer.String("namespace"),
-		BranchFromNamespace: turbopuffer.BranchFromNamespaceParams{
-			SourceNamespace: "source_namespace",
-		},
+		Namespace:       turbopuffer.String("namespace"),
+		SourceNamespace: "source_namespace",
 	})
 	if err != nil {
 		var apierr *turbopuffer.Error
@@ -55,12 +53,10 @@ func TestNamespaceCopyFromWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("tpuf_A1..."),
 	)
 	_, err := client.Namespaces.CopyFrom(context.TODO(), turbopuffer.NamespaceCopyFromParams{
-		Namespace: turbopuffer.String("namespace"),
-		CopyFromNamespace: turbopuffer.CopyFromNamespaceParams{
-			SourceNamespace: "source_namespace",
-			SourceAPIKey:    turbopuffer.String("source_api_key"),
-			SourceRegion:    turbopuffer.String("source_region"),
-		},
+		Namespace:       turbopuffer.String("namespace"),
+		SourceNamespace: "source_namespace",
+		SourceAPIKey:    turbopuffer.String("source_api_key"),
+		SourceRegion:    turbopuffer.String("source_region"),
 	})
 	if err != nil {
 		var apierr *turbopuffer.Error
