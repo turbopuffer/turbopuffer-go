@@ -137,7 +137,7 @@ func (r *NamespaceService) Metadata(ctx context.Context, query NamespaceMetadata
 		err = errors.New("missing required namespace parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/namespaces/%s/metadata", url.PathEscape(query.Namespace.Value))
+	path := fmt.Sprintf("v2/namespaces/%s/metadata", url.PathEscape(query.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return res, err
 }
@@ -222,7 +222,7 @@ func (r *NamespaceService) UpdateMetadata(ctx context.Context, params NamespaceU
 		err = errors.New("missing required namespace parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/namespaces/%s/metadata", url.PathEscape(params.Namespace.Value))
+	path := fmt.Sprintf("v2/namespaces/%s/metadata", url.PathEscape(params.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPatch, path, params, &res, opts...)
 	return res, err
 }
@@ -587,6 +587,176 @@ const (
 	DistanceMetricEuclideanSquared DistanceMetric = "euclidean_squared"
 )
 
+// Encryption contains all possible properties and values from
+// [EncryptionCustomerManaged], [EncryptionDefault].
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+type Encryption struct {
+	// This field is from variant [EncryptionCustomerManaged].
+	KeyName string `json:"key_name"`
+	Mode    string `json:"mode"`
+	JSON    struct {
+		KeyName respjson.Field
+		Mode    respjson.Field
+		raw     string
+	} `json:"-"`
+}
+
+func (u Encryption) AsCustomerManaged() (v EncryptionCustomerManaged) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u Encryption) AsDefault() (v EncryptionDefault) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u Encryption) RawJSON() string { return u.JSON.raw }
+
+func (r *Encryption) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// ToParam converts this Encryption to a EncryptionParam.
+//
+// Warning: the fields of the param type will not be present. ToParam should only
+// be used at the last possible moment before sending a request. Test for this with
+// EncryptionParam.Overrides()
+func (r Encryption) ToParam() EncryptionParam {
+	return param.Override[EncryptionParam](json.RawMessage(r.RawJSON()))
+}
+
+// Encrypt the namespace with a customer-managed encryption key (CMEK).
+type EncryptionCustomerManaged struct {
+	// The identifier of the CMEK key to use for encryption. For GCP, the
+	// fully-qualified resource name of the key. For AWS, the ARN of the key.
+	KeyName string                   `json:"key_name" api:"required"`
+	Mode    constant.CustomerManaged `json:"mode" default:"customer-managed"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		KeyName     respjson.Field
+		Mode        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r EncryptionCustomerManaged) RawJSON() string { return r.JSON.raw }
+func (r *EncryptionCustomerManaged) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Use the default server-side encryption (SSE).
+type EncryptionDefault struct {
+	Mode constant.Default `json:"mode" default:"default"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Mode        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r EncryptionDefault) RawJSON() string { return r.JSON.raw }
+func (r *EncryptionDefault) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func EncryptionParamCustomerManaged(keyName string) EncryptionParam {
+	var variant EncryptionCustomerManagedParam
+	variant.KeyName = keyName
+	return EncryptionParam{CustomerManaged: &variant}
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type EncryptionParam struct {
+	CustomerManaged *EncryptionCustomerManagedParam `json:",omitzero,inline"`
+	Default         *EncryptionDefaultParam         `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u EncryptionParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.CustomerManaged, u.Default)
+}
+func (u *EncryptionParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *EncryptionParam) asAny() any {
+	if !param.IsOmitted(u.CustomerManaged) {
+		return u.CustomerManaged
+	} else if !param.IsOmitted(u.Default) {
+		return u.Default
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u EncryptionParam) GetKeyName() *string {
+	if vt := u.CustomerManaged; vt != nil {
+		return &vt.KeyName
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u EncryptionParam) GetMode() *string {
+	if vt := u.CustomerManaged; vt != nil {
+		return (*string)(&vt.Mode)
+	} else if vt := u.Default; vt != nil {
+		return (*string)(&vt.Mode)
+	}
+	return nil
+}
+
+// Encrypt the namespace with a customer-managed encryption key (CMEK).
+//
+// The properties KeyName, Mode are required.
+type EncryptionCustomerManagedParam struct {
+	// The identifier of the CMEK key to use for encryption. For GCP, the
+	// fully-qualified resource name of the key. For AWS, the ARN of the key.
+	KeyName string `json:"key_name" api:"required"`
+	// This field can be elided, and will marshal its zero value as "customer-managed".
+	Mode constant.CustomerManaged `json:"mode" default:"customer-managed"`
+	paramObj
+}
+
+func (r EncryptionCustomerManagedParam) MarshalJSON() (data []byte, err error) {
+	type shadow EncryptionCustomerManagedParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *EncryptionCustomerManagedParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func NewEncryptionDefaultParam() EncryptionDefaultParam {
+	return EncryptionDefaultParam{
+		Mode: "default",
+	}
+}
+
+// Use the default server-side encryption (SSE).
+//
+// This struct has a constant value, construct it with [NewEncryptionDefaultParam].
+type EncryptionDefaultParam struct {
+	Mode constant.Default `json:"mode" default:"default"`
+	paramObj
+}
+
+func (r EncryptionDefaultParam) MarshalJSON() (data []byte, err error) {
+	type shadow EncryptionDefaultParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *EncryptionDefaultParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Configuration options for full-text search.
 type FullTextSearchConfig struct {
 	// Whether to convert each non-ASCII character in a token to its ASCII equivalent,
@@ -861,10 +1031,9 @@ type NamespaceMetadata struct {
 	ApproxRowCount int64 `json:"approx_row_count" api:"required"`
 	// The timestamp when the namespace was created.
 	CreatedAt time.Time `json:"created_at" api:"required" format:"date-time"`
-	// Indicates that the namespace is encrypted with a customer-managed encryption key
-	// (CMEK).
-	Encryption NamespaceMetadataEncryption `json:"encryption" api:"required"`
-	Index      NamespaceMetadataIndex      `json:"index" api:"required"`
+	// The encryption configuration for a namespace.
+	Encryption Encryption             `json:"encryption" api:"required"`
+	Index      NamespaceMetadataIndex `json:"index" api:"required"`
 	// The schema of the namespace.
 	Schema map[string]AttributeSchemaConfig `json:"schema" api:"required"`
 	// The timestamp when the namespace was last modified by a write operation.
@@ -890,91 +1059,6 @@ type NamespaceMetadata struct {
 // Returns the unmodified JSON received from the API
 func (r NamespaceMetadata) RawJSON() string { return r.JSON.raw }
 func (r *NamespaceMetadata) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// NamespaceMetadataEncryption contains all possible properties and values from
-// [NamespaceMetadataEncryptionSse], [NamespaceMetadataEncryptionCmek].
-//
-// Use the methods beginning with 'As' to cast the union to one of its variants.
-type NamespaceMetadataEncryption struct {
-	// This field is from variant [NamespaceMetadataEncryptionSse].
-	Sse bool `json:"sse"`
-	// This field is from variant [NamespaceMetadataEncryptionCmek].
-	Cmek NamespaceMetadataEncryptionCmekCmek `json:"cmek"`
-	JSON struct {
-		Sse  respjson.Field
-		Cmek respjson.Field
-		raw  string
-	} `json:"-"`
-}
-
-func (u NamespaceMetadataEncryption) AsNamespaceMetadataEncryptionSse() (v NamespaceMetadataEncryptionSse) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u NamespaceMetadataEncryption) AsNamespaceMetadataEncryptionCmek() (v NamespaceMetadataEncryptionCmek) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-// Returns the unmodified JSON received from the API
-func (u NamespaceMetadataEncryption) RawJSON() string { return u.JSON.raw }
-
-func (r *NamespaceMetadataEncryption) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type NamespaceMetadataEncryptionSse struct {
-	// Always true. Indicates that the namespace is encrypted with SSE.
-	Sse bool `json:"sse" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Sse         respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r NamespaceMetadataEncryptionSse) RawJSON() string { return r.JSON.raw }
-func (r *NamespaceMetadataEncryptionSse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// Indicates that the namespace is encrypted with a customer-managed encryption key
-// (CMEK).
-type NamespaceMetadataEncryptionCmek struct {
-	Cmek NamespaceMetadataEncryptionCmekCmek `json:"cmek" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Cmek        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r NamespaceMetadataEncryptionCmek) RawJSON() string { return r.JSON.raw }
-func (r *NamespaceMetadataEncryptionCmek) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type NamespaceMetadataEncryptionCmekCmek struct {
-	// The name of the CMEK key in use.
-	KeyName string `json:"key_name" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		KeyName     respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r NamespaceMetadataEncryptionCmekCmek) RawJSON() string { return r.JSON.raw }
-func (r *NamespaceMetadataEncryptionCmekCmek) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -2084,7 +2168,7 @@ type NamespaceWriteParams struct {
 	// Any of "cosine_distance", "euclidean_squared".
 	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
 	// The encryption configuration for a namespace.
-	Encryption NamespaceWriteParamsEncryption `json:"encryption,omitzero"`
+	Encryption EncryptionParam `json:"encryption,omitzero"`
 	// The patch and filter specifying which documents to patch.
 	PatchByFilter NamespaceWriteParamsPatchByFilter `json:"patch_by_filter,omitzero"`
 	// A list of documents in columnar format. Each key is a column name, mapped to an
@@ -2111,36 +2195,6 @@ func (r NamespaceWriteParams) MarshalJSON() (data []byte, err error) {
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *NamespaceWriteParams) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// The encryption configuration for a namespace.
-type NamespaceWriteParamsEncryption struct {
-	Cmek NamespaceWriteParamsEncryptionCmek `json:"cmek,omitzero"`
-	paramObj
-}
-
-func (r NamespaceWriteParamsEncryption) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceWriteParamsEncryption
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *NamespaceWriteParamsEncryption) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// The property KeyName is required.
-type NamespaceWriteParamsEncryptionCmek struct {
-	// The identifier of the CMEK key to use for encryption. For GCP, the
-	// fully-qualified resource name of the key. For AWS, the ARN of the key.
-	KeyName string `json:"key_name" api:"required"`
-	paramObj
-}
-
-func (r NamespaceWriteParamsEncryptionCmek) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceWriteParamsEncryptionCmek
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *NamespaceWriteParamsEncryptionCmek) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
