@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"os"
 	"slices"
-	"sync/atomic"
 	"strings"
+	"sync/atomic"
 
 	"github.com/turbopuffer/turbopuffer-go/v2/internal"
 	"github.com/turbopuffer/turbopuffer-go/v2/internal/requestconfig"
