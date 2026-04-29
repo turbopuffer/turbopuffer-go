@@ -1831,8 +1831,9 @@ func (r *NamespaceWriteResponse) UnmarshalJSON(data []byte) error {
 }
 
 type NamespaceBranchFromParams struct {
-	Namespace           param.Opt[string]         `path:"namespace,omitzero" api:"required" json:"-"`
-	BranchFromNamespace BranchFromNamespaceParams `json:"branch_from_namespace,omitzero" api:"required"`
+	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
+	// The namespace to create an instant, copy-on-write clone of.
+	SourceNamespace string `json:"source_namespace" api:"required"`
 	paramObj
 }
 
@@ -1845,8 +1846,13 @@ func (r *NamespaceBranchFromParams) UnmarshalJSON(data []byte) error {
 }
 
 type NamespaceCopyFromParams struct {
-	Namespace         param.Opt[string]       `path:"namespace,omitzero" api:"required" json:"-"`
-	CopyFromNamespace CopyFromNamespaceParams `json:"copy_from_namespace,omitzero" api:"required"`
+	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
+	// The namespace to copy documents from.
+	SourceNamespace string `json:"source_namespace" api:"required"`
+	// (Optional) An API key for the organization containing the source namespace
+	SourceAPIKey param.Opt[string] `json:"source_api_key,omitzero"`
+	// (Optional) The region of the source namespace.
+	SourceRegion param.Opt[string] `json:"source_region,omitzero"`
 	paramObj
 }
 
