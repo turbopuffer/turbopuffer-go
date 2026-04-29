@@ -26,7 +26,8 @@ func TestNamespaceBranchFrom(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
 	)
-	_, err := client.Namespaces.BranchFrom(context.TODO(), turbopuffer.NamespaceBranchFromParams{
+	ns := client.Namespace("ns")
+	_, err := ns.BranchFrom(context.TODO(), turbopuffer.NamespaceBranchFromParams{
 		Namespace:       turbopuffer.String("namespace"),
 		SourceNamespace: "source_namespace",
 	})
@@ -52,7 +53,8 @@ func TestNamespaceCopyFromWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
 	)
-	_, err := client.Namespaces.CopyFrom(context.TODO(), turbopuffer.NamespaceCopyFromParams{
+	ns := client.Namespace("ns")
+	_, err := ns.CopyFrom(context.TODO(), turbopuffer.NamespaceCopyFromParams{
 		Namespace:       turbopuffer.String("namespace"),
 		SourceNamespace: "source_namespace",
 		SourceAPIKey:    turbopuffer.String("source_api_key"),
@@ -199,7 +201,7 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 	ns := client.Namespace("ns")
 	_, err := ns.MultiQuery(context.TODO(), turbopuffer.NamespaceMultiQueryParams{
 		Namespace: turbopuffer.String("namespace"),
-		Queries: []turbopuffer.QueryParam{{
+		Queries: []turbopuffer.NamespaceMultiQueryParamsQuery{{
 			DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 			ExcludeAttributes: []string{"string"},
 			GroupBy:           []string{"string"},
