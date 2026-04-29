@@ -275,7 +275,7 @@ type AggregationGroup map[string]any
 type AttributeSchemaConfig struct {
 	// The data type of the attribute. Valid values: string, int, uint, float, uuid,
 	// datetime, bool, []string, []int, []uint, []float, []uuid, []datetime, []bool,
-	// [DIMS]f16, [DIMS]f32.
+	// [DIMS]f16, [DIMS]f32, {}f16.
 	Type AttributeType `json:"type" api:"required"`
 	// Whether to create an approximate nearest neighbor index for the attribute. Can
 	// be a boolean or a detailed configuration object.
@@ -292,6 +292,9 @@ type AttributeSchemaConfig struct {
 	Glob bool `json:"glob"`
 	// Whether to enable Regex filters on this attribute.
 	Regex bool `json:"regex"`
+	// Whether to create a sparse kNN index for the attribute. Requires the `{}f16`
+	// type.
+	SparseKnn AttributeSchemaConfigSparseKnn `json:"sparse_knn"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Type           respjson.Field
@@ -301,6 +304,7 @@ type AttributeSchemaConfig struct {
 		Fuzzy          respjson.Field
 		Glob           respjson.Field
 		Regex          respjson.Field
+		SparseKnn      respjson.Field
 		ExtraFields    map[string]respjson.Field
 		raw            string
 	} `json:"-"`
@@ -341,13 +345,32 @@ func (r *AttributeSchemaConfigAnn) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Whether to create a sparse kNN index for the attribute. Requires the `{}f16`
+// type.
+type AttributeSchemaConfigSparseKnn struct {
+	// A function used to calculate sparse vector similarity.
+	DistanceMetric constant.DotProduct `json:"distance_metric" default:"dot_product"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		DistanceMetric respjson.Field
+		ExtraFields    map[string]respjson.Field
+		raw            string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r AttributeSchemaConfigSparseKnn) RawJSON() string { return r.JSON.raw }
+func (r *AttributeSchemaConfigSparseKnn) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Detailed configuration for an attribute attached to a document.
 //
 // The property Type is required.
 type AttributeSchemaConfigParam struct {
 	// The data type of the attribute. Valid values: string, int, uint, float, uuid,
 	// datetime, bool, []string, []int, []uint, []float, []uuid, []datetime, []bool,
-	// [DIMS]f16, [DIMS]f32.
+	// [DIMS]f16, [DIMS]f32, {}f16.
 	Type AttributeType `json:"type" api:"required"`
 	// Whether or not the attributes can be used in filters.
 	Filterable param.Opt[bool] `json:"filterable,omitzero"`
@@ -364,6 +387,9 @@ type AttributeSchemaConfigParam struct {
 	// the `string` or `[]string` type, and by default, BM25-enabled attributes are not
 	// filterable. You can override this by setting `filterable: true`.
 	FullTextSearch *FullTextSearchConfigParam `json:"full_text_search,omitzero"`
+	// Whether to create a sparse kNN index for the attribute. Requires the `{}f16`
+	// type.
+	SparseKnn AttributeSchemaConfigSparseKnnParam `json:"sparse_knn,omitzero"`
 	paramObj
 }
 
@@ -389,6 +415,31 @@ func (r AttributeSchemaConfigAnnParam) MarshalJSON() (data []byte, err error) {
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *AttributeSchemaConfigAnnParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func NewAttributeSchemaConfigSparseKnnParam() AttributeSchemaConfigSparseKnnParam {
+	return AttributeSchemaConfigSparseKnnParam{
+		DistanceMetric: "dot_product",
+	}
+}
+
+// Whether to create a sparse kNN index for the attribute. Requires the `{}f16`
+// type.
+//
+// This struct has a constant value, construct it with
+// [NewAttributeSchemaConfigSparseKnnParam].
+type AttributeSchemaConfigSparseKnnParam struct {
+	// A function used to calculate sparse vector similarity.
+	DistanceMetric constant.DotProduct `json:"distance_metric" default:"dot_product"`
+	paramObj
+}
+
+func (r AttributeSchemaConfigSparseKnnParam) MarshalJSON() (data []byte, err error) {
+	type shadow AttributeSchemaConfigSparseKnnParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *AttributeSchemaConfigSparseKnnParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
