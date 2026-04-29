@@ -406,10 +406,12 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 					Stemming:        turbopuffer.Bool(true),
 					Tokenizer:       turbopuffer.TokenizerPreTokenizedArray,
 				},
-				Fuzzy:     turbopuffer.Bool(true),
-				Glob:      turbopuffer.Bool(true),
-				Regex:     turbopuffer.Bool(true),
-				SparseKnn: turbopuffer.NewAttributeSchemaConfigSparseKnnParam(),
+				Fuzzy: turbopuffer.Bool(true),
+				Glob:  turbopuffer.Bool(true),
+				Regex: turbopuffer.Bool(true),
+				SparseKnn: turbopuffer.AttributeSchemaConfigSparseKnnParam{
+					DistanceMetric: turbopuffer.SparseDistanceMetricDotProduct,
+				},
 			},
 		},
 	})
@@ -503,10 +505,12 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 					Stemming:        turbopuffer.Bool(true),
 					Tokenizer:       turbopuffer.TokenizerPreTokenizedArray,
 				},
-				Fuzzy:     turbopuffer.Bool(true),
-				Glob:      turbopuffer.Bool(true),
-				Regex:     turbopuffer.Bool(true),
-				SparseKnn: turbopuffer.NewAttributeSchemaConfigSparseKnnParam(),
+				Fuzzy: turbopuffer.Bool(true),
+				Glob:  turbopuffer.Bool(true),
+				Regex: turbopuffer.Bool(true),
+				SparseKnn: turbopuffer.AttributeSchemaConfigSparseKnnParam{
+					DistanceMetric: turbopuffer.SparseDistanceMetricDotProduct,
+				},
 			},
 		},
 		UpsertColumns: turbopuffer.ColumnsParam{

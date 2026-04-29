@@ -341,7 +341,9 @@ func (r *AttributeSchemaConfigAnn) UnmarshalJSON(data []byte) error {
 // type.
 type AttributeSchemaConfigSparseKnn struct {
 	// A function used to calculate sparse vector similarity.
-	DistanceMetric constant.DotProduct `json:"distance_metric" default:"dot_product"`
+	//
+	// Any of "dot_product".
+	DistanceMetric SparseDistanceMetric `json:"distance_metric" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		DistanceMetric respjson.Field
@@ -410,20 +412,15 @@ func (r *AttributeSchemaConfigAnnParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func NewAttributeSchemaConfigSparseKnnParam() AttributeSchemaConfigSparseKnnParam {
-	return AttributeSchemaConfigSparseKnnParam{
-		DistanceMetric: "dot_product",
-	}
-}
-
 // Whether to create a sparse kNN index for the attribute. Requires the `{}f16`
 // type.
 //
-// This struct has a constant value, construct it with
-// [NewAttributeSchemaConfigSparseKnnParam].
+// The property DistanceMetric is required.
 type AttributeSchemaConfigSparseKnnParam struct {
 	// A function used to calculate sparse vector similarity.
-	DistanceMetric constant.DotProduct `json:"distance_metric" default:"dot_product"`
+	//
+	// Any of "dot_product".
+	DistanceMetric SparseDistanceMetric `json:"distance_metric,omitzero" api:"required"`
 	paramObj
 }
 
@@ -1360,6 +1357,13 @@ func (r SaturateParams) MarshalJSON() (data []byte, err error) {
 func (r *SaturateParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
+
+// A function used to calculate sparse vector similarity.
+type SparseDistanceMetric string
+
+const (
+	SparseDistanceMetricDotProduct SparseDistanceMetric = "dot_product"
+)
 
 // The tokenizer to use for full-text search on an attribute. Defaults to
 // `word_v3`.
