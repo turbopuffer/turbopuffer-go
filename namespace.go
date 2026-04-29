@@ -1757,8 +1757,14 @@ type NamespaceBranchFromParams struct {
 }
 
 func (r NamespaceBranchFromParams) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceBranchFromParams
-	return param.MarshalObject(r, (*shadow)(&r))
+	wrapper := struct {
+		BranchFromNamespace BranchFromNamespaceParams `json:"branch_from_namespace,omitzero"`
+	}{
+		BranchFromNamespace: BranchFromNamespaceParams{
+			SourceNamespace: r.SourceNamespace,
+		},
+	}
+	return param.MarshalObject(r, &wrapper)
 }
 func (r *NamespaceBranchFromParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
@@ -1776,8 +1782,16 @@ type NamespaceCopyFromParams struct {
 }
 
 func (r NamespaceCopyFromParams) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceCopyFromParams
-	return param.MarshalObject(r, (*shadow)(&r))
+	wrapper := struct {
+		CopyFromNamespace CopyFromNamespaceParams `json:"copy_from_namespace,omitzero"`
+	}{
+		CopyFromNamespace: CopyFromNamespaceParams{
+			SourceNamespace: r.SourceNamespace,
+			SourceAPIKey:    r.SourceAPIKey,
+			SourceRegion:    r.SourceRegion,
+		},
+	}
+	return param.MarshalObject(r, &wrapper)
 }
 func (r *NamespaceCopyFromParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
