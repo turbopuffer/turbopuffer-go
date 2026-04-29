@@ -939,24 +939,24 @@ const (
 
 type RankByAttributes []RankByAttribute
 type RankByKnn struct {
-	attr  string
-	value []float32
+	attr string
+	f2   VectorExpr
 }
 
 func NewRankByKnn(
 	attr string,
-	value []float32,
+	f2 VectorExpr,
 ) RankByKnn {
 	return RankByKnn{
 		attr,
-		value,
+		f2,
 	}
 }
 func (v RankByKnn) MarshalJSON() ([]byte, error) {
 	return shimjson.Marshal([]any{
 		v.attr,
 		"kNN",
-		v.value,
+		v.f2,
 	})
 }
 
@@ -1249,23 +1249,23 @@ func (v RankByTextSum) MarshalJSON() ([]byte, error) {
 }
 
 type RankByVector struct {
-	attr  string
-	value []float32
+	attr string
+	f2   VectorExpr
 }
 
 func NewRankByVector(
 	attr string,
-	value []float32,
+	f2 VectorExpr,
 ) RankByVector {
 	return RankByVector{
 		attr,
-		value,
+		f2,
 	}
 }
 func (v RankByVector) MarshalJSON() ([]byte, error) {
 	return shimjson.Marshal([]any{
 		v.attr,
 		"ANN",
-		v.value,
+		v.f2,
 	})
 }
