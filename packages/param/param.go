@@ -2,7 +2,7 @@ package param
 
 import (
 	"encoding/json"
-	"github.com/turbopuffer/turbopuffer-go/internal/encoding/json/sentinel"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/encoding/json/sentinel"
 	"reflect"
 )
 

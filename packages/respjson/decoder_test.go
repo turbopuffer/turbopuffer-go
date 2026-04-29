@@ -3,8 +3,8 @@ package respjson_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/turbopuffer/turbopuffer-go/internal/apijson"
-	rj "github.com/turbopuffer/turbopuffer-go/packages/respjson"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/apijson"
+	rj "github.com/turbopuffer/turbopuffer-go/v2/packages/respjson"
 	"reflect"
 	"testing"
 )

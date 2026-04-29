@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/turbopuffer/turbopuffer-go"
-	"github.com/turbopuffer/turbopuffer-go/internal"
-	"github.com/turbopuffer/turbopuffer-go/option"
+	"github.com/turbopuffer/turbopuffer-go/v2"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal"
+	"github.com/turbopuffer/turbopuffer-go/v2/option"
 )
 
 type closureTransport struct {

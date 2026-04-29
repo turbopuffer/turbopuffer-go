@@ -13,7 +13,7 @@ import (
 
 	"github.com/tidwall/sjson"
 
-	shimjson "github.com/turbopuffer/turbopuffer-go/internal/encoding/json"
+	shimjson "github.com/turbopuffer/turbopuffer-go/v2/internal/encoding/json"
 )
 
 var encoders sync.Map // map[encoderEntry]encoderFunc

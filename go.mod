@@ -1,4 +1,4 @@
-module github.com/turbopuffer/turbopuffer-go
+module github.com/turbopuffer/turbopuffer-go/v2
 
 go 1.22
 

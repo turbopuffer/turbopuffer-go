@@ -1,8 +1,8 @@
 package sentinel_test
 
 import (
-	"github.com/turbopuffer/turbopuffer-go/internal/encoding/json/sentinel"
-	"github.com/turbopuffer/turbopuffer-go/packages/param"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/encoding/json/sentinel"
+	"github.com/turbopuffer/turbopuffer-go/v2/packages/param"
 	"reflect"
 	"slices"
 	"testing"

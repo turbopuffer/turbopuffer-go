@@ -1,7 +1,7 @@
 package apijson
 
 import (
-	"github.com/turbopuffer/turbopuffer-go/packages/respjson"
+	"github.com/turbopuffer/turbopuffer-go/v2/packages/respjson"
 	"reflect"
 )
 
