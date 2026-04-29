@@ -441,8 +441,8 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		},
 		DisableBackpressure: turbopuffer.Bool(true),
 		DistanceMetric:      turbopuffer.DistanceMetricCosineDistance,
-		Encryption: turbopuffer.NamespaceWriteParamsEncryption{
-			Cmek: turbopuffer.NamespaceWriteParamsEncryptionCmek{
+		Encryption: turbopuffer.EncryptionParam{
+			CustomerManaged: &turbopuffer.EncryptionCustomerManagedParam{
 				KeyName: "key_name",
 			},
 		},
