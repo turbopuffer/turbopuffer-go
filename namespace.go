@@ -1029,43 +1029,6 @@ func (r *PinningConfigParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Query, filter, full-text search and vector search documents.
-type QueryParam struct {
-	// The number of results to return.
-	TopK param.Opt[int64] `json:"top_k,omitzero"`
-	// Aggregations to compute over all documents in the namespace that match the
-	// filters.
-	AggregateBy map[string]AggregateBy `json:"aggregate_by,omitzero"`
-	// A function used to calculate vector similarity.
-	//
-	// Any of "cosine_distance", "euclidean_squared".
-	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
-	// List of attribute names to exclude from the response. All other attributes will
-	// be included in the response.
-	ExcludeAttributes []string `json:"exclude_attributes,omitzero"`
-	// Exact filters for attributes to refine search results for. Think of it as a SQL
-	// WHERE clause.
-	Filters Filter `json:"filters,omitzero"`
-	// Groups documents by the specified attributes (the "group key") before computing
-	// aggregates. Aggregates are computed separately for each group.
-	GroupBy []string `json:"group_by,omitzero"`
-	// Whether to include attributes in the response.
-	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
-	// Limits the documents returned by a query.
-	Limit LimitParam `json:"limit,omitzero"`
-	// How to rank the documents in the namespace.
-	RankBy RankBy `json:"rank_by,omitzero"`
-	paramObj
-}
-
-func (r QueryParam) MarshalJSON() (data []byte, err error) {
-	type shadow QueryParam
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *QueryParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
 // The billing information for a query.
 type QueryBilling struct {
 	// The number of billable logical bytes queried from the namespace.
@@ -1557,7 +1520,7 @@ type NamespaceExplainQueryParamsConsistency struct {
 	// The query's consistency level.
 	//
 	// Any of "strong", "eventual".
-	Level NamespaceExplainQueryParamsConsistencyLevel `json:"level,omitzero"`
+	Level string `json:"level,omitzero"`
 	paramObj
 }
 
@@ -1569,13 +1532,11 @@ func (r *NamespaceExplainQueryParamsConsistency) UnmarshalJSON(data []byte) erro
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// The query's consistency level.
-type NamespaceExplainQueryParamsConsistencyLevel string
-
-const (
-	NamespaceExplainQueryParamsConsistencyLevelStrong   NamespaceExplainQueryParamsConsistencyLevel = "strong"
-	NamespaceExplainQueryParamsConsistencyLevelEventual NamespaceExplainQueryParamsConsistencyLevel = "eventual"
-)
+func init() {
+	apijson.RegisterFieldValidator[NamespaceExplainQueryParamsConsistency](
+		"level", "strong", "eventual",
+	)
+}
 
 type NamespaceHintCacheWarmParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
@@ -1588,8 +1549,8 @@ type NamespaceMetadataParams struct {
 }
 
 type NamespaceMultiQueryParams struct {
-	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
-	Queries   []QueryParam      `json:"queries,omitzero" api:"required"`
+	Namespace param.Opt[string]                `path:"namespace,omitzero" api:"required" json:"-"`
+	Queries   []NamespaceMultiQueryParamsQuery `json:"queries,omitzero" api:"required"`
 	// The consistency level for a query.
 	Consistency NamespaceMultiQueryParamsConsistency `json:"consistency,omitzero"`
 	// The encoding to use for vectors in the response.
@@ -1607,12 +1568,49 @@ func (r *NamespaceMultiQueryParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Query, filter, full-text search and vector search documents.
+type NamespaceMultiQueryParamsQuery struct {
+	// The number of results to return.
+	TopK param.Opt[int64] `json:"top_k,omitzero"`
+	// Aggregations to compute over all documents in the namespace that match the
+	// filters.
+	AggregateBy map[string]any `json:"aggregate_by,omitzero"`
+	// A function used to calculate vector similarity.
+	//
+	// Any of "cosine_distance", "euclidean_squared".
+	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
+	// List of attribute names to exclude from the response. All other attributes will
+	// be included in the response.
+	ExcludeAttributes []string `json:"exclude_attributes,omitzero"`
+	// Exact filters for attributes to refine search results for. Think of it as a SQL
+	// WHERE clause.
+	Filters any `json:"filters,omitzero"`
+	// Groups documents by the specified attributes (the "group key") before computing
+	// aggregates. Aggregates are computed separately for each group.
+	GroupBy []string `json:"group_by,omitzero"`
+	// Whether to include attributes in the response.
+	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
+	// Limits the documents returned by a query.
+	Limit LimitParam `json:"limit,omitzero"`
+	// How to rank the documents in the namespace.
+	RankBy any `json:"rank_by,omitzero"`
+	paramObj
+}
+
+func (r NamespaceMultiQueryParamsQuery) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceMultiQueryParamsQuery
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceMultiQueryParamsQuery) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // The consistency level for a query.
 type NamespaceMultiQueryParamsConsistency struct {
 	// The query's consistency level.
 	//
 	// Any of "strong", "eventual".
-	Level NamespaceMultiQueryParamsConsistencyLevel `json:"level,omitzero"`
+	Level string `json:"level,omitzero"`
 	paramObj
 }
 
@@ -1624,13 +1622,11 @@ func (r *NamespaceMultiQueryParamsConsistency) UnmarshalJSON(data []byte) error 
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// The query's consistency level.
-type NamespaceMultiQueryParamsConsistencyLevel string
-
-const (
-	NamespaceMultiQueryParamsConsistencyLevelStrong   NamespaceMultiQueryParamsConsistencyLevel = "strong"
-	NamespaceMultiQueryParamsConsistencyLevelEventual NamespaceMultiQueryParamsConsistencyLevel = "eventual"
-)
+func init() {
+	apijson.RegisterFieldValidator[NamespaceMultiQueryParamsConsistency](
+		"level", "strong", "eventual",
+	)
+}
 
 type NamespaceQueryParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
@@ -1680,7 +1676,7 @@ type NamespaceQueryParamsConsistency struct {
 	// The query's consistency level.
 	//
 	// Any of "strong", "eventual".
-	Level NamespaceQueryParamsConsistencyLevel `json:"level,omitzero"`
+	Level string `json:"level,omitzero"`
 	paramObj
 }
 
@@ -1692,13 +1688,11 @@ func (r *NamespaceQueryParamsConsistency) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// The query's consistency level.
-type NamespaceQueryParamsConsistencyLevel string
-
-const (
-	NamespaceQueryParamsConsistencyLevelStrong   NamespaceQueryParamsConsistencyLevel = "strong"
-	NamespaceQueryParamsConsistencyLevelEventual NamespaceQueryParamsConsistencyLevel = "eventual"
-)
+func init() {
+	apijson.RegisterFieldValidator[NamespaceQueryParamsConsistency](
+		"level", "strong", "eventual",
+	)
+}
 
 type NamespaceRecallParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
