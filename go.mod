@@ -9,7 +9,3 @@ require (
 )
 
 require github.com/tidwall/match v1.1.1 // indirect
-
-// Versions before v1.12.2 contain a data race in Client.Namespace.
-// See https://github.com/turbopuffer/turbopuffer-go/pull/88.
-retract [v0.1.0-alpha.1, v1.12.1]
