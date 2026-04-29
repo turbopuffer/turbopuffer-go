@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.0-alpha.2 (2026-04-29)
+
+Full Changelog: [v2.0.0-alpha.1...v2.0.0-alpha.2](https://github.com/turbopuffer/turbopuffer-go/compare/v2.0.0-alpha.1...v2.0.0-alpha.2)
+
+### Bug Fixes
+
+* wrap branch_from/copy_from syntax sugar bodies ([2345916](https://github.com/turbopuffer/turbopuffer-go/commit/234591688f5b0068be0e9826d2637e8f80833871))
+
 ## 2.0.0-alpha.1 (2026-04-29)
 
 Full Changelog: [v2.0.0-alpha.1...v2.0.0-alpha.1](https://github.com/turbopuffer/turbopuffer-go/compare/v2.0.0-alpha.1...v2.0.0-alpha.1)
