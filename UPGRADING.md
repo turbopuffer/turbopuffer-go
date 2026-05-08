@@ -79,8 +79,7 @@ changes.
   })
   ```
 
-- The `encryption` parameter has been restructured. A new `Default` variant
-  lets you explicitly opt out of CMEK on writes to a CMEK-enabled namespace.
+- The `encryption` parameter has been restructured.
 
   Old:
 
@@ -101,6 +100,9 @@ changes.
       Encryption: turbopuffer.EncryptionParamCustomerManaged("..."),
   })
   ```
+
+  A new `Default` variant lets you explicitly opt out of CMEK on writes to a
+  CMEK-enabled namespace.
 
 ## v1.0
 
