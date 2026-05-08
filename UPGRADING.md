@@ -101,5 +101,5 @@ changes.
   })
   ```
 
-  A new `Default` variant lets you explicitly opt out of CMEK on writes to a
-  CMEK-enabled namespace.
+  A new `Default` variant lets you migrate a namespace from CMEK to default
+  encryption.
