@@ -230,7 +230,7 @@ func (r *NamespaceService) UpdateMetadata(ctx context.Context, params NamespaceU
 		err = errors.New("missing required namespace parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v2/namespaces/%s/metadata", url.PathEscape(params.Namespace.Value))
+	path := fmt.Sprintf("v1/namespaces/%s/metadata", url.PathEscape(params.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPatch, path, params, &res, opts...)
 	return res, err
 }
