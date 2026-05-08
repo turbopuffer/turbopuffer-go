@@ -79,10 +79,8 @@ changes.
   })
   ```
 
-- The `Encryption` field on `NamespaceWriteParams` is now a discriminated union
-  (`EncryptionParam`) rather than an object with a `Cmek` field. A new
-  `Default` variant lets you explicitly opt out of CMEK on writes to a
-  CMEK-enabled namespace.
+- The `encryption` parameter has been restructured. A new `Default` variant
+  lets you explicitly opt out of CMEK on writes to a CMEK-enabled namespace.
 
   Old:
 
