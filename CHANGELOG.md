@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.0.0-alpha.4 (2026-05-08)
+
+Full Changelog: [v2.0.0-alpha.3...v2.0.0-alpha.4](https://github.com/turbopuffer/turbopuffer-go/compare/v2.0.0-alpha.3...v2.0.0-alpha.4)
+
+### Features
+
+* spec: move update_metadata to v1 ([f2ec0e9](https://github.com/turbopuffer/turbopuffer-go/commit/f2ec0e9aabbd47e3135a13440cbf266fef0a42c4))
+
+
+### Bug Fixes
+
+* **go:** avoid panic when http.DefaultTransport is wrapped ([fde3f7a](https://github.com/turbopuffer/turbopuffer-go/commit/fde3f7a22e7b7a2dde49241f3caa2f6b61d58d30))
+
+
+### Chores
+
+* avoid embedding reflect.Type for dead code elimination ([9567f84](https://github.com/turbopuffer/turbopuffer-go/commit/9567f846900aa1d87a602a03de95188cdc9ed842))
+* redact api-key headers in debug logs ([1f0353a](https://github.com/turbopuffer/turbopuffer-go/commit/1f0353a26a71264d6e67e3bf141a20d7ed147451))
+
 ## 2.0.0-alpha.3 (2026-04-29)
 
 Full Changelog: [v2.0.0-alpha.2...v2.0.0-alpha.3](https://github.com/turbopuffer/turbopuffer-go/compare/v2.0.0-alpha.2...v2.0.0-alpha.3)
