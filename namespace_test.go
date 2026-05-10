@@ -116,7 +116,7 @@ func TestNamespaceExplainQueryWithOptionalParams(t *testing.T) {
 		DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 		ExcludeAttributes: []string{"string"},
 		Filters:           map[string]any{},
-		GroupBy:           []string{"string"},
+		GroupBy:           []any{map[string]any{}},
 		IncludeAttributes: turbopuffer.IncludeAttributesParam{
 			Bool: turbopuffer.Bool(true),
 		},
@@ -212,7 +212,7 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 			DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 			ExcludeAttributes: []string{"string"},
 			Filters:           map[string]any{},
-			GroupBy:           []string{"string"},
+			GroupBy:           []any{map[string]any{}},
 			IncludeAttributes: turbopuffer.IncludeAttributesParam{
 				Bool: turbopuffer.Bool(true),
 			},
@@ -264,7 +264,7 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 		ExcludeAttributes: []string{"string"},
 		Filters:           map[string]any{},
-		GroupBy:           []string{"string"},
+		GroupBy:           []any{map[string]any{}},
 		IncludeAttributes: turbopuffer.IncludeAttributesParam{
 			Bool: turbopuffer.Bool(true),
 		},
