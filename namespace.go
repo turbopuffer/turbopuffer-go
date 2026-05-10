@@ -1827,7 +1827,7 @@ type NamespaceExplainQueryParams struct {
 	Filters Filter `json:"filters,omitzero"`
 	// Groups documents by the specified attributes (the "group key") before computing
 	// aggregates. Aggregates are computed separately for each group.
-	GroupBy []any `json:"group_by,omitzero"`
+	GroupBy []GroupBy `json:"group_by,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
 	// Limits the documents returned by a query.
@@ -1933,7 +1933,7 @@ type NamespaceMultiQueryParamsQuery struct {
 	Filters any `json:"filters,omitzero"`
 	// Groups documents by the specified attributes (the "group key") before computing
 	// aggregates. Aggregates are computed separately for each group.
-	GroupBy []any `json:"group_by,omitzero"`
+	GroupBy []GroupBy `json:"group_by,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
 	// Limits the documents returned by a query.
@@ -1989,7 +1989,7 @@ type NamespaceQueryParams struct {
 	Filters Filter `json:"filters,omitzero"`
 	// Groups documents by the specified attributes (the "group key") before computing
 	// aggregates. Aggregates are computed separately for each group.
-	GroupBy []any `json:"group_by,omitzero"`
+	GroupBy []GroupBy `json:"group_by,omitzero"`
 	// Whether to include attributes in the response.
 	IncludeAttributes IncludeAttributesParam `json:"include_attributes,omitzero"`
 	// Limits the documents returned by a query.

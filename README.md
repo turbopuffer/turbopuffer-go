@@ -80,7 +80,7 @@ func main() {
 	queryRes, err := ns.Query(
 		ctx,
 		turbopuffer.NamespaceQueryParams{
-			RankBy: turbopuffer.NewRankByVector("vector", []float32{0.1, 0.2}),
+			RankBy: turbopuffer.NewRankByAnn("vector", []float32{0.1, 0.2}),
 			TopK:   turbopuffer.Int(10),
 			Filters: turbopuffer.NewFilterAnd([]turbopuffer.Filter{
 				turbopuffer.NewFilterEq("name", "foo"),

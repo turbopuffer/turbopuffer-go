@@ -65,7 +65,7 @@ func main() {
 	// Do a vector query.
 	{
 		res, err := namespace.Query(ctx, turbopuffer.NamespaceQueryParams{
-			RankBy:            turbopuffer.NewRankByVector("vector", []float32{3.0, 4.0, 5.0}),
+			RankBy:            turbopuffer.NewRankByAnn("vector", []float32{3.0, 4.0, 5.0}),
 			TopK:              turbopuffer.Int(10),
 			IncludeAttributes: turbopuffer.IncludeAttributesParam{Bool: turbopuffer.Bool(true)},
 			Filters: turbopuffer.NewFilterAnd([]turbopuffer.Filter{
