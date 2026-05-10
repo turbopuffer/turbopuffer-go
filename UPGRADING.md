@@ -6,6 +6,16 @@ changes.
 
 ## v2.0
 
+- The module path has been bumped to `github.com/turbopuffer/turbopuffer-go/v2`.
+  Update your imports accordingly:
+
+  ```go
+  import (
+      "github.com/turbopuffer/turbopuffer-go/v2"
+      "github.com/turbopuffer/turbopuffer-go/v2/option"
+  )
+  ```
+
 - The `NewRankByVector` constructor has been renamed to `NewRankByAnn`.
 
   Old:
@@ -113,14 +123,4 @@ changes.
   ns.BranchFrom(ctx, turbopuffer.NamespaceBranchFromParams{
       SourceNamespace: "src",
   })
-  ```
-
-- The module path has been bumped to `github.com/turbopuffer/turbopuffer-go/v2`.
-  Update your imports accordingly:
-
-  ```go
-  import (
-      "github.com/turbopuffer/turbopuffer-go/v2"
-      "github.com/turbopuffer/turbopuffer-go/v2/option"
-  )
   ```
