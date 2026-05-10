@@ -114,7 +114,7 @@ func TestNamespaceExplainQueryWithOptionalParams(t *testing.T) {
 		},
 		DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 		ExcludeAttributes: []string{"string"},
-		GroupBy:           []any{map[string]any{}},
+		GroupBy:           []turbopuffer.GroupBy{turbopuffer.NewGroupByAttr("string")},
 		IncludeAttributes: turbopuffer.IncludeAttributesParam{
 			Bool: turbopuffer.Bool(true),
 		},
@@ -201,10 +201,10 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 	ns := client.Namespace("ns")
 	_, err := ns.MultiQuery(context.TODO(), turbopuffer.NamespaceMultiQueryParams{
 		Namespace: turbopuffer.String("namespace"),
-		Queries: []turbopuffer.NamespaceMultiQueryParamsQuery{{
+		Queries: []turbopuffer.QueryParam{{
 			DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 			ExcludeAttributes: []string{"string"},
-			GroupBy:           []any{map[string]any{}},
+			GroupBy:           []turbopuffer.GroupBy{turbopuffer.NewGroupByAttr("string")},
 			IncludeAttributes: turbopuffer.IncludeAttributesParam{
 				Bool: turbopuffer.Bool(true),
 			},
@@ -215,7 +215,7 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 					Limit:      0,
 				},
 			},
-			RankBy: turbopuffer.NewRankByVector("vector", []float32{0}),
+			RankBy: turbopuffer.NewRankByAnn("vector", []float32{0}),
 			TopK:   turbopuffer.Int(0),
 		}},
 		Consistency: turbopuffer.NamespaceMultiQueryParamsConsistency{
@@ -253,7 +253,7 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		},
 		DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 		ExcludeAttributes: []string{"string"},
-		GroupBy:           []any{map[string]any{}},
+		GroupBy:           []turbopuffer.GroupBy{turbopuffer.NewGroupByAttr("string")},
 		IncludeAttributes: turbopuffer.IncludeAttributesParam{
 			Bool: turbopuffer.Bool(true),
 		},
@@ -264,7 +264,7 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 				Limit:      0,
 			},
 		},
-		RankBy:         turbopuffer.NewRankByVector("vector", []float32{0}),
+		RankBy:         turbopuffer.NewRankByAnn("vector", []float32{0}),
 		TopK:           turbopuffer.Int(0),
 		VectorEncoding: turbopuffer.VectorEncodingFloat,
 	})
