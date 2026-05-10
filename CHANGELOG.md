@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.0.0-alpha.5 (2026-05-10)
+
+Full Changelog: [v2.0.0-alpha.4...v2.0.0-alpha.5](https://github.com/turbopuffer/turbopuffer-go/compare/v2.0.0-alpha.4...v2.0.0-alpha.5)
+
+### Features
+
+* **go:** add QueryParam alias for NamespaceMultiQueryParamsQuery ([46b9fdf](https://github.com/turbopuffer/turbopuffer-go/commit/46b9fdfaea0863110e03f5b1055361c9f7b91f7c))
+* spec: rename RankByVector/RankBySparseVector to RankByAnn/RankBySparseKnn ([633b37d](https://github.com/turbopuffer/turbopuffer-go/commit/633b37dcc858aa03bc1eb416fcdb6d0a9f4b50d5))
+
+
+### Bug Fixes
+
+* **go:** use QueryParam, GroupBy, and RankByAnn in tests and examples ([58b91b8](https://github.com/turbopuffer/turbopuffer-go/commit/58b91b8210764cdf48318d2167a46a0a4565d52d))
+
 ## 2.0.0-alpha.4 (2026-05-08)
 
 Full Changelog: [v2.0.0-alpha.3...v2.0.0-alpha.4](https://github.com/turbopuffer/turbopuffer-go/compare/v2.0.0-alpha.3...v2.0.0-alpha.4)
