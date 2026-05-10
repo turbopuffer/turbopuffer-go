@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.0 (2026-05-10)
+
+Full Changelog: [v2.0.0-alpha.6...v2.0.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.0.0-alpha.6...v2.0.0)
+
+### Documentation
+
+* document v2.0 breaking changes in UPGRADING.md ([393ee30](https://github.com/turbopuffer/turbopuffer-go/commit/393ee303026a3506c58c683dc4f28f9313558c95))
+
 ## 2.0.0-alpha.6 (2026-05-10)
 
 Full Changelog: [v2.0.0-alpha.5...v2.0.0-alpha.6](https://github.com/turbopuffer/turbopuffer-go/compare/v2.0.0-alpha.5...v2.0.0-alpha.6)
