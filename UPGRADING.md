@@ -6,15 +6,48 @@ changes.
 
 ## v2.0
 
-- The module path has been bumped to `github.com/turbopuffer/turbopuffer-go/v2`.
-  Update your imports accordingly:
+- The `NewRankByVector` constructor has been renamed to `NewRankByAnn`.
+
+  Old:
 
   ```go
-  import (
-      "github.com/turbopuffer/turbopuffer-go/v2"
-      "github.com/turbopuffer/turbopuffer-go/v2/option"
-  )
+  ns.Query(ctx, turbopuffer.NamespaceQueryParams{
+      RankBy: turbopuffer.NewRankByVector("vector", []float32{0.1, 0.2}),
+  })
   ```
+
+  New:
+
+  ```go
+  ns.Query(ctx, turbopuffer.NamespaceQueryParams{
+      RankBy: turbopuffer.NewRankByAnn("vector", []float32{0.1, 0.2}),
+  })
+  ```
+
+- The `encryption` parameter has been restructured.
+
+  Old:
+
+  ```go
+  ns.Write(ctx, turbopuffer.NamespaceWriteParams{
+      UpsertRows: []turbopuffer.RowParam{ /* ... */ },
+      Encryption: turbopuffer.NamespaceWriteParamsEncryption{
+          Cmek: turbopuffer.NamespaceWriteParamsEncryptionCmek{KeyName: "..."},
+      },
+  })
+  ```
+
+  New:
+
+  ```go
+  ns.Write(ctx, turbopuffer.NamespaceWriteParams{
+      UpsertRows: []turbopuffer.RowParam{ /* ... */ },
+      Encryption: turbopuffer.EncryptionParamCustomerManaged("..."),
+  })
+  ```
+
+  A new `Default` variant lets you migrate a namespace from CMEK to default
+  encryption.
 
 - The `CopyFromNamespace` field on `NamespaceWriteParams` has been removed in
   favor of a dedicated `CopyFrom` method.
@@ -60,47 +93,14 @@ changes.
   })
   ```
 
-- The `encryption` parameter has been restructured.
-
-  Old:
-
-  ```go
-  ns.Write(ctx, turbopuffer.NamespaceWriteParams{
-      UpsertRows: []turbopuffer.RowParam{ /* ... */ },
-      Encryption: turbopuffer.NamespaceWriteParamsEncryption{
-          Cmek: turbopuffer.NamespaceWriteParamsEncryptionCmek{KeyName: "..."},
-      },
-  })
-  ```
-
-  New:
+- The module path has been bumped to `github.com/turbopuffer/turbopuffer-go/v2`.
+  Update your imports accordingly:
 
   ```go
-  ns.Write(ctx, turbopuffer.NamespaceWriteParams{
-      UpsertRows: []turbopuffer.RowParam{ /* ... */ },
-      Encryption: turbopuffer.EncryptionParamCustomerManaged("..."),
-  })
-  ```
-
-  A new `Default` variant lets you migrate a namespace from CMEK to default
-  encryption.
-
-- The `NewRankByVector` constructor has been renamed to `NewRankByAnn`.
-
-  Old:
-
-  ```go
-  ns.Query(ctx, turbopuffer.NamespaceQueryParams{
-      RankBy: turbopuffer.NewRankByVector("vector", []float32{0.1, 0.2}),
-  })
-  ```
-
-  New:
-
-  ```go
-  ns.Query(ctx, turbopuffer.NamespaceQueryParams{
-      RankBy: turbopuffer.NewRankByAnn("vector", []float32{0.1, 0.2}),
-  })
+  import (
+      "github.com/turbopuffer/turbopuffer-go/v2"
+      "github.com/turbopuffer/turbopuffer-go/v2/option"
+  )
   ```
 
 - `NamespaceQueryParams.GroupBy` is now `[]turbopuffer.GroupBy` instead of
