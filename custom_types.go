@@ -855,13 +855,67 @@ func (v FilterRegex) MarshalJSON() ([]byte, error) {
 	})
 }
 
+type GroupBy interface {
+	sealed_GroupBy()
+}
+
+func (v GroupByAttr) sealed_GroupBy() {}
+func (v GroupByExpr) sealed_GroupBy() {}
+
+type GroupByAttr string
+
+func NewGroupByAttr(value string) GroupByAttr {
+	return GroupByAttr(value)
+}
+func (v GroupByAttr) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal(string(v))
+}
+
+type GroupByExpr struct {
+	Name  string
+	Value GroupByFunction
+}
+
+func NewGroupByExpr(name string, value GroupByFunction) GroupByExpr {
+	return GroupByExpr{Name: name, Value: value}
+}
+func (v GroupByExpr) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal(map[string]any{
+		v.Name: v.Value,
+	})
+}
+
+type GroupByFunction interface {
+	sealed_GroupByFunction()
+}
+
+func (v GroupByFunctionForEachUnique) sealed_GroupByFunction() {}
+
+type GroupByFunctionForEachUnique struct {
+	attr string
+}
+
+func NewGroupByFunctionForEachUnique(
+	attr string,
+) GroupByFunctionForEachUnique {
+	return GroupByFunctionForEachUnique{
+		attr,
+	}
+}
+func (v GroupByFunctionForEachUnique) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		"ForEachUnique",
+		v.attr,
+	})
+}
+
 type RankBy interface {
 	sealed_RankBy()
 }
 
-func (v RankByVector) sealed_RankBy()                           {}
+func (v RankByAnn) sealed_RankBy()                              {}
 func (v RankByKnn) sealed_RankBy()                              {}
-func (v RankBySparseVector) sealed_RankBy()                     {}
+func (v RankBySparseKnn) sealed_RankBy()                        {}
 func (v RankByTextBM25) sealed_RankBy()                         {}
 func (v RankByTextBM25Array) sealed_RankBy()                    {}
 func (v RankByTextBM25WithParams) sealed_RankBy()               {}
@@ -909,6 +963,28 @@ func (v RankByTextDecay) sealed_RankBy()                        {}
 func (v RankByTextDist) sealed_RankBy()                         {}
 func (v RankByAttribute) sealed_RankBy()                        {}
 func (v RankByAttributes) sealed_RankBy()                       {}
+
+type RankByAnn struct {
+	attr  string
+	value []float32
+}
+
+func NewRankByAnn(
+	attr string,
+	value []float32,
+) RankByAnn {
+	return RankByAnn{
+		attr,
+		value,
+	}
+}
+func (v RankByAnn) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"ANN",
+		v.value,
+	})
+}
 
 type RankByAttribute struct {
 	attr  string
@@ -961,21 +1037,21 @@ func (v RankByKnn) MarshalJSON() ([]byte, error) {
 	})
 }
 
-type RankBySparseVector struct {
+type RankBySparseKnn struct {
 	attr  string
 	value map[string]float64
 }
 
-func NewRankBySparseVector(
+func NewRankBySparseKnn(
 	attr string,
 	value map[string]float64,
-) RankBySparseVector {
-	return RankBySparseVector{
+) RankBySparseKnn {
+	return RankBySparseKnn{
 		attr,
 		value,
 	}
 }
-func (v RankBySparseVector) MarshalJSON() ([]byte, error) {
+func (v RankBySparseKnn) MarshalJSON() ([]byte, error) {
 	return shimjson.Marshal([]any{
 		v.attr,
 		"SparseKNN",
@@ -1268,27 +1344,5 @@ func (v RankByTextSum) MarshalJSON() ([]byte, error) {
 	return shimjson.Marshal([]any{
 		"Sum",
 		v.subqueries,
-	})
-}
-
-type RankByVector struct {
-	attr  string
-	value []float32
-}
-
-func NewRankByVector(
-	attr string,
-	value []float32,
-) RankByVector {
-	return RankByVector{
-		attr,
-		value,
-	}
-}
-func (v RankByVector) MarshalJSON() ([]byte, error) {
-	return shimjson.Marshal([]any{
-		v.attr,
-		"ANN",
-		v.value,
 	})
 }
