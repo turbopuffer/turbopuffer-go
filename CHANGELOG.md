@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.0-alpha.6 (2026-05-10)
+
+Full Changelog: [v2.0.0-alpha.5...v2.0.0-alpha.6](https://github.com/turbopuffer/turbopuffer-go/compare/v2.0.0-alpha.5...v2.0.0-alpha.6)
+
 ## 2.0.0-alpha.5 (2026-05-10)
 
 Full Changelog: [v2.0.0-alpha.4...v2.0.0-alpha.5](https://github.com/turbopuffer/turbopuffer-go/compare/v2.0.0-alpha.4...v2.0.0-alpha.5)
