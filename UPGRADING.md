@@ -84,3 +84,28 @@ changes.
 
   A new `Default` variant lets you migrate a namespace from CMEK to default
   encryption.
+
+- The `NewRankByVector` and `NewRankBySparseVector` constructors have been
+  renamed to `NewRankByAnn` and `NewRankBySparseKnn`.
+
+- `NamespaceQueryParams.GroupBy` is now `[]turbopuffer.GroupBy` instead of
+  `[]string`. Wrap plain attribute names with `turbopuffer.NewGroupByAttr`.
+
+  Old:
+
+  ```go
+  ns.Query(ctx, turbopuffer.NamespaceQueryParams{
+      GroupBy: []string{"color", "size"},
+  })
+  ```
+
+  New:
+
+  ```go
+  ns.Query(ctx, turbopuffer.NamespaceQueryParams{
+      GroupBy: []turbopuffer.GroupBy{
+          turbopuffer.NewGroupByAttr("color"),
+          turbopuffer.NewGroupByAttr("size"),
+      },
+  })
+  ```
