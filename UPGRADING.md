@@ -24,6 +24,28 @@ changes.
   })
   ```
 
+- `NamespaceQueryParams.GroupBy` is now `[]turbopuffer.GroupBy` instead of
+  `[]string`. Wrap plain attribute names with `turbopuffer.NewGroupByAttr`.
+
+  Old:
+
+  ```go
+  ns.Query(ctx, turbopuffer.NamespaceQueryParams{
+      GroupBy: []string{"color", "size"},
+  })
+  ```
+
+  New:
+
+  ```go
+  ns.Query(ctx, turbopuffer.NamespaceQueryParams{
+      GroupBy: []turbopuffer.GroupBy{
+          turbopuffer.NewGroupByAttr("color"),
+          turbopuffer.NewGroupByAttr("size"),
+      },
+  })
+  ```
+
 - The `encryption` parameter has been restructured.
 
   Old:
@@ -101,26 +123,4 @@ changes.
       "github.com/turbopuffer/turbopuffer-go/v2"
       "github.com/turbopuffer/turbopuffer-go/v2/option"
   )
-  ```
-
-- `NamespaceQueryParams.GroupBy` is now `[]turbopuffer.GroupBy` instead of
-  `[]string`. Wrap plain attribute names with `turbopuffer.NewGroupByAttr`.
-
-  Old:
-
-  ```go
-  ns.Query(ctx, turbopuffer.NamespaceQueryParams{
-      GroupBy: []string{"color", "size"},
-  })
-  ```
-
-  New:
-
-  ```go
-  ns.Query(ctx, turbopuffer.NamespaceQueryParams{
-      GroupBy: []turbopuffer.GroupBy{
-          turbopuffer.NewGroupByAttr("color"),
-          turbopuffer.NewGroupByAttr("size"),
-      },
-  })
   ```
