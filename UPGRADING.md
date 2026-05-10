@@ -60,25 +60,6 @@ changes.
   })
   ```
 
-- The element type of `NamespaceMultiQueryParams.Queries` has been renamed from
-  `QueryParam` to `NamespaceMultiQueryParamsQuery`.
-
-  Old:
-
-  ```go
-  ns.MultiQuery(ctx, turbopuffer.NamespaceMultiQueryParams{
-      Queries: []turbopuffer.QueryParam{ /* ... */ },
-  })
-  ```
-
-  New:
-
-  ```go
-  ns.MultiQuery(ctx, turbopuffer.NamespaceMultiQueryParams{
-      Queries: []turbopuffer.NamespaceMultiQueryParamsQuery{ /* ... */ },
-  })
-  ```
-
 - The `encryption` parameter has been restructured.
 
   Old:
