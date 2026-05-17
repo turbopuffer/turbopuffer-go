@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.0 (2026-05-17)
+
+Full Changelog: [v2.0.0...v2.1.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.0.0...v2.1.0)
+
+### Features
+
+* **client:** optimize json encoder for internal types ([a3a96ea](https://github.com/turbopuffer/turbopuffer-go/commit/a3a96ea12f2b8d296d08895938872ac21ceaef5d))
+
 ## 2.0.0 (2026-05-10)
 
 Full Changelog: [v2.0.0-alpha.6...v2.0.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.0.0-alpha.6...v2.0.0)
