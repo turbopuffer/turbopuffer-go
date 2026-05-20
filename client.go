@@ -13,6 +13,7 @@ import (
 
 	"github.com/turbopuffer/turbopuffer-go/v2/internal"
 	"github.com/turbopuffer/turbopuffer-go/v2/internal/requestconfig"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/respondasync"
 	"github.com/turbopuffer/turbopuffer-go/v2/option"
 	"github.com/turbopuffer/turbopuffer-go/v2/packages/pagination"
 )
@@ -59,6 +60,7 @@ func DefaultClientOptions() []option.RequestOption {
 // option will be passed down to the services and requests that this client makes.
 func NewClient(opts ...option.RequestOption) (r Client) {
 	opts = append(DefaultClientOptions(), opts...)
+	opts = append([]option.RequestOption{respondasync.NewOption(opts)}, opts...)
 
 	r = Client{
 		Options:    opts,
