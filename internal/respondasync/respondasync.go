@@ -13,6 +13,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"slices"
@@ -60,15 +61,15 @@ func (m *middleware) maybePoll(origReq *http.Request, res *http.Response) (*http
 		return res, nil
 	}
 
-	location := res.Header.Get(headerLocation)
-	if location == "" {
-		return res, errors.New("server returned async response without a `Location` header")
-	}
-
 	// Drain and close the body, to prevent connection leaking.
 	if res.Body != nil {
 		_, _ = io.Copy(io.Discard, res.Body)
 		_ = res.Body.Close()
+	}
+
+	location := res.Header.Get(headerLocation)
+	if location == "" {
+		return res, errors.New("server returned async response without a `Location` header")
 	}
 
 	ctx := origReq.Context()
@@ -147,6 +148,9 @@ func resolvePollResponse(body []byte) (*http.Response, error) {
 		statusCode = http.StatusOK
 		responseBody = parsed.Result.Success
 	case parsed.Result.Error != nil:
+		if parsed.Result.Error.StatusCode == 0 {
+			return nil, errMalformedPollResponse
+		}
 		statusCode = parsed.Result.Error.StatusCode
 		responseBody = parsed.Result.Error.Detail
 	default:
@@ -154,8 +158,11 @@ func resolvePollResponse(body []byte) (*http.Response, error) {
 	}
 
 	return &http.Response{
-		Status:     http.StatusText(statusCode),
+		Status:     fmt.Sprintf("%d %s", statusCode, http.StatusText(statusCode)),
 		StatusCode: statusCode,
+		Proto:      "HTTP/1.1",
+		ProtoMajor: 1,
+		ProtoMinor: 1,
 		Header: http.Header{
 			"Content-Type": {"application/json"},
 			// Prevent the outer retry loop from starting another
