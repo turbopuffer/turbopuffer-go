@@ -828,6 +828,44 @@ func (r *FullTextSearchConfigParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// An edit distance threshold for the Fuzzy filter.
+//
+// The properties Distance, MinQueryChars are required.
+type FuzzyMaxEditDistanceParam struct {
+	// The maximum edit distance to allow.
+	Distance int64 `json:"distance" api:"required"`
+	// Minimum number of characters in a query where this distance applies. Must be at
+	// least 3 · (distance + 1).
+	MinQueryChars int64 `json:"min_query_chars" api:"required"`
+	paramObj
+}
+
+func (r FuzzyMaxEditDistanceParam) MarshalJSON() (data []byte, err error) {
+	type shadow FuzzyMaxEditDistanceParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *FuzzyMaxEditDistanceParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Additional parameters for the Fuzzy filter.
+//
+// The property MaxEditDistance is required.
+type FuzzyParams struct {
+	// Maximum edit distance allowed at each query length. Queries shorter than the
+	// first threshold return no matches.
+	MaxEditDistance []FuzzyMaxEditDistanceParam `json:"max_edit_distance,omitzero" api:"required"`
+	paramObj
+}
+
+func (r FuzzyParams) MarshalJSON() (data []byte, err error) {
+	type shadow FuzzyParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *FuzzyParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // ID contains all possible properties and values from [string], [int64].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
