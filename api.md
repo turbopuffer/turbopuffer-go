@@ -26,6 +26,8 @@ Params Types:
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#EncryptionParam">EncryptionParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#FullTextSearchConfigParam">FullTextSearchConfigParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#FullTextSearchConfigParam">FullTextSearchConfigParam</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#FuzzyMaxEditDistanceParam">FuzzyMaxEditDistanceParam</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#FuzzyParams">FuzzyParams</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#IDParam">IDParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#IncludeAttributesParam">IncludeAttributesParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#Language">Language</a>
