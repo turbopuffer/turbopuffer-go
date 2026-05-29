@@ -89,6 +89,7 @@ func (v FilterNotGlob) sealed_Filter()                          {}
 func (v FilterIGlob) sealed_Filter()                            {}
 func (v FilterNotIGlob) sealed_Filter()                         {}
 func (v FilterRegex) sealed_Filter()                            {}
+func (v FilterFuzzy) sealed_Filter()                            {}
 func (v FilterContainsAllTokens) sealed_Filter()                {}
 func (v FilterContainsAllTokensArray) sealed_Filter()           {}
 func (v FilterContainsAllTokensWithParams) sealed_Filter()      {}
@@ -508,6 +509,32 @@ func (v FilterEq) MarshalJSON() ([]byte, error) {
 		v.attr,
 		"Eq",
 		v.value,
+	})
+}
+
+type FilterFuzzy struct {
+	attr   string
+	value  string
+	params FuzzyParams
+}
+
+func NewFilterFuzzy(
+	attr string,
+	value string,
+	params FuzzyParams,
+) FilterFuzzy {
+	return FilterFuzzy{
+		attr,
+		value,
+		params,
+	}
+}
+func (v FilterFuzzy) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"Fuzzy",
+		v.value,
+		v.params,
 	})
 }
 
@@ -944,6 +971,7 @@ func (v FilterNotGlob) sealed_RankBy()                          {}
 func (v FilterIGlob) sealed_RankBy()                            {}
 func (v FilterNotIGlob) sealed_RankBy()                         {}
 func (v FilterRegex) sealed_RankBy()                            {}
+func (v FilterFuzzy) sealed_RankBy()                            {}
 func (v FilterContainsAllTokens) sealed_RankBy()                {}
 func (v FilterContainsAllTokensArray) sealed_RankBy()           {}
 func (v FilterContainsAllTokensWithParams) sealed_RankBy()      {}
@@ -1091,6 +1119,7 @@ func (v FilterNotGlob) sealed_RankByText()                          {}
 func (v FilterIGlob) sealed_RankByText()                            {}
 func (v FilterNotIGlob) sealed_RankByText()                         {}
 func (v FilterRegex) sealed_RankByText()                            {}
+func (v FilterFuzzy) sealed_RankByText()                            {}
 func (v FilterContainsAllTokens) sealed_RankByText()                {}
 func (v FilterContainsAllTokensArray) sealed_RankByText()           {}
 func (v FilterContainsAllTokensWithParams) sealed_RankByText()      {}

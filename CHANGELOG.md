@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.2.0 (2026-05-29)
+
+Full Changelog: [v2.1.0...v2.2.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.1.0...v2.2.0)
+
+### Features
+
+* rename /docs/auth to /docs/overview ([86bfd6a](https://github.com/turbopuffer/turbopuffer-go/commit/86bfd6a007ef00a0cf5ef9ad971b109d7e6a79a4))
+* spec: force generation of FuzzyParams stainless models ([dc75877](https://github.com/turbopuffer/turbopuffer-go/commit/dc75877336d94ac920881299f92157f4b81d5c02))
+* transparent async polling ([#119](https://github.com/turbopuffer/turbopuffer-go/issues/119)) ([7dcd309](https://github.com/turbopuffer/turbopuffer-go/commit/7dcd3098ba6bea7c7080047caf8ee6c233563161))
+
 ## 2.1.0 (2026-05-17)
 
 Full Changelog: [v2.0.0...v2.1.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.0.0...v2.1.0)

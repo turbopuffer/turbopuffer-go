@@ -6,7 +6,7 @@
 
 <!-- x-release-please-end -->
 
-The turbopuffer Go library provides convenient access to the [turbopuffer HTTP API](https://turbopuffer.com/docs)
+The turbopuffer Go library provides convenient access to the [turbopuffer HTTP API](https://turbopuffer.com/docs/overview)
 from applications written in Go.
 
 It is generated with [Stainless](https://www.stainless.com/).
@@ -44,7 +44,7 @@ Or to pin the version:
 <!-- x-release-please-start-version -->
 
 ```sh
-go get -u 'github.com/turbopuffer/turbopuffer-go@v2.1.0'
+go get -u 'github.com/turbopuffer/turbopuffer-go@v2.2.0'
 ```
 
 <!-- x-release-please-end -->
