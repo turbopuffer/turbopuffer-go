@@ -271,6 +271,72 @@ func (r *NamespaceService) Write(ctx context.Context, params NamespaceWriteParam
 
 type AggregationGroup map[string]any
 
+// Configuration options for automatic embedding.
+type AttributeEmbedConfig struct {
+	// The model to use for embedding. See our documentation for a list of models
+	// supported in each region.
+	Model string `json:"model" api:"required"`
+	// The name of an existing vector attribute to store embeddings in. If omitted,
+	// turbopuffer will generate a computed vector attribute named
+	// `$embed_<attribute>`.
+	Attribute string `json:"attribute"`
+	// The dimensionality to embed at. If not set, will pick the default for this
+	// model. If you're storing embeddings in an existing attribute, this can be
+	// omitted, and may not be set to a value other than the dimensions of that
+	// attribute.
+	Dims int64 `json:"dims"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Model       respjson.Field
+		Attribute   respjson.Field
+		Dims        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r AttributeEmbedConfig) RawJSON() string { return r.JSON.raw }
+func (r *AttributeEmbedConfig) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// ToParam converts this AttributeEmbedConfig to a AttributeEmbedConfigParam.
+//
+// Warning: the fields of the param type will not be present. ToParam should only
+// be used at the last possible moment before sending a request. Test for this with
+// AttributeEmbedConfigParam.Overrides()
+func (r AttributeEmbedConfig) ToParam() AttributeEmbedConfigParam {
+	return param.Override[AttributeEmbedConfigParam](json.RawMessage(r.RawJSON()))
+}
+
+// Configuration options for automatic embedding.
+//
+// The property Model is required.
+type AttributeEmbedConfigParam struct {
+	// The model to use for embedding. See our documentation for a list of models
+	// supported in each region.
+	Model string `json:"model" api:"required"`
+	// The name of an existing vector attribute to store embeddings in. If omitted,
+	// turbopuffer will generate a computed vector attribute named
+	// `$embed_<attribute>`.
+	Attribute param.Opt[string] `json:"attribute,omitzero"`
+	// The dimensionality to embed at. If not set, will pick the default for this
+	// model. If you're storing embeddings in an existing attribute, this can be
+	// omitted, and may not be set to a value other than the dimensions of that
+	// attribute.
+	Dims param.Opt[int64] `json:"dims,omitzero"`
+	paramObj
+}
+
+func (r AttributeEmbedConfigParam) MarshalJSON() (data []byte, err error) {
+	type shadow AttributeEmbedConfigParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *AttributeEmbedConfigParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Detailed configuration for an attribute attached to a document.
 type AttributeSchemaConfig struct {
 	// The data type of the attribute. Valid values: string, int, uint, float, uuid,
@@ -280,6 +346,10 @@ type AttributeSchemaConfig struct {
 	// Whether to create an approximate nearest neighbor index for the attribute. Can
 	// be a boolean or a detailed configuration object.
 	Ann AttributeSchemaConfigAnn `json:"ann"`
+	// Whether to automatically embed this string attribute into a vector attribute.
+	// Can be a model name, a detailed configuration object, or `null` to remove an
+	// existing embedding configuration.
+	Embed AttributeEmbedConfig `json:"embed" api:"nullable"`
 	// Whether or not the attributes can be used in filters.
 	Filterable bool `json:"filterable"`
 	// Whether this attribute can be used as part of a BM25 full-text search. Requires
@@ -299,6 +369,7 @@ type AttributeSchemaConfig struct {
 	JSON struct {
 		Type           respjson.Field
 		Ann            respjson.Field
+		Embed          respjson.Field
 		Filterable     respjson.Field
 		FullTextSearch respjson.Field
 		Fuzzy          respjson.Field
@@ -382,6 +453,10 @@ type AttributeSchemaConfigParam struct {
 	Glob param.Opt[bool] `json:"glob,omitzero"`
 	// Whether to enable Regex filters on this attribute.
 	Regex param.Opt[bool] `json:"regex,omitzero"`
+	// Whether to automatically embed this string attribute into a vector attribute.
+	// Can be a model name, a detailed configuration object, or `null` to remove an
+	// existing embedding configuration.
+	Embed AttributeEmbedConfigParam `json:"embed,omitzero"`
 	// Whether to create an approximate nearest neighbor index for the attribute. Can
 	// be a boolean or a detailed configuration object.
 	Ann AttributeSchemaConfigAnnParam `json:"ann,omitzero"`
@@ -549,6 +624,22 @@ const (
 	DistanceMetricCosineDistance   DistanceMetric = "cosine_distance"
 	DistanceMetricEuclideanSquared DistanceMetric = "euclidean_squared"
 )
+
+// Additional (optional) parameters for the Embed expression.
+type EmbedParams struct {
+	// The model to use for embedding, overriding the model configured for the
+	// attribute.
+	Model param.Opt[string] `json:"model,omitzero"`
+	paramObj
+}
+
+func (r EmbedParams) MarshalJSON() (data []byte, err error) {
+	type shadow EmbedParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *EmbedParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 // Encryption contains all possible properties and values from
 // [EncryptionCustomerManaged], [EncryptionDefault].
