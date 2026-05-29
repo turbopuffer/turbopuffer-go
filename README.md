@@ -13,7 +13,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## Documentation
 
-The HTTP API documentation can be found at [turbopuffer.com/docs](https://turbopuffer.com/docs/auth).
+The HTTP API documentation can be found at [turbopuffer.com/docs/overview](https://turbopuffer.com/docs/overview).
 
 The full API of this library can be found at
 <https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go>.
