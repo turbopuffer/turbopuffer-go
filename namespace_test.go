@@ -394,6 +394,11 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 				Ann: turbopuffer.AttributeSchemaConfigAnnParam{
 					DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
 				},
+				Embed: turbopuffer.AttributeEmbedConfigParam{
+					Model:     "model",
+					Attribute: turbopuffer.String("attribute"),
+					Dims:      turbopuffer.Int(0),
+				},
 				Filterable: turbopuffer.Bool(true),
 				FullTextSearch: turbopuffer.FullTextSearchConfigParam{
 					AsciiFolding:    turbopuffer.Bool(true),
@@ -492,6 +497,11 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 				Type: "string",
 				Ann: turbopuffer.AttributeSchemaConfigAnnParam{
 					DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+				},
+				Embed: turbopuffer.AttributeEmbedConfigParam{
+					Model:     "model",
+					Attribute: turbopuffer.String("attribute"),
+					Dims:      turbopuffer.Int(0),
 				},
 				Filterable: turbopuffer.Bool(true),
 				FullTextSearch: turbopuffer.FullTextSearchConfigParam{

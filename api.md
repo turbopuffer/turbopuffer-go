@@ -12,6 +12,8 @@ Methods:
 
 Params Types:
 
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AttributeEmbedConfigParam">AttributeEmbedConfigParam</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AttributeEmbedConfigParam">AttributeEmbedConfigParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AttributeSchemaConfigParam">AttributeSchemaConfigParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AttributeSchemaConfigParam">AttributeSchemaConfigParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AttributeType">AttributeType</a>
@@ -23,6 +25,7 @@ Params Types:
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#CopyFromNamespaceParams">CopyFromNamespaceParams</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#DecayParams">DecayParams</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#DistanceMetric">DistanceMetric</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#EmbedParams">EmbedParams</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#EncryptionParam">EncryptionParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#FullTextSearchConfigParam">FullTextSearchConfigParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#FullTextSearchConfigParam">FullTextSearchConfigParam</a>
@@ -44,6 +47,8 @@ Params Types:
 Response Types:
 
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AggregationGroup">AggregationGroup</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AttributeEmbedConfig">AttributeEmbedConfig</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AttributeEmbedConfig">AttributeEmbedConfig</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AttributeSchemaConfig">AttributeSchemaConfig</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AttributeType">AttributeType</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#DistanceMetric">DistanceMetric</a>
