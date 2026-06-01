@@ -16,6 +16,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"slices"
 	"strings"
 	"time"
@@ -67,9 +68,9 @@ func (m *middleware) maybePoll(origReq *http.Request, res *http.Response) (*http
 		_ = res.Body.Close()
 	}
 
-	location := res.Header.Get(headerLocation)
-	if location == "" {
-		return res, errors.New("server returned async response without a `Location` header")
+	location, err := extractLocation(res, origReq.URL)
+	if err != nil {
+		return res, err
 	}
 
 	ctx := origReq.Context()
@@ -92,6 +93,26 @@ func (m *middleware) maybePoll(origReq *http.Request, res *http.Response) (*http
 		case <-time.After(PollInterval):
 		}
 	}
+}
+
+func extractLocation(res *http.Response, origURL *url.URL) (string, error) {
+	rawLocation := res.Header.Get(headerLocation)
+	if rawLocation == "" {
+		return "", errors.New("server returned async response without a 'Location' header")
+	}
+
+	// Resolve the Location against the original request URL.
+	resolved, err := origURL.Parse(rawLocation)
+	if err != nil {
+		return "", fmt.Errorf("malformed 'Location' header: %q", rawLocation)
+	}
+
+	// Reject a Location pointing at a different origin, to prevent API key exfiltration.
+	if resolved.Scheme != origURL.Scheme || resolved.Host != origURL.Host {
+		return "", fmt.Errorf("'Location' origin does not match request origin: %q", rawLocation)
+	}
+
+	return resolved.String(), nil
 }
 
 func respondAsyncApplied(res *http.Response) bool {
