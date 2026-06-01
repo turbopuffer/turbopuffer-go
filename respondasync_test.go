@@ -174,6 +174,33 @@ func TestRespondAsyncPolledToSuccess(t *testing.T) {
 	}
 }
 
+func TestRespondAsyncBadLocationRejected(t *testing.T) {
+	badLocations := []string{
+		"https://evil.example.com/v1/ops/op-x",
+		"//evil.example.com/v1/ops/op-x",
+		"http://api.turbopuffer.com/v1/ops/op-x",
+		"http://host:notaport/x",
+	}
+	for _, bad := range badLocations {
+		t.Run(bad, func(t *testing.T) {
+			calls := 0
+			client := newClient(&closureTransport{
+				fn: func(req *http.Request) (*http.Response, error) {
+					calls++
+					return asyncAcceptedResponse(bad), nil
+				},
+			})
+			ns := client.Namespace("test")
+			if _, err := ns.Write(context.Background(), writeParams()); err == nil {
+				t.Fatal("expected error, got nil")
+			}
+			if calls != 1 {
+				t.Errorf("expected 1 request, got %d", calls)
+			}
+		})
+	}
+}
+
 func TestRespondAsyncErrorResultThrowsStatusError(t *testing.T) {
 	fastPollInterval(t)
 	responses := []*http.Response{
