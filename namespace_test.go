@@ -469,8 +469,8 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 					Attribute: turbopuffer.String("attribute"),
 					Dims:      turbopuffer.Int(0),
 				}, Filterable: turbopuffer.Bool(true), FullTextSearch: &turbopuffer.FullTextSearchConfigParam{B: turbopuffer.Float(0), CaseSensitive: turbopuffer.Bool(true), K1: turbopuffer.Float(0), Language: turbopuffer.LanguageArabic, RemoveStopwords: turbopuffer.Bool(true), Stemming: turbopuffer.Bool(true), Tokenizer: turbopuffer.TokenizerPreTokenizedArray}, Fuzzy: turbopuffer.Bool(true), Glob: turbopuffer.Bool(true), Type: turbopuffer.AttributeType("string"), SparseKnn: turbopuffer.AttributeSchemaConfigSparseKnnParam{
-				DistanceMetric: turbopuffer.SparseDistanceMetricDotProduct,
-			}},
+					DistanceMetric: turbopuffer.SparseDistanceMetricDotProduct,
+				}},
 		},
 		UpsertColumns:   turbopuffer.ColumnsParam{},
 		UpsertRows:      []turbopuffer.RowParam{},
