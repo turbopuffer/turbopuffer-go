@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.3.0-alpha.1 (2026-06-02)
+
+Full Changelog: [v2.2.0...v2.3.0-alpha.1](https://github.com/turbopuffer/turbopuffer-go/compare/v2.2.0...v2.3.0-alpha.1)
+
+### Features
+
+* openapi: spec for `rerank_by: ["RRF"]` ([d3fec84](https://github.com/turbopuffer/turbopuffer-go/commit/d3fec84eafc106fc9df072bb096fb803a4c05211))
+* spec: add SDK support for native embedding ([2147191](https://github.com/turbopuffer/turbopuffer-go/commit/214719174c298eec20447c32dbd9e4dfd3b9f174))
+
+
+### Bug Fixes
+
+* reject malicious poll locations ([#123](https://github.com/turbopuffer/turbopuffer-go/issues/123)) ([2ae058e](https://github.com/turbopuffer/turbopuffer-go/commit/2ae058eedf07f1cd78743996d017c9226cb0a5a1))
+* type rerank_by parameter as RerankBy ([#126](https://github.com/turbopuffer/turbopuffer-go/issues/126)) ([82f91d9](https://github.com/turbopuffer/turbopuffer-go/commit/82f91d9837d46b5e57aa7cf68ffe20e79f411556))
+
+
+### Chores
+
+* bump apigen ([#124](https://github.com/turbopuffer/turbopuffer-go/issues/124)) ([e30d0fb](https://github.com/turbopuffer/turbopuffer-go/commit/e30d0fb2ee3a44968b5fa9b3532a9ad1b1b1993b))
+* fix API docs links ([#121](https://github.com/turbopuffer/turbopuffer-go/issues/121)) ([54effa8](https://github.com/turbopuffer/turbopuffer-go/commit/54effa8e9364b9e381872e157bf9b753ea4ac779))
+
 ## 2.2.0 (2026-05-29)
 
 Full Changelog: [v2.1.0...v2.2.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.1.0...v2.2.0)
