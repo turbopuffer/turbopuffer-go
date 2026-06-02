@@ -38,6 +38,7 @@ Params Types:
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#NamespaceMetadataPatchParam">NamespaceMetadataPatchParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#PinningConfigParam">PinningConfigParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#RowParam">RowParam</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#RrfParams">RrfParams</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#SaturateParams">SaturateParams</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#SparseDistanceMetric">SparseDistanceMetric</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#Tokenizer">Tokenizer</a>
