@@ -2044,7 +2044,7 @@ type NamespaceMultiQueryParams struct {
 	// The consistency level for a query.
 	Consistency NamespaceMultiQueryParamsConsistency `json:"consistency,omitzero"`
 	// How to combine the rows returned by each sub-query into a single ranked list.
-	RerankBy any `json:"rerank_by,omitzero"`
+	RerankBy RerankBy `json:"rerank_by,omitzero"`
 	// The encoding to use for vectors in the response.
 	//
 	// Any of "float", "base64".
