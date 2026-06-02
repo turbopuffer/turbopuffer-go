@@ -229,6 +229,7 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 		Consistency: turbopuffer.NamespaceMultiQueryParamsConsistency{
 			Level: "strong",
 		},
+		RerankBy:       map[string]any{},
 		VectorEncoding: turbopuffer.VectorEncodingFloat,
 	})
 	if err != nil {

@@ -1470,6 +1470,21 @@ func (r *RowParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Configuration options for RRF.
+type RrfParams struct {
+	// RRF rank constant (`k`). Must be greater than zero. Defaults to `60`.
+	RankConstant param.Opt[int64] `json:"rank_constant,omitzero"`
+	paramObj
+}
+
+func (r RrfParams) MarshalJSON() (data []byte, err error) {
+	type shadow RrfParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *RrfParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Additional parameters for the Saturate operator.
 type SaturateParams struct {
 	// An exponent that helps further control the shape of the Saturate function.
@@ -2083,6 +2098,8 @@ type NamespaceMultiQueryParams struct {
 	Queries   []NamespaceMultiQueryParamsQuery `json:"queries,omitzero" api:"required"`
 	// The consistency level for a query.
 	Consistency NamespaceMultiQueryParamsConsistency `json:"consistency,omitzero"`
+	// How to combine the rows returned by each sub-query into a single ranked list.
+	RerankBy any `json:"rerank_by,omitzero"`
 	// The encoding to use for vectors in the response.
 	//
 	// Any of "float", "base64".
