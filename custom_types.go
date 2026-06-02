@@ -1463,3 +1463,40 @@ func (v RankByTextSum) MarshalJSON() ([]byte, error) {
 		v.subqueries,
 	})
 }
+
+type RerankBy interface {
+	sealed_RerankBy()
+}
+
+func (v RerankByRrf) sealed_RerankBy()           {}
+func (v RerankByRrfWithParams) sealed_RerankBy() {}
+
+type RerankByRrf struct {
+}
+
+func NewRerankByRrf() RerankByRrf {
+	return RerankByRrf{}
+}
+func (v RerankByRrf) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		"RRF",
+	})
+}
+
+type RerankByRrfWithParams struct {
+	f1 RrfParams
+}
+
+func NewRerankByRrfWithParams(
+	f1 RrfParams,
+) RerankByRrfWithParams {
+	return RerankByRrfWithParams{
+		f1,
+	}
+}
+func (v RerankByRrfWithParams) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		"RRF",
+		v.f1,
+	})
+}
