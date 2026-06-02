@@ -1,12 +1,30 @@
 # Changelog
 
+## 2.3.0 (2026-06-02)
+
+Full Changelog: [v2.2.0...v2.3.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.2.0...v2.3.0)
+
+### Features
+
+* spec: add SDK support for native embedding ([2147191](https://github.com/turbopuffer/turbopuffer-go/commit/214719174c298eec20447c32dbd9e4dfd3b9f174))
+
+
+### Bug Fixes
+
+* reject malicious poll locations ([#123](https://github.com/turbopuffer/turbopuffer-go/issues/123)) ([2ae058e](https://github.com/turbopuffer/turbopuffer-go/commit/2ae058eedf07f1cd78743996d017c9226cb0a5a1))
+
+
+### Chores
+
+* bump apigen ([#124](https://github.com/turbopuffer/turbopuffer-go/issues/124)) ([e30d0fb](https://github.com/turbopuffer/turbopuffer-go/commit/e30d0fb2ee3a44968b5fa9b3532a9ad1b1b1993b))
+* fix API docs links ([#121](https://github.com/turbopuffer/turbopuffer-go/issues/121)) ([54effa8](https://github.com/turbopuffer/turbopuffer-go/commit/54effa8e9364b9e381872e157bf9b753ea4ac779))
+
 ## 2.2.0 (2026-05-29)
 
 Full Changelog: [v2.1.0...v2.2.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.1.0...v2.2.0)
 
 ### Features
 
-* rename /docs/auth to /docs/overview ([86bfd6a](https://github.com/turbopuffer/turbopuffer-go/commit/86bfd6a007ef00a0cf5ef9ad971b109d7e6a79a4))
 * spec: force generation of FuzzyParams stainless models ([dc75877](https://github.com/turbopuffer/turbopuffer-go/commit/dc75877336d94ac920881299f92157f4b81d5c02))
 * transparent async polling ([#119](https://github.com/turbopuffer/turbopuffer-go/issues/119)) ([7dcd309](https://github.com/turbopuffer/turbopuffer-go/commit/7dcd3098ba6bea7c7080047caf8ee6c233563161))
 

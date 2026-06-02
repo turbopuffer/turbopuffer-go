@@ -45,7 +45,49 @@ type Expr interface {
 	sealed_Expr()
 }
 
-func (v ExprRefNew) sealed_Expr() {}
+func (v ExprRefNew) sealed_Expr()          {}
+func (v ExprEmbed) sealed_Expr()           {}
+func (v ExprEmbedWithParams) sealed_Expr() {}
+
+type ExprEmbed struct {
+	value string
+}
+
+func NewExprEmbed(
+	value string,
+) ExprEmbed {
+	return ExprEmbed{
+		value,
+	}
+}
+func (v ExprEmbed) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		"Embed",
+		v.value,
+	})
+}
+
+type ExprEmbedWithParams struct {
+	value  string
+	params EmbedParams
+}
+
+func NewExprEmbedWithParams(
+	value string,
+	params EmbedParams,
+) ExprEmbedWithParams {
+	return ExprEmbedWithParams{
+		value,
+		params,
+	}
+}
+func (v ExprEmbedWithParams) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		"Embed",
+		v.value,
+		v.params,
+	})
+}
 
 type ExprRefNew struct {
 	refNew string
@@ -941,7 +983,9 @@ type RankBy interface {
 }
 
 func (v RankByAnn) sealed_RankBy()                              {}
+func (v RankByAnnExpr) sealed_RankBy()                          {}
 func (v RankByKnn) sealed_RankBy()                              {}
+func (v RankByKnnExpr) sealed_RankBy()                          {}
 func (v RankBySparseKnn) sealed_RankBy()                        {}
 func (v RankByTextBM25) sealed_RankBy()                         {}
 func (v RankByTextBM25Array) sealed_RankBy()                    {}
@@ -1014,6 +1058,28 @@ func (v RankByAnn) MarshalJSON() ([]byte, error) {
 	})
 }
 
+type RankByAnnExpr struct {
+	attr string
+	expr Expr
+}
+
+func NewRankByAnnExpr(
+	attr string,
+	expr Expr,
+) RankByAnnExpr {
+	return RankByAnnExpr{
+		attr,
+		expr,
+	}
+}
+func (v RankByAnnExpr) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"ANN",
+		v.expr,
+	})
+}
+
 type RankByAttribute struct {
 	attr  string
 	order RankByAttributeOrder
@@ -1062,6 +1128,28 @@ func (v RankByKnn) MarshalJSON() ([]byte, error) {
 		v.attr,
 		"kNN",
 		v.value,
+	})
+}
+
+type RankByKnnExpr struct {
+	attr string
+	expr Expr
+}
+
+func NewRankByKnnExpr(
+	attr string,
+	expr Expr,
+) RankByKnnExpr {
+	return RankByKnnExpr{
+		attr,
+		expr,
+	}
+}
+func (v RankByKnnExpr) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"kNN",
+		v.expr,
 	})
 }
 
