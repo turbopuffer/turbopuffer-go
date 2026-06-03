@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.0 (2026-06-03)
+
+Full Changelog: [v2.3.0-alpha.1...v2.3.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.3.0-alpha.1...v2.3.0)
+
+### Features
+
+* spec: add support for word_v4 tokenizer ([b3325e1](https://github.com/turbopuffer/turbopuffer-go/commit/b3325e1f8c8d4a3c4a9ce1d0dd739193ffc2847e))
+
 ## 2.3.0-alpha.1 (2026-06-02)
 
 Full Changelog: [v2.2.0...v2.3.0-alpha.1](https://github.com/turbopuffer/turbopuffer-go/compare/v2.2.0...v2.3.0-alpha.1)
