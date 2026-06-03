@@ -840,9 +840,10 @@ type FullTextSearchConfig struct {
 	// stem).
 	Stemming bool `json:"stemming"`
 	// The tokenizer to use for full-text search on an attribute. Defaults to
-	// `word_v3`.
+	// `word_v4`.
 	//
-	// Any of "pre_tokenized_array", "word_v0", "word_v1", "word_v2", "word_v3".
+	// Any of "pre_tokenized_array", "word_v0", "word_v1", "word_v2", "word_v3",
+	// "word_v4".
 	Tokenizer Tokenizer `json:"tokenizer"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -904,9 +905,10 @@ type FullTextSearchConfigParam struct {
 	// Defaults to `39`.
 	MaxTokenLength param.Opt[int64] `json:"max_token_length,omitzero"`
 	// The tokenizer to use for full-text search on an attribute. Defaults to
-	// `word_v3`.
+	// `word_v4`.
 	//
-	// Any of "pre_tokenized_array", "word_v0", "word_v1", "word_v2", "word_v3".
+	// Any of "pre_tokenized_array", "word_v0", "word_v1", "word_v2", "word_v3",
+	// "word_v4".
 	Tokenizer Tokenizer `json:"tokenizer,omitzero"`
 	paramObj
 }
@@ -1429,7 +1431,7 @@ const (
 )
 
 // The tokenizer to use for full-text search on an attribute. Defaults to
-// `word_v3`.
+// `word_v4`.
 type Tokenizer string
 
 const (
@@ -1438,6 +1440,7 @@ const (
 	TokenizerWordV1            Tokenizer = "word_v1"
 	TokenizerWordV2            Tokenizer = "word_v2"
 	TokenizerWordV3            Tokenizer = "word_v3"
+	TokenizerWordV4            Tokenizer = "word_v4"
 )
 
 // Vector contains all possible properties and values from [[]float32], [string].
