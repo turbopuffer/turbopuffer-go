@@ -982,6 +982,9 @@ type FuzzyParams struct {
 	// Maximum edit distance allowed at each query length. Queries shorter than the
 	// first threshold return no matches.
 	MaxEditDistance []FuzzyMaxEditDistanceParam `json:"max_edit_distance,omitzero" api:"required"`
+	// Whether searching with Fuzzy filter is case-sensitive. Defaults to `true` (i.e.
+	// case-sensitive).
+	CaseSensitive param.Opt[bool] `json:"case_sensitive,omitzero"`
 	paramObj
 }
 
