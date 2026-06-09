@@ -57,8 +57,13 @@ func TestNamespaceCopyFromWithOptionalParams(t *testing.T) {
 	_, err := ns.CopyFrom(context.TODO(), turbopuffer.NamespaceCopyFromParams{
 		Namespace:       turbopuffer.String("namespace"),
 		SourceNamespace: "source_namespace",
-		SourceAPIKey:    turbopuffer.String("source_api_key"),
-		SourceRegion:    turbopuffer.String("source_region"),
+		DestEncryption: turbopuffer.EncryptionParam{
+			CustomerManaged: &turbopuffer.EncryptionCustomerManagedParam{
+				KeyName: "key_name",
+			},
+		},
+		SourceAPIKey: turbopuffer.String("source_api_key"),
+		SourceRegion: turbopuffer.String("source_region"),
 	})
 	if err != nil {
 		var apierr *turbopuffer.Error
