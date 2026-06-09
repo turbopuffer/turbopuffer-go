@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.4.0 (2026-06-09)
+
+Full Changelog: [v2.3.0...v2.4.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.3.0...v2.4.0)
+
+### Features
+
+* stainless: update sdks to support case-insensitive fuzzy filter ([c9ff259](https://github.com/turbopuffer/turbopuffer-go/commit/c9ff2598826a83aa8e5a7dfce119d8568ff8b585))
+* tpuf-engine: support dest_encryption in copy_from_namespace ([418aa41](https://github.com/turbopuffer/turbopuffer-go/commit/418aa41450dcd3bf2b9dfc20ac33b4904f69afcd))
+
 ## 2.3.0 (2026-06-03)
 
 Full Changelog: [v2.3.0-alpha.1...v2.3.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.3.0-alpha.1...v2.3.0)
