@@ -2007,6 +2007,8 @@ type NamespaceCopyFromParams struct {
 	SourceAPIKey param.Opt[string] `json:"source_api_key,omitzero"`
 	// (Optional) The region of the source namespace.
 	SourceRegion param.Opt[string] `json:"source_region,omitzero"`
+	// (Optional) The encryption configuration for the destination namespace.
+	DestEncryption EncryptionParam `json:"dest_encryption,omitzero"`
 	paramObj
 }
 
