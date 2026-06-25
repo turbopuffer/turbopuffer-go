@@ -983,6 +983,7 @@ type RankBy interface {
 }
 
 func (v RankByAnn) sealed_RankBy()                              {}
+func (v RankByAnnMulti) sealed_RankBy()                         {}
 func (v RankByAnnExpr) sealed_RankBy()                          {}
 func (v RankByKnn) sealed_RankBy()                              {}
 func (v RankByKnnExpr) sealed_RankBy()                          {}
@@ -1077,6 +1078,28 @@ func (v RankByAnnExpr) MarshalJSON() ([]byte, error) {
 		v.attr,
 		"ANN",
 		v.expr,
+	})
+}
+
+type RankByAnnMulti struct {
+	attr  string
+	value [][]float32
+}
+
+func NewRankByAnnMulti(
+	attr string,
+	value [][]float32,
+) RankByAnnMulti {
+	return RankByAnnMulti{
+		attr,
+		value,
+	}
+}
+func (v RankByAnnMulti) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"ANN",
+		v.value,
 	})
 }
 
