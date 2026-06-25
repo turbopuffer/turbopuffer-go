@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.4.1 (2026-06-25)
+
+Full Changelog: [v2.4.0...v2.4.1](https://github.com/turbopuffer/turbopuffer-go/compare/v2.4.0...v2.4.1)
+
+### Chores
+
+* remove unused MCP package ([2634d26](https://github.com/turbopuffer/turbopuffer-go/commit/2634d26ccb7707b80b4005135ee4b686661a49de))
+
+
+### Documentation
+
+* rename /docs/overview to /docs/api-overview ([8cc6fdc](https://github.com/turbopuffer/turbopuffer-go/commit/8cc6fdc034662871d03507ed099c71ab30759f16))
+
 ## 2.4.0 (2026-06-09)
 
 Full Changelog: [v2.3.0...v2.4.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.3.0...v2.4.0)
