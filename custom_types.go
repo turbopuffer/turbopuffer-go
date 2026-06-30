@@ -986,6 +986,7 @@ func (v RankByAnn) sealed_RankBy()                              {}
 func (v RankByAnnMulti) sealed_RankBy()                         {}
 func (v RankByAnnExpr) sealed_RankBy()                          {}
 func (v RankByKnn) sealed_RankBy()                              {}
+func (v RankByKnnMulti) sealed_RankBy()                         {}
 func (v RankByKnnExpr) sealed_RankBy()                          {}
 func (v RankBySparseKnn) sealed_RankBy()                        {}
 func (v RankByTextBM25) sealed_RankBy()                         {}
@@ -1173,6 +1174,28 @@ func (v RankByKnnExpr) MarshalJSON() ([]byte, error) {
 		v.attr,
 		"kNN",
 		v.expr,
+	})
+}
+
+type RankByKnnMulti struct {
+	attr  string
+	value [][]float32
+}
+
+func NewRankByKnnMulti(
+	attr string,
+	value [][]float32,
+) RankByKnnMulti {
+	return RankByKnnMulti{
+		attr,
+		value,
+	}
+}
+func (v RankByKnnMulti) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"kNN",
+		v.value,
 	})
 }
 
