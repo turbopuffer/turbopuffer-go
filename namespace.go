@@ -394,11 +394,16 @@ type AttributeSchemaConfigAnn struct {
 	//
 	// Any of "cosine_distance", "euclidean_squared".
 	DistanceMetric DistanceMetric `json:"distance_metric"`
+	// Opt in to late-interaction (MUVERA) indexing. Only valid on fixed-dim `[][N]f32`
+	// vector array attributes, and is required to enable an ANN index on such
+	// attributes. Defaults to `false`.
+	LateInteraction bool `json:"late_interaction"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		DistanceMetric respjson.Field
-		ExtraFields    map[string]respjson.Field
-		raw            string
+		DistanceMetric  respjson.Field
+		LateInteraction respjson.Field
+		ExtraFields     map[string]respjson.Field
+		raw             string
 	} `json:"-"`
 }
 
@@ -472,6 +477,10 @@ func (r *AttributeSchemaConfigParam) UnmarshalJSON(data []byte) error {
 
 // Configuration options for ANN (Approximate Nearest Neighbor) indexing.
 type AttributeSchemaConfigAnnParam struct {
+	// Opt in to late-interaction (MUVERA) indexing. Only valid on fixed-dim `[][N]f32`
+	// vector array attributes, and is required to enable an ANN index on such
+	// attributes. Defaults to `false`.
+	LateInteraction param.Opt[bool] `json:"late_interaction,omitzero"`
 	// A function used to calculate vector similarity.
 	//
 	// Any of "cosine_distance", "euclidean_squared".

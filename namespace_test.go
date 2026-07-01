@@ -398,7 +398,8 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 			"foo": {
 				Type: "string",
 				Ann: turbopuffer.AttributeSchemaConfigAnnParam{
-					DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+					DistanceMetric:  turbopuffer.DistanceMetricCosineDistance,
+					LateInteraction: turbopuffer.Bool(true),
 				},
 				Embed: turbopuffer.AttributeEmbedConfigParam{
 					Model:     "model",
@@ -502,7 +503,8 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 			"foo": {
 				Type: "string",
 				Ann: turbopuffer.AttributeSchemaConfigAnnParam{
-					DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
+					DistanceMetric:  turbopuffer.DistanceMetricCosineDistance,
+					LateInteraction: turbopuffer.Bool(true),
 				},
 				Embed: turbopuffer.AttributeEmbedConfigParam{
 					Model:     "model",
