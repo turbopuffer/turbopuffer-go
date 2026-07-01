@@ -40,6 +40,7 @@ Params Types:
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#RowParam">RowParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#RrfParams">RrfParams</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#SaturateParams">SaturateParams</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#ShardingConfigParam">ShardingConfigParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#SparseDistanceMetric">SparseDistanceMetric</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#Tokenizer">Tokenizer</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#VectorParam">VectorParam</a>
@@ -63,6 +64,7 @@ Response Types:
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#QueryBilling">QueryBilling</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#QueryPerformance">QueryPerformance</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#Row">Row</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#ShardingConfig">ShardingConfig</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#SparseDistanceMetric">SparseDistanceMetric</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#Tokenizer">Tokenizer</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#Vector">Vector</a>

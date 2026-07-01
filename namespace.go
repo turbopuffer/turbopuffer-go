@@ -1172,6 +1172,11 @@ type NamespaceMetadata struct {
 	// Configuration for namespace pinning, along with the current status of the pinned
 	// namespace.
 	Pinning NamespaceMetadataPinning `json:"pinning"`
+	// Configuration for namespace sharding, which partitions a namespace's documents
+	// across multiple internal shards to scale indexing and query throughput beyond a
+	// single machine. Sharding can only be configured on a namespace's inaugural
+	// write, and cannot be added to or changed on an existing namespace.
+	Sharding ShardingConfig `json:"sharding"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ApproxLogicalBytes respjson.Field
@@ -1182,6 +1187,7 @@ type NamespaceMetadata struct {
 		Schema             respjson.Field
 		UpdatedAt          respjson.Field
 		Pinning            respjson.Field
+		Sharding           respjson.Field
 		ExtraFields        map[string]respjson.Field
 		raw                string
 	} `json:"-"`
@@ -1504,6 +1510,56 @@ func (r SaturateParams) MarshalJSON() (data []byte, err error) {
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *SaturateParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Configuration for namespace sharding, which partitions a namespace's documents
+// across multiple internal shards to scale indexing and query throughput beyond a
+// single machine. Sharding can only be configured on a namespace's inaugural
+// write, and cannot be added to or changed on an existing namespace.
+type ShardingConfig struct {
+	// The number of shards to partition the namespace into.
+	NumShards int64 `json:"num_shards" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		NumShards   respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ShardingConfig) RawJSON() string { return r.JSON.raw }
+func (r *ShardingConfig) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// ToParam converts this ShardingConfig to a ShardingConfigParam.
+//
+// Warning: the fields of the param type will not be present. ToParam should only
+// be used at the last possible moment before sending a request. Test for this with
+// ShardingConfigParam.Overrides()
+func (r ShardingConfig) ToParam() ShardingConfigParam {
+	return param.Override[ShardingConfigParam](json.RawMessage(r.RawJSON()))
+}
+
+// Configuration for namespace sharding, which partitions a namespace's documents
+// across multiple internal shards to scale indexing and query throughput beyond a
+// single machine. Sharding can only be configured on a namespace's inaugural
+// write, and cannot be added to or changed on an existing namespace.
+//
+// The property NumShards is required.
+type ShardingConfigParam struct {
+	// The number of shards to partition the namespace into.
+	NumShards int64 `json:"num_shards" api:"required"`
+	paramObj
+}
+
+func (r ShardingConfigParam) MarshalJSON() (data []byte, err error) {
+	type shadow ShardingConfigParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ShardingConfigParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -2344,6 +2400,11 @@ type NamespaceWriteParams struct {
 	PatchRows      []RowParam `json:"patch_rows,omitzero"`
 	// The schema of the attributes attached to the documents.
 	Schema map[string]AttributeSchemaConfigParam `json:"schema,omitzero"`
+	// Configuration for namespace sharding, which partitions a namespace's documents
+	// across multiple internal shards to scale indexing and query throughput beyond a
+	// single machine. Sharding can only be configured on a namespace's inaugural
+	// write, and cannot be added to or changed on an existing namespace.
+	Sharding ShardingConfigParam `json:"sharding,omitzero"`
 	// A list of documents in columnar format. Each key is a column name, mapped to an
 	// array of values for that column.
 	UpsertColumns ColumnsParam `json:"upsert_columns,omitzero"`
