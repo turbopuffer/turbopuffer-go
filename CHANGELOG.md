@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.5.0 (2026-07-03)
+
+Full Changelog: [v2.4.1...v2.5.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.4.1...v2.5.0)
+
+### Features
+
+* spec: add sharding config to the openapi spec ([0c4a5d5](https://github.com/turbopuffer/turbopuffer-go/commit/0c4a5d5f6b48bbd83b8655a39cb418c92a29ef49))
+* support late_interaction parameter in sdks ([04e0e4c](https://github.com/turbopuffer/turbopuffer-go/commit/04e0e4c118e41b45c6d07030da9f65758a6234ae))
+
 ## 2.4.1 (2026-06-25)
 
 Full Changelog: [v2.4.0...v2.4.1](https://github.com/turbopuffer/turbopuffer-go/compare/v2.4.0...v2.4.1)
