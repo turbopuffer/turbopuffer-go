@@ -115,6 +115,11 @@ func TestNamespaceExplainQueryWithOptionalParams(t *testing.T) {
 		AggregateBy: map[string]any{
 			"foo": "bar",
 		},
+		ComputeAttributes: map[string]turbopuffer.NamespaceExplainQueryParamsComputeAttribute{
+			"foo": {
+				Score: []any{map[string]any{}},
+			},
+		},
 		Consistency: turbopuffer.NamespaceExplainQueryParamsConsistency{
 			Level: "strong",
 		},
@@ -214,6 +219,11 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 			AggregateBy: map[string]any{
 				"foo": "bar",
 			},
+			ComputeAttributes: map[string]turbopuffer.NamespaceMultiQueryParamsQueryComputeAttribute{
+				"foo": {
+					Score: []any{map[string]any{}},
+				},
+			},
 			DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 			ExcludeAttributes: []string{"string"},
 			Filters:           map[string]any{},
@@ -263,6 +273,11 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 		Namespace: turbopuffer.String("namespace"),
 		AggregateBy: map[string]any{
 			"foo": "bar",
+		},
+		ComputeAttributes: map[string]turbopuffer.NamespaceQueryParamsComputeAttribute{
+			"foo": {
+				Score: []any{map[string]any{}},
+			},
 		},
 		Consistency: turbopuffer.NamespaceQueryParamsConsistency{
 			Level: "strong",
