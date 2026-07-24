@@ -2145,7 +2145,7 @@ type NamespaceExplainQueryParams struct {
 	// Computes additional values on documents returned by a query. Each key is the
 	// name of the computed attribute; each value is an expression describing how to
 	// compute it.
-	ComputeAttributes map[string]NamespaceExplainQueryParamsComputeAttribute `json:"compute_attributes,omitzero"`
+	ComputeAttributes map[string]any `json:"compute_attributes,omitzero"`
 	// The consistency level for a query.
 	Consistency NamespaceExplainQueryParamsConsistency `json:"consistency,omitzero"`
 	// A function used to calculate vector similarity.
@@ -2180,31 +2180,6 @@ func (r NamespaceExplainQueryParams) MarshalJSON() (data []byte, err error) {
 }
 func (r *NamespaceExplainQueryParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type NamespaceExplainQueryParamsComputeAttribute struct {
-	Score                                        []any   `json:",omitzero,inline"`
-	NamespaceExplainQuerysComputeAttributeScore2 [][]any `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u NamespaceExplainQueryParamsComputeAttribute) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.Score, u.NamespaceExplainQuerysComputeAttributeScore2)
-}
-func (u *NamespaceExplainQueryParamsComputeAttribute) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *NamespaceExplainQueryParamsComputeAttribute) asAny() any {
-	if !param.IsOmitted(u.Score) {
-		return &u.Score
-	} else if !param.IsOmitted(u.NamespaceExplainQuerysComputeAttributeScore2) {
-		return &u.NamespaceExplainQuerysComputeAttributeScore2
-	}
-	return nil
 }
 
 // The consistency level for a query.
@@ -2272,7 +2247,7 @@ type NamespaceMultiQueryParamsQuery struct {
 	// Computes additional values on documents returned by a query. Each key is the
 	// name of the computed attribute; each value is an expression describing how to
 	// compute it.
-	ComputeAttributes map[string]NamespaceMultiQueryParamsQueryComputeAttribute `json:"compute_attributes,omitzero"`
+	ComputeAttributes map[string]any `json:"compute_attributes,omitzero"`
 	// A function used to calculate vector similarity.
 	//
 	// Any of "cosine_distance", "euclidean_squared".
@@ -2301,31 +2276,6 @@ func (r NamespaceMultiQueryParamsQuery) MarshalJSON() (data []byte, err error) {
 }
 func (r *NamespaceMultiQueryParamsQuery) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type NamespaceMultiQueryParamsQueryComputeAttribute struct {
-	Score                                           []any   `json:",omitzero,inline"`
-	NamespaceMultiQuerysQueryComputeAttributeScore2 [][]any `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u NamespaceMultiQueryParamsQueryComputeAttribute) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.Score, u.NamespaceMultiQuerysQueryComputeAttributeScore2)
-}
-func (u *NamespaceMultiQueryParamsQueryComputeAttribute) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *NamespaceMultiQueryParamsQueryComputeAttribute) asAny() any {
-	if !param.IsOmitted(u.Score) {
-		return &u.Score
-	} else if !param.IsOmitted(u.NamespaceMultiQuerysQueryComputeAttributeScore2) {
-		return &u.NamespaceMultiQuerysQueryComputeAttributeScore2
-	}
-	return nil
 }
 
 // The consistency level for a query.
@@ -2361,7 +2311,7 @@ type NamespaceQueryParams struct {
 	// Computes additional values on documents returned by a query. Each key is the
 	// name of the computed attribute; each value is an expression describing how to
 	// compute it.
-	ComputeAttributes map[string]NamespaceQueryParamsComputeAttribute `json:"compute_attributes,omitzero"`
+	ComputeAttributes map[string]any `json:"compute_attributes,omitzero"`
 	// The consistency level for a query.
 	Consistency NamespaceQueryParamsConsistency `json:"consistency,omitzero"`
 	// A function used to calculate vector similarity.
@@ -2396,31 +2346,6 @@ func (r NamespaceQueryParams) MarshalJSON() (data []byte, err error) {
 }
 func (r *NamespaceQueryParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type NamespaceQueryParamsComputeAttribute struct {
-	Score                                 []any   `json:",omitzero,inline"`
-	NamespaceQuerysComputeAttributeScore2 [][]any `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u NamespaceQueryParamsComputeAttribute) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.Score, u.NamespaceQuerysComputeAttributeScore2)
-}
-func (u *NamespaceQueryParamsComputeAttribute) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *NamespaceQueryParamsComputeAttribute) asAny() any {
-	if !param.IsOmitted(u.Score) {
-		return &u.Score
-	} else if !param.IsOmitted(u.NamespaceQuerysComputeAttributeScore2) {
-		return &u.NamespaceQuerysComputeAttributeScore2
-	}
-	return nil
 }
 
 // The consistency level for a query.
