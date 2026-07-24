@@ -971,6 +971,51 @@ func (r *FuzzyParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Additional (optional) parameters for the Highlight compute expression.
+type HighlightConfigParam struct {
+	// The maximum number of fragments to return. Defaults to `3`.
+	FragmentLimit param.Opt[int64] `json:"fragment_limit,omitzero"`
+	// How to split a text attribute into fragments for highlighting.
+	//
+	// Any of "none", "sentence", "paragraph", "word".
+	FragmentBy HighlightFragmentBy `json:"fragment_by,omitzero"`
+	// The units to report highlighted fragment offsets in.
+	//
+	// Any of "utf-8", "utf-16", "codepoints".
+	IncludeOffsets HighlightOffsetUnits `json:"include_offsets,omitzero"`
+	// How to rank candidate fragments within the attribute before selecting the top
+	// `fragment_limit`. Defaults to the query's `rank_by`.
+	RankFragmentsBy any `json:"rank_fragments_by,omitzero"`
+	paramObj
+}
+
+func (r HighlightConfigParam) MarshalJSON() (data []byte, err error) {
+	type shadow HighlightConfigParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *HighlightConfigParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// How to split a text attribute into fragments for highlighting.
+type HighlightFragmentBy string
+
+const (
+	HighlightFragmentByNone      HighlightFragmentBy = "none"
+	HighlightFragmentBySentence  HighlightFragmentBy = "sentence"
+	HighlightFragmentByParagraph HighlightFragmentBy = "paragraph"
+	HighlightFragmentByWord      HighlightFragmentBy = "word"
+)
+
+// The units to report highlighted fragment offsets in.
+type HighlightOffsetUnits string
+
+const (
+	HighlightOffsetUnitsUtf8       HighlightOffsetUnits = "utf-8"
+	HighlightOffsetUnitsUtf16      HighlightOffsetUnits = "utf-16"
+	HighlightOffsetUnitsCodepoints HighlightOffsetUnits = "codepoints"
+)
+
 // ID contains all possible properties and values from [string], [int64].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
