@@ -1006,7 +1006,7 @@ func (r *FuzzyParams) UnmarshalJSON(data []byte) error {
 }
 
 // Additional (optional) parameters for the Highlight compute expression.
-type HighlightConfigParam struct {
+type HighlightConfigParams struct {
 	// The maximum number of fragments to return. Defaults to `3`.
 	FragmentLimit param.Opt[int64] `json:"fragment_limit,omitzero"`
 	// How to split a text attribute into fragments for highlighting.
@@ -1023,11 +1023,11 @@ type HighlightConfigParam struct {
 	paramObj
 }
 
-func (r HighlightConfigParam) MarshalJSON() (data []byte, err error) {
-	type shadow HighlightConfigParam
+func (r HighlightConfigParams) MarshalJSON() (data []byte, err error) {
+	type shadow HighlightConfigParams
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *HighlightConfigParam) UnmarshalJSON(data []byte) error {
+func (r *HighlightConfigParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
