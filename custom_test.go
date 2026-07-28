@@ -150,3 +150,32 @@ func TestToParamSerialization(t *testing.T) {
 		})
 	}
 }
+
+// TestComputeAttributesSerialization verifies that each variant of the
+// ComputeAttributes union serializes to its expected turbolisp wire format
+// when used as a value of the compute_attributes map. compute_attributes is a
+// request-only param, so this asserts the marshaled JSON rather than a full
+// round-trip.
+func TestComputeAttributesSerialization(t *testing.T) {
+	for _, tc := range []struct {
+		name string
+		val  turbopuffer.ComputeAttributes
+		want string
+	}{
+		{"vector_dist", turbopuffer.NewComputeAttributesVectorDist("vec", []float32{0.5}), `["vec","VectorDist",[0.5]]`},
+		{"highlight", turbopuffer.NewComputeAttributesHighlight("body"), `["Highlight","body"]`},
+		{"highlight_with_config", turbopuffer.NewComputeAttributesHighlightWithConfig("body", turbopuffer.HighlightConfigParams{}), `["Highlight","body",{}]`},
+		{"score_rank_by", turbopuffer.NewRankByAnn("vec", []float32{0.5}), `["vec","ANN",[0.5]]`},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			got, err := json.Marshal(map[string]turbopuffer.ComputeAttributes{"attr": tc.val})
+			if err != nil {
+				t.Fatal(err)
+			}
+			want := `{"attr":` + tc.want + `}`
+			if string(got) != want {
+				t.Fatalf("compute_attributes[%s]: got %s, want %s", tc.name, got, want)
+			}
+		})
+	}
+}
