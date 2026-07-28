@@ -41,6 +41,131 @@ func (v AggregateBySum) MarshalJSON() ([]byte, error) {
 	})
 }
 
+type ComputeAttributes interface {
+	sealed_ComputeAttributes()
+}
+
+func (v ComputeAttributesVectorDist) sealed_ComputeAttributes()            {}
+func (v ComputeAttributesHighlight) sealed_ComputeAttributes()             {}
+func (v ComputeAttributesHighlightWithConfig) sealed_ComputeAttributes()   {}
+func (v RankByAnn) sealed_ComputeAttributes()                              {}
+func (v RankByAnnMulti) sealed_ComputeAttributes()                         {}
+func (v RankByAnnExpr) sealed_ComputeAttributes()                          {}
+func (v RankByKnn) sealed_ComputeAttributes()                              {}
+func (v RankByKnnMulti) sealed_ComputeAttributes()                         {}
+func (v RankByKnnExpr) sealed_ComputeAttributes()                          {}
+func (v RankBySparseKnn) sealed_ComputeAttributes()                        {}
+func (v RankByTextBM25) sealed_ComputeAttributes()                         {}
+func (v RankByTextBM25Array) sealed_ComputeAttributes()                    {}
+func (v RankByTextBM25WithParams) sealed_ComputeAttributes()               {}
+func (v RankByTextBM25ArrayWithParams) sealed_ComputeAttributes()          {}
+func (v RankByTextSum) sealed_ComputeAttributes()                          {}
+func (v RankByTextMax) sealed_ComputeAttributes()                          {}
+func (v RankByTextProduct) sealed_ComputeAttributes()                      {}
+func (v FilterEq) sealed_ComputeAttributes()                               {}
+func (v FilterNotEq) sealed_ComputeAttributes()                            {}
+func (v FilterIn[T]) sealed_ComputeAttributes()                            {}
+func (v FilterNotIn[T]) sealed_ComputeAttributes()                         {}
+func (v FilterContains) sealed_ComputeAttributes()                         {}
+func (v FilterNotContains) sealed_ComputeAttributes()                      {}
+func (v FilterContainsAny[T]) sealed_ComputeAttributes()                   {}
+func (v FilterNotContainsAny[T]) sealed_ComputeAttributes()                {}
+func (v FilterLt) sealed_ComputeAttributes()                               {}
+func (v FilterLte) sealed_ComputeAttributes()                              {}
+func (v FilterGt) sealed_ComputeAttributes()                               {}
+func (v FilterGte) sealed_ComputeAttributes()                              {}
+func (v FilterAnyLt) sealed_ComputeAttributes()                            {}
+func (v FilterAnyLte) sealed_ComputeAttributes()                           {}
+func (v FilterAnyGt) sealed_ComputeAttributes()                            {}
+func (v FilterAnyGte) sealed_ComputeAttributes()                           {}
+func (v FilterGlob) sealed_ComputeAttributes()                             {}
+func (v FilterNotGlob) sealed_ComputeAttributes()                          {}
+func (v FilterIGlob) sealed_ComputeAttributes()                            {}
+func (v FilterNotIGlob) sealed_ComputeAttributes()                         {}
+func (v FilterRegex) sealed_ComputeAttributes()                            {}
+func (v FilterFuzzy) sealed_ComputeAttributes()                            {}
+func (v FilterContainsAllTokens) sealed_ComputeAttributes()                {}
+func (v FilterContainsAllTokensArray) sealed_ComputeAttributes()           {}
+func (v FilterContainsAllTokensWithParams) sealed_ComputeAttributes()      {}
+func (v FilterContainsAllTokensArrayWithParams) sealed_ComputeAttributes() {}
+func (v FilterContainsAnyToken) sealed_ComputeAttributes()                 {}
+func (v FilterContainsAnyTokenArray) sealed_ComputeAttributes()            {}
+func (v FilterContainsAnyTokenWithParams) sealed_ComputeAttributes()       {}
+func (v FilterContainsAnyTokenArrayWithParams) sealed_ComputeAttributes()  {}
+func (v FilterContainsTokenSequence) sealed_ComputeAttributes()            {}
+func (v FilterContainsTokenSequenceArray) sealed_ComputeAttributes()       {}
+func (v FilterNot) sealed_ComputeAttributes()                              {}
+func (v FilterAnd) sealed_ComputeAttributes()                              {}
+func (v FilterOr) sealed_ComputeAttributes()                               {}
+func (v RankByTextAttribute) sealed_ComputeAttributes()                    {}
+func (v RankByTextSaturate) sealed_ComputeAttributes()                     {}
+func (v RankByTextDecay) sealed_ComputeAttributes()                        {}
+func (v RankByTextDist) sealed_ComputeAttributes()                         {}
+func (v RankByAttribute) sealed_ComputeAttributes()                        {}
+func (v RankByAttributes) sealed_ComputeAttributes()                       {}
+
+type ComputeAttributesHighlight struct {
+	attr string
+}
+
+func NewComputeAttributesHighlight(
+	attr string,
+) ComputeAttributesHighlight {
+	return ComputeAttributesHighlight{
+		attr,
+	}
+}
+func (v ComputeAttributesHighlight) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		"Highlight",
+		v.attr,
+	})
+}
+
+type ComputeAttributesHighlightWithConfig struct {
+	attr   string
+	config HighlightConfigParams
+}
+
+func NewComputeAttributesHighlightWithConfig(
+	attr string,
+	config HighlightConfigParams,
+) ComputeAttributesHighlightWithConfig {
+	return ComputeAttributesHighlightWithConfig{
+		attr,
+		config,
+	}
+}
+func (v ComputeAttributesHighlightWithConfig) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		"Highlight",
+		v.attr,
+		v.config,
+	})
+}
+
+type ComputeAttributesVectorDist struct {
+	attr  string
+	value []float32
+}
+
+func NewComputeAttributesVectorDist(
+	attr string,
+	value []float32,
+) ComputeAttributesVectorDist {
+	return ComputeAttributesVectorDist{
+		attr,
+		value,
+	}
+}
+func (v ComputeAttributesVectorDist) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal([]any{
+		v.attr,
+		"VectorDist",
+		v.value,
+	})
+}
+
 type Expr interface {
 	sealed_Expr()
 }
