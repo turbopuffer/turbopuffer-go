@@ -114,8 +114,8 @@ func TestNamespaceExplainQueryWithOptionalParams(t *testing.T) {
 	ns := client.Namespace("ns")
 	_, err := ns.ExplainQuery(context.TODO(), turbopuffer.NamespaceExplainQueryParams{
 		Namespace: turbopuffer.String("namespace"),
-		ComputeAttributes: map[string]turbopuffer.ComputeAttributes{
-			"foo": turbopuffer.NewComputeAttributesHighlight("bar"),
+		ComputeAttributes: map[string]turbopuffer.Expr{
+			"foo": turbopuffer.NewExprHighlight("bar"),
 		},
 		Consistency: turbopuffer.NamespaceExplainQueryParamsConsistency{
 			Level: "strong",
@@ -213,8 +213,8 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 			AggregateBy: map[string]any{
 				"foo": "bar",
 			},
-			ComputeAttributes: map[string]turbopuffer.ComputeAttributes{
-				"foo": turbopuffer.NewComputeAttributesHighlight("bar"),
+			ComputeAttributes: map[string]turbopuffer.Expr{
+				"foo": turbopuffer.NewExprHighlight("bar"),
 			},
 			DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 			ExcludeAttributes: []string{"string"},
@@ -263,8 +263,8 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 	ns := client.Namespace("ns")
 	_, err := ns.Query(context.TODO(), turbopuffer.NamespaceQueryParams{
 		Namespace: turbopuffer.String("namespace"),
-		ComputeAttributes: map[string]turbopuffer.ComputeAttributes{
-			"foo": turbopuffer.NewComputeAttributesHighlight("bar"),
+		ComputeAttributes: map[string]turbopuffer.Expr{
+			"foo": turbopuffer.NewExprHighlight("bar"),
 		},
 		Consistency: turbopuffer.NamespaceQueryParamsConsistency{
 			Level: "strong",

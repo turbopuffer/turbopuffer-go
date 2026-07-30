@@ -2082,7 +2082,7 @@ type NamespaceExplainQueryParams struct {
 	// Computes additional values on documents returned by a query. Each key is the
 	// name of the computed attribute; each value is an expression describing how to
 	// compute it.
-	ComputeAttributes map[string]ComputeAttributes `json:"compute_attributes,omitzero"`
+	ComputeAttributes map[string]Expr `json:"compute_attributes,omitzero"`
 	// The consistency level for a query.
 	Consistency NamespaceExplainQueryParamsConsistency `json:"consistency,omitzero"`
 	// A function used to calculate vector similarity.
@@ -2196,7 +2196,7 @@ type NamespaceMultiQueryParamsQuery struct {
 	// Computes additional values on documents returned by a query. Each key is the
 	// name of the computed attribute; each value is an expression describing how to
 	// compute it.
-	ComputeAttributes map[string]ComputeAttributes `json:"compute_attributes,omitzero"`
+	ComputeAttributes map[string]Expr `json:"compute_attributes,omitzero"`
 	// A function used to calculate vector similarity.
 	//
 	// Any of "cosine_distance", "euclidean_squared".
@@ -2254,7 +2254,7 @@ type NamespaceQueryParams struct {
 	// Computes additional values on documents returned by a query. Each key is the
 	// name of the computed attribute; each value is an expression describing how to
 	// compute it.
-	ComputeAttributes map[string]ComputeAttributes `json:"compute_attributes,omitzero"`
+	ComputeAttributes map[string]Expr `json:"compute_attributes,omitzero"`
 	// The consistency level for a query.
 	Consistency NamespaceQueryParamsConsistency `json:"consistency,omitzero"`
 	// A function used to calculate vector similarity.
