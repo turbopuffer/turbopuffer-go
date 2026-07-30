@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.6.0 (2026-07-30)
+
+Full Changelog: [v2.5.0...v2.6.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.5.0...v2.6.0)
+
+### Features
+
+* openapi: add RRF `weights` parameter ([4545ea3](https://github.com/turbopuffer/turbopuffer-go/commit/4545ea38647a7efe2971e9bdc78f4549680a9f19))
+* spec: expose computed attributes ([ab55642](https://github.com/turbopuffer/turbopuffer-go/commit/ab55642b72f9f0368a92231232d21e1f667c78f5))
+* spec: hide HighlightConfig.rank_fragments_by's RankBy ref from Stainless ([6287c7d](https://github.com/turbopuffer/turbopuffer-go/commit/6287c7dc05a85c1739c0494f1e4663201b07a5d5))
+* spec: make compute_attributes value x-stainless-any ([a2cd394](https://github.com/turbopuffer/turbopuffer-go/commit/a2cd39435908e0edafdbf004c64d1cd3ebe8d768))
+* spec: rename HighlightConfig -&gt; HighlightConfigParams ([e72eced](https://github.com/turbopuffer/turbopuffer-go/commit/e72eced1e0c597fe36c25bea63eda3d30a75c6b2))
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([de18333](https://github.com/turbopuffer/turbopuffer-go/commit/de18333843526583a4df6fc435841bb9599b896d))
+* type compute_attributes as the Expr union (turbopuffer[#10694](https://github.com/turbopuffer/turbopuffer-go/issues/10694)) ([#137](https://github.com/turbopuffer/turbopuffer-go/issues/137)) ([4fa5c96](https://github.com/turbopuffer/turbopuffer-go/commit/4fa5c96a3c4bf7952c4c395c44fc31259ffcc1f6))
+
+
+### Chores
+
+* regenerate custom types for compute attributes ([#133](https://github.com/turbopuffer/turbopuffer-go/issues/133)) ([531a1ef](https://github.com/turbopuffer/turbopuffer-go/commit/531a1ef7e01a11f74d51ac367b1d1bac88ba70cf))
+
 ## 2.5.0 (2026-07-03)
 
 Full Changelog: [v2.4.1...v2.5.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.4.1...v2.5.0)
