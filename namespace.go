@@ -1458,6 +1458,10 @@ type RowParam Row
 type RrfParams struct {
 	// RRF rank constant (`k`). Must be greater than zero. Defaults to `60`.
 	RankConstant param.Opt[int64] `json:"rank_constant,omitzero"`
+	// A positive weight for each subquery, in the same order as `queries`. The number
+	// of weights must match the number of subqueries. When omitted, every subquery has
+	// a weight of `1`.
+	Weights []float64 `json:"weights,omitzero"`
 	paramObj
 }
 
