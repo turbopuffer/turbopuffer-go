@@ -240,6 +240,9 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 		Consistency: turbopuffer.NamespaceMultiQueryParamsConsistency{
 			Level: "strong",
 		},
+		Limit: turbopuffer.NamespaceMultiQueryParamsLimit{
+			Total: 0,
+		},
 		RerankBy:       map[string]any{},
 		VectorEncoding: turbopuffer.VectorEncodingFloat,
 	})
