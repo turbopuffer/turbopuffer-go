@@ -1345,6 +1345,11 @@ func (r *NamespaceMetadataPinning) UnmarshalJSON(data []byte) error {
 type NamespaceMetadataPinningStatus struct {
 	// The number of replicas that are warm and serving traffic.
 	ReadyReplicas int64 `json:"ready_replicas" api:"required"`
+	// The number of running replicas for the namespace. Replicas are billed once
+	// running, even before they finish warming their caches and become ready to serve
+	// traffic. This count is updated independently and may briefly disagree with the
+	// other status fields.
+	Replicas int64 `json:"replicas" api:"required"`
 	// The timestamp of the latest pinning status snapshot.
 	UpdatedAt time.Time `json:"updated_at" api:"required" format:"date-time"`
 	// Aggregate utilization for the pinned namespace, reported as a value between 0.0
@@ -1353,6 +1358,7 @@ type NamespaceMetadataPinningStatus struct {
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ReadyReplicas respjson.Field
+		Replicas      respjson.Field
 		UpdatedAt     respjson.Field
 		Utilization   respjson.Field
 		ExtraFields   map[string]respjson.Field
