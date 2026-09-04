@@ -1192,6 +1192,8 @@ type NamespaceMetadata struct {
 	// Configuration for namespace pinning, along with the current status of the pinned
 	// namespace.
 	Pinning NamespaceMetadataPinning `json:"pinning"`
+	// Whether document and schema writes are rejected. Omitted when `false`.
+	ReadOnly bool `json:"read_only"`
 	// Configuration for namespace sharding, which partitions a namespace's documents
 	// across multiple internal shards to scale indexing and query throughput beyond a
 	// single machine. Sharding can only be configured on a namespace's inaugural
@@ -1207,6 +1209,7 @@ type NamespaceMetadata struct {
 		Schema             respjson.Field
 		UpdatedAt          respjson.Field
 		Pinning            respjson.Field
+		ReadOnly           respjson.Field
 		Sharding           respjson.Field
 		ExtraFields        map[string]respjson.Field
 		raw                string
@@ -1340,6 +1343,9 @@ func (r *NamespaceMetadataPinningStatus) UnmarshalJSON(data []byte) error {
 
 // Request to update namespace metadata configuration.
 type NamespaceMetadataPatchParam struct {
+	// Set to `true` to reject document and schema writes, or `false` to allow them.
+	// Writes already in progress may still commit. Metadata updates remain available.
+	ReadOnly param.Opt[bool] `json:"read_only,omitzero"`
 	// Configuration for namespace pinning.
 	//
 	// - Missing field: no change to pinning configuration
