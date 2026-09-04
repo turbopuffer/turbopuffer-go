@@ -380,6 +380,7 @@ func TestNamespaceUpdateMetadataWithOptionalParams(t *testing.T) {
 			Pinning: turbopuffer.PinningConfigParam{
 				Replicas: turbopuffer.Int(1),
 			},
+			ReadOnly: turbopuffer.Bool(true),
 		},
 	})
 	if err != nil {
