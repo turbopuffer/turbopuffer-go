@@ -2153,6 +2153,9 @@ type NamespaceDeleteAllParams struct {
 
 type NamespaceExplainQueryParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
+	// Number of documents to skip before returning results. Supported only in v2
+	// queries with an explicit `rank_by` and `top_k` or `limit`.
+	Offset param.Opt[int64] `json:"offset,omitzero"`
 	// The number of results to return.
 	TopK param.Opt[int64] `json:"top_k,omitzero"`
 	// Aggregations to compute over all documents in the namespace that match the
@@ -2234,6 +2237,9 @@ type NamespaceMetadataParams struct {
 type NamespaceMultiQueryParams struct {
 	Namespace param.Opt[string]                `path:"namespace,omitzero" api:"required" json:"-"`
 	Queries   []NamespaceMultiQueryParamsQuery `json:"queries,omitzero" api:"required"`
+	// Number of reranked documents to skip before returning results. Requires
+	// `rerank_by` and `limit`.
+	Offset param.Opt[int64] `json:"offset,omitzero"`
 	// The consistency level for a query.
 	Consistency NamespaceMultiQueryParamsConsistency `json:"consistency,omitzero"`
 	// Limits the total number of reranked documents returned.
@@ -2257,6 +2263,9 @@ func (r *NamespaceMultiQueryParams) UnmarshalJSON(data []byte) error {
 
 // Query, filter, full-text search and vector search documents.
 type NamespaceMultiQueryParamsQuery struct {
+	// Number of documents to skip before returning results. Supported only in v2
+	// queries with an explicit `rank_by` and `top_k` or `limit`.
+	Offset param.Opt[int64] `json:"offset,omitzero"`
 	// The number of results to return.
 	TopK param.Opt[int64] `json:"top_k,omitzero"`
 	// Aggregations to compute over all documents in the namespace that match the
@@ -2335,6 +2344,9 @@ func (r *NamespaceMultiQueryParamsLimit) UnmarshalJSON(data []byte) error {
 
 type NamespaceQueryParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
+	// Number of documents to skip before returning results. Supported only in v2
+	// queries with an explicit `rank_by` and `top_k` or `limit`.
+	Offset param.Opt[int64] `json:"offset,omitzero"`
 	// The number of results to return.
 	TopK param.Opt[int64] `json:"top_k,omitzero"`
 	// Aggregations to compute over all documents in the namespace that match the
