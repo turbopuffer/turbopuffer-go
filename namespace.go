@@ -1496,6 +1496,23 @@ func (r *QueryPerformance) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Limits the total number of reranked documents returned.
+//
+// The property Total is required.
+type RerankLimitParam struct {
+	// Limits the total number of documents returned after reranking.
+	Total int64 `json:"total" api:"required"`
+	paramObj
+}
+
+func (r RerankLimitParam) MarshalJSON() (data []byte, err error) {
+	type shadow RerankLimitParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *RerankLimitParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // A single document, in a row-based format.
 type Row struct {
 	// An identifier for a document.
@@ -2243,7 +2260,7 @@ type NamespaceMultiQueryParams struct {
 	// The consistency level for a query.
 	Consistency NamespaceMultiQueryParamsConsistency `json:"consistency,omitzero"`
 	// Limits the total number of reranked documents returned.
-	Limit NamespaceMultiQueryParamsLimit `json:"limit,omitzero"`
+	Limit RerankLimitParam `json:"limit,omitzero"`
 	// How to combine the rows returned by each sub-query into a single ranked list.
 	RerankBy any `json:"rerank_by,omitzero"`
 	// The encoding to use for vectors in the response.
@@ -2326,20 +2343,6 @@ func init() {
 	apijson.RegisterFieldValidator[NamespaceMultiQueryParamsConsistency](
 		"level", "strong", "eventual",
 	)
-}
-
-// The property Total is required.
-type NamespaceMultiQueryParamsLimit struct {
-	Total int64 `json:"total" api:"required"`
-	paramObj
-}
-
-func (r NamespaceMultiQueryParamsLimit) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceMultiQueryParamsLimit
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *NamespaceMultiQueryParamsLimit) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
 }
 
 type NamespaceQueryParams struct {
