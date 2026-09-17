@@ -21,21 +21,30 @@ func ValueOf[T Constant[T]]() T {
 type Accepted string        // Always "ACCEPTED"
 type CustomerManaged string // Always "customer-managed"
 type Default string         // Always "default"
+type Error string           // Always "error"
+type Finished string        // Always "finished"
 type Ok string              // Always "OK"
+type Running string         // Always "running"
 type UpToDate string        // Always "up-to-date"
 type Updating string        // Always "updating"
 
 func (c Accepted) Default() Accepted               { return "ACCEPTED" }
 func (c CustomerManaged) Default() CustomerManaged { return "customer-managed" }
 func (c Default) Default() Default                 { return "default" }
+func (c Error) Default() Error                     { return "error" }
+func (c Finished) Default() Finished               { return "finished" }
 func (c Ok) Default() Ok                           { return "OK" }
+func (c Running) Default() Running                 { return "running" }
 func (c UpToDate) Default() UpToDate               { return "up-to-date" }
 func (c Updating) Default() Updating               { return "updating" }
 
 func (c Accepted) MarshalJSON() ([]byte, error)        { return marshalString(c) }
 func (c CustomerManaged) MarshalJSON() ([]byte, error) { return marshalString(c) }
 func (c Default) MarshalJSON() ([]byte, error)         { return marshalString(c) }
+func (c Error) MarshalJSON() ([]byte, error)           { return marshalString(c) }
+func (c Finished) MarshalJSON() ([]byte, error)        { return marshalString(c) }
 func (c Ok) MarshalJSON() ([]byte, error)              { return marshalString(c) }
+func (c Running) MarshalJSON() ([]byte, error)         { return marshalString(c) }
 func (c UpToDate) MarshalJSON() ([]byte, error)        { return marshalString(c) }
 func (c Updating) MarshalJSON() ([]byte, error)        { return marshalString(c) }
 
