@@ -266,7 +266,8 @@ func TestNamespacePollCopyFrom(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
 	)
-	_, err := client.Namespaces.PollCopyFrom(
+	ns := client.Namespace("namespace")
+	_, err := ns.PollCopyFrom(
 		context.TODO(),
 		"token",
 		turbopuffer.NamespacePollCopyFromParams{
@@ -399,7 +400,8 @@ func TestNamespaceStartCopyFromWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
 	)
-	_, err := client.Namespaces.StartCopyFrom(context.TODO(), turbopuffer.NamespaceStartCopyFromParams{
+	ns := client.Namespace("namespace")
+	_, err := ns.StartCopyFrom(context.TODO(), turbopuffer.NamespaceStartCopyFromParams{
 		Namespace:       turbopuffer.String("namespace"),
 		SourceNamespace: "source_namespace",
 		DestEncryption: turbopuffer.EncryptionParam{
