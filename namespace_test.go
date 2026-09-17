@@ -258,6 +258,35 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 	}
 }
 
+func TestNamespacePollCopyFrom(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := turbopuffer.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("tpuf_A1..."),
+	)
+	_, err := client.Namespaces.PollCopyFrom(
+		context.TODO(),
+		"token",
+		turbopuffer.NamespacePollCopyFromParams{
+			Namespace: turbopuffer.String("namespace"),
+		},
+	)
+	if err != nil {
+		var apierr *turbopuffer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
 func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
@@ -355,6 +384,39 @@ func TestNamespaceSchema(t *testing.T) {
 	)
 	_, err := client.Namespaces.Schema(context.TODO(), turbopuffer.NamespaceSchemaParams{
 		Namespace: turbopuffer.String("namespace"),
+	})
+	if err != nil {
+		var apierr *turbopuffer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestNamespaceStartCopyFromWithOptionalParams(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := turbopuffer.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("tpuf_A1..."),
+	)
+	_, err := client.Namespaces.StartCopyFrom(context.TODO(), turbopuffer.NamespaceStartCopyFromParams{
+		Namespace:       turbopuffer.String("namespace"),
+		SourceNamespace: "source_namespace",
+		DestEncryption: turbopuffer.EncryptionParam{
+			CustomerManaged: &turbopuffer.EncryptionCustomerManagedParam{
+				KeyName: "key_name",
+			},
+		},
+		SourceAPIKey: turbopuffer.String("source_api_key"),
+		SourceRegion: turbopuffer.String("source_region"),
 	})
 	if err != nil {
 		var apierr *turbopuffer.Error

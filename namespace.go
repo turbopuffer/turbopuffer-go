@@ -159,6 +159,27 @@ func (r *NamespaceService) MultiQuery(ctx context.Context, params NamespaceMulti
 	return res, err
 }
 
+// Retrieve the current status of a copy operation.
+func (r *NamespaceService) PollCopyFrom(ctx context.Context, token string, query NamespacePollCopyFromParams, opts ...option.RequestOption) (res *CopyFromNamespaceOperation, err error) {
+	opts = slices.Concat(r.Options, opts)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return nil, err
+	}
+	requestconfig.UseDefaultParam(&query.Namespace, precfg.DefaultNamespace)
+	if query.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return nil, err
+	}
+	if token == "" {
+		err = errors.New("missing required token parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("v1/namespaces/%s/operations/%s?stainless_overload=pollCopyFrom", url.PathEscape(query.Namespace.Value), url.PathEscape(token))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	return res, err
+}
+
 // Query, filter, full-text search and vector search documents.
 func (r *NamespaceService) Query(ctx context.Context, params NamespaceQueryParams, opts ...option.RequestOption) (res *NamespaceQueryResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -207,6 +228,25 @@ func (r *NamespaceService) Schema(ctx context.Context, query NamespaceSchemaPara
 	}
 	path := fmt.Sprintf("v1/namespaces/%s/schema", url.PathEscape(query.Namespace.Value))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	return res, err
+}
+
+// Start copying all documents from another namespace into this one. Returns an
+// operation token without waiting for the copy to finish. Use the token to poll
+// for progress and the result.
+func (r *NamespaceService) StartCopyFrom(ctx context.Context, params NamespaceStartCopyFromParams, opts ...option.RequestOption) (res *NamespaceStartCopyFromResponse, err error) {
+	opts = slices.Concat(r.Options, opts)
+	precfg, err := requestconfig.PreRequestOptions(opts...)
+	if err != nil {
+		return nil, err
+	}
+	requestconfig.UseDefaultParam(&params.Namespace, precfg.DefaultNamespace)
+	if params.Namespace.Value == "" {
+		err = errors.New("missing required namespace parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("v2/namespaces/%s/async?stainless_overload=startCopyFrom", url.PathEscape(params.Namespace.Value))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return res, err
 }
 
@@ -621,6 +661,191 @@ func (r ContainsAnyTokenFilterParams) MarshalJSON() (data []byte, err error) {
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *ContainsAnyTokenFilterParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// CopyFromNamespaceOperation contains all possible properties and values from
+// [CopyFromNamespaceOperationRunning], [CopyFromNamespaceOperationFinished].
+//
+// Use the [CopyFromNamespaceOperation.AsAny] method to switch on the variant.
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+type CopyFromNamespaceOperation struct {
+	StartTime time.Time `json:"start_time"`
+	// Any of "running", "finished".
+	Status string `json:"status"`
+	// This field is from variant [CopyFromNamespaceOperationRunning].
+	Progress string `json:"progress"`
+	// This field is from variant [CopyFromNamespaceOperationFinished].
+	FinishTime time.Time `json:"finish_time"`
+	// This field is from variant [CopyFromNamespaceOperationFinished].
+	Result CopyFromNamespaceOperationResult `json:"result"`
+	JSON   struct {
+		StartTime  respjson.Field
+		Status     respjson.Field
+		Progress   respjson.Field
+		FinishTime respjson.Field
+		Result     respjson.Field
+		raw        string
+	} `json:"-"`
+}
+
+// anyCopyFromNamespaceOperation is implemented by each variant of
+// [CopyFromNamespaceOperation] to add type safety for the return type of
+// [CopyFromNamespaceOperation.AsAny]
+type anyCopyFromNamespaceOperation interface {
+	implCopyFromNamespaceOperation()
+}
+
+func (CopyFromNamespaceOperationRunning) implCopyFromNamespaceOperation()  {}
+func (CopyFromNamespaceOperationFinished) implCopyFromNamespaceOperation() {}
+
+// Use the following switch statement to find the correct variant
+//
+//	switch variant := CopyFromNamespaceOperation.AsAny().(type) {
+//	case turbopuffer.CopyFromNamespaceOperationRunning:
+//	case turbopuffer.CopyFromNamespaceOperationFinished:
+//	default:
+//	  fmt.Errorf("no variant present")
+//	}
+func (u CopyFromNamespaceOperation) AsAny() anyCopyFromNamespaceOperation {
+	switch u.Status {
+	case "running":
+		return u.AsRunning()
+	case "finished":
+		return u.AsFinished()
+	}
+	return nil
+}
+
+func (u CopyFromNamespaceOperation) AsRunning() (v CopyFromNamespaceOperationRunning) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u CopyFromNamespaceOperation) AsFinished() (v CopyFromNamespaceOperationFinished) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u CopyFromNamespaceOperation) RawJSON() string { return u.JSON.raw }
+
+func (r *CopyFromNamespaceOperation) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type CopyFromNamespaceOperationRunning struct {
+	// The time at which the operation started.
+	StartTime time.Time        `json:"start_time" api:"required" format:"date-time"`
+	Status    constant.Running `json:"status" default:"running"`
+	// A freeform description of the operation's progress. May be absent, and its
+	// format may change.
+	Progress string `json:"progress"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		StartTime   respjson.Field
+		Status      respjson.Field
+		Progress    respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r CopyFromNamespaceOperationRunning) RawJSON() string { return r.JSON.raw }
+func (r *CopyFromNamespaceOperationRunning) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type CopyFromNamespaceOperationFinished struct {
+	// The time at which the operation finished.
+	FinishTime time.Time                        `json:"finish_time" api:"required" format:"date-time"`
+	Result     CopyFromNamespaceOperationResult `json:"result" api:"required"`
+	// The time at which the operation started.
+	StartTime time.Time         `json:"start_time" api:"required" format:"date-time"`
+	Status    constant.Finished `json:"status" default:"finished"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		FinishTime  respjson.Field
+		Result      respjson.Field
+		StartTime   respjson.Field
+		Status      respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r CopyFromNamespaceOperationFinished) RawJSON() string { return r.JSON.raw }
+func (r *CopyFromNamespaceOperationFinished) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// CopyFromNamespaceOperationResult contains all possible properties and values
+// from [CopyFromNamespaceOperationResultSuccess],
+// [CopyFromNamespaceOperationResultError].
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+type CopyFromNamespaceOperationResult struct {
+	// This field is from variant [CopyFromNamespaceOperationResultSuccess].
+	Success WriteResult `json:"success"`
+	// This field is from variant [CopyFromNamespaceOperationResultError].
+	Error OperationError `json:"error"`
+	JSON  struct {
+		Success respjson.Field
+		Error   respjson.Field
+		raw     string
+	} `json:"-"`
+}
+
+func (u CopyFromNamespaceOperationResult) AsSuccess() (v CopyFromNamespaceOperationResultSuccess) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u CopyFromNamespaceOperationResult) AsError() (v CopyFromNamespaceOperationResultError) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u CopyFromNamespaceOperationResult) RawJSON() string { return u.JSON.raw }
+
+func (r *CopyFromNamespaceOperationResult) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type CopyFromNamespaceOperationResultSuccess struct {
+	// The response to a successful write request.
+	Success WriteResult `json:"success" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Success     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r CopyFromNamespaceOperationResultSuccess) RawJSON() string { return r.JSON.raw }
+func (r *CopyFromNamespaceOperationResultSuccess) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type CopyFromNamespaceOperationResultError struct {
+	Error OperationError `json:"error" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Error       respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r CopyFromNamespaceOperationResultError) RawJSON() string { return r.JSON.raw }
+func (r *CopyFromNamespaceOperationResultError) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -1398,6 +1623,47 @@ func (r *NamespaceMetadataPatchParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+type OperationError struct {
+	// The response to an unsuccessful request.
+	Detail OperationErrorDetail `json:"detail" api:"required"`
+	// The HTTP status code of the operation's error.
+	StatusCode int64 `json:"status_code" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Detail      respjson.Field
+		StatusCode  respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r OperationError) RawJSON() string { return r.JSON.raw }
+func (r *OperationError) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The response to an unsuccessful request.
+type OperationErrorDetail struct {
+	// The error message.
+	Error string `json:"error" api:"required"`
+	// The status of the request.
+	Status constant.Error `json:"status" default:"error"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Error       respjson.Field
+		Status      respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r OperationErrorDetail) RawJSON() string { return r.JSON.raw }
+func (r *OperationErrorDetail) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Configuration for namespace pinning.
 type PinningConfig struct {
 	// The number of read replicas to provision. Defaults to 1 if not specified.
@@ -1787,6 +2053,60 @@ func (r *WritePerformance) UnmarshalJSON(data []byte) error {
 }
 
 // The response to a successful write request.
+type WriteResult struct {
+	// The billing information for a write request.
+	Billing WriteBilling `json:"billing" api:"required"`
+	// A message describing the result of the write request.
+	Message string `json:"message" api:"required"`
+	// The number of rows affected by the write request.
+	RowsAffected int64 `json:"rows_affected" api:"required"`
+	// The status of the request.
+	Status constant.Ok `json:"status" default:"OK"`
+	// The IDs of documents that were deleted. Only included when `return_affected_ids`
+	// is true and at least one document was deleted.
+	DeletedIDs []ID `json:"deleted_ids" format:"uuid"`
+	// The IDs of documents that were patched. Only included when `return_affected_ids`
+	// is true and at least one document was patched.
+	PatchedIDs []ID `json:"patched_ids" format:"uuid"`
+	// The performance information for a write request.
+	Performance WritePerformance `json:"performance"`
+	// The number of rows deleted by the write request.
+	RowsDeleted int64 `json:"rows_deleted"`
+	// The number of rows patched by the write request.
+	RowsPatched int64 `json:"rows_patched"`
+	// Whether more documents match the filter for partial operations.
+	RowsRemaining bool `json:"rows_remaining"`
+	// The number of rows upserted by the write request.
+	RowsUpserted int64 `json:"rows_upserted"`
+	// The IDs of documents that were upserted. Only included when
+	// `return_affected_ids` is true and at least one document was upserted.
+	UpsertedIDs []ID `json:"upserted_ids" format:"uuid"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Billing       respjson.Field
+		Message       respjson.Field
+		RowsAffected  respjson.Field
+		Status        respjson.Field
+		DeletedIDs    respjson.Field
+		PatchedIDs    respjson.Field
+		Performance   respjson.Field
+		RowsDeleted   respjson.Field
+		RowsPatched   respjson.Field
+		RowsRemaining respjson.Field
+		RowsUpserted  respjson.Field
+		UpsertedIDs   respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r WriteResult) RawJSON() string { return r.JSON.raw }
+func (r *WriteResult) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The response to a successful write request.
 type NamespaceBranchFromResponse struct {
 	// The billing information for a write request.
 	Billing WriteBilling `json:"billing" api:"required"`
@@ -2071,6 +2391,23 @@ func (r *NamespaceRecallResponseGroundTruth) UnmarshalJSON(data []byte) error {
 
 type NamespaceSchemaResponse map[string]AttributeSchemaConfig
 
+type NamespaceStartCopyFromResponse struct {
+	// The token identifying the copy operation.
+	Token string `json:"token" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Token       respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceStartCopyFromResponse) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceStartCopyFromResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 type NamespaceUpdateSchemaResponse map[string]AttributeSchemaConfig
 
 // The response to a successful write request.
@@ -2345,6 +2682,11 @@ func init() {
 	)
 }
 
+type NamespacePollCopyFromParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
+	paramObj
+}
+
 type NamespaceQueryParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
 	// Number of documents to skip before returning results. Supported only in v2
@@ -2446,6 +2788,27 @@ func (r *NamespaceRecallParams) UnmarshalJSON(data []byte) error {
 type NamespaceSchemaParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
 	paramObj
+}
+
+type NamespaceStartCopyFromParams struct {
+	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
+	// The namespace to copy documents from.
+	SourceNamespace string `json:"source_namespace" api:"required"`
+	// (Optional) An API key for the organization containing the source namespace
+	SourceAPIKey param.Opt[string] `json:"source_api_key,omitzero"`
+	// (Optional) The region of the source namespace.
+	SourceRegion param.Opt[string] `json:"source_region,omitzero"`
+	// (Optional) The encryption configuration for the destination namespace.
+	DestEncryption EncryptionParam `json:"dest_encryption,omitzero"`
+	paramObj
+}
+
+func (r NamespaceStartCopyFromParams) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceStartCopyFromParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceStartCopyFromParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
 }
 
 type NamespaceUpdateMetadataParams struct {
