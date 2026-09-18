@@ -2738,7 +2738,10 @@ type NamespaceStartCopyFromParams struct {
 
 func (r NamespaceStartCopyFromParams) MarshalJSON() (data []byte, err error) {
 	type shadow NamespaceStartCopyFromParams
-	return param.MarshalObject(r, (*shadow)(&r))
+	wrapper := struct {
+		CopyFromNamespace *shadow `json:"copy_from_namespace"`
+	}{CopyFromNamespace: (*shadow)(&r)}
+	return param.MarshalObject(r, &wrapper)
 }
 func (r *NamespaceStartCopyFromParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)

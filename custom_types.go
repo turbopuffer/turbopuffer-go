@@ -10,25 +10,6 @@ type AggregateBy interface {
 
 func (v AggregateByCount) sealed_AggregateBy() {}
 func (v AggregateBySum) sealed_AggregateBy()   {}
-func (v AggregateByAvg) sealed_AggregateBy()   {}
-
-type AggregateByAvg struct {
-	attr string
-}
-
-func NewAggregateByAvg(
-	attr string,
-) AggregateByAvg {
-	return AggregateByAvg{
-		attr,
-	}
-}
-func (v AggregateByAvg) MarshalJSON() ([]byte, error) {
-	return shimjson.Marshal([]any{
-		"Avg",
-		v.attr,
-	})
-}
 
 type AggregateByCount struct {
 }
