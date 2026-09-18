@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.7.0 (2026-09-18)
+
+Full Changelog: [v2.6.0...v2.7.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.6.0...v2.7.0)
+
+### Features
+
+* Add `read_only` namespace field ([90ceb28](https://github.com/turbopuffer/turbopuffer-go/commit/90ceb28688a1756f2e099459f2601bed8ae24fd2))
+* **api:** Merge remote-tracking branch 'origin/preview/benesch/named-rerank-limit-schema' ([8458f89](https://github.com/turbopuffer/turbopuffer-go/commit/8458f8906efabe0d6675589ac80ba7e250783e4b))
+* Apply limit on rerank_by when provided ([a78469b](https://github.com/turbopuffer/turbopuffer-go/commit/a78469bca59e852646db33449198340daa99f35a))
+* Apply limit on rerank_by when provided ([08214b8](https://github.com/turbopuffer/turbopuffer-go/commit/08214b824c9a753f035e5772718cdbbb95d1947c))
+* engine,openapi: async copy_from_namespace endpoints ([1a28f22](https://github.com/turbopuffer/turbopuffer-go/commit/1a28f223a3bb1964686c5d489e9b7368db70ec53))
+* spec: name the RerankLimit object so Stainless generates it in Go ([5472013](https://github.com/turbopuffer/turbopuffer-go/commit/5472013ba8eb2b649e6664a68212acf73e93ff57))
+* spec: no-op change to Stainless spec ([8fd2168](https://github.com/turbopuffer/turbopuffer-go/commit/8fd216858b961ed67448dd595b0508ba53f3ced9))
+* tpuf-engine: Adding pagination through `offset` ([5ea0b0e](https://github.com/turbopuffer/turbopuffer-go/commit/5ea0b0eb22ca25613467f75690f088d7b982b644))
+* tpuf-engine: expose billed_replicas in pinning metadata ([39f8a38](https://github.com/turbopuffer/turbopuffer-go/commit/39f8a381b77053b27bc7c268ec33752824bc5cf0))
+
+
+### Bug Fixes
+
+* restore generated multi-query limit definitions ([#141](https://github.com/turbopuffer/turbopuffer-go/issues/141)) ([a57b6bb](https://github.com/turbopuffer/turbopuffer-go/commit/a57b6bba7f914e6f991c1ffa2fd14dac540ebfa6))
+* restore namespace CI and wrap async copy requests ([#142](https://github.com/turbopuffer/turbopuffer-go/issues/142)) ([ecc90c3](https://github.com/turbopuffer/turbopuffer-go/commit/ecc90c3f236572950cbe379c5a3b8fecf7f35713))
+
 ## 2.6.0 (2026-07-30)
 
 Full Changelog: [v2.5.0...v2.6.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.5.0...v2.6.0)
