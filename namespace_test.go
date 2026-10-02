@@ -467,35 +467,37 @@ func TestNamespaceUpdateSchemaWithOptionalParams(t *testing.T) {
 	)
 	ns := client.Namespace("ns")
 	_, err := ns.UpdateSchema(context.TODO(), turbopuffer.NamespaceUpdateSchemaParams{
-		Schema: map[string]turbopuffer.AttributeSchemaConfigParam{
+		Schema: map[string]turbopuffer.AttributeSchemaParam{
 			"foo": {
-				Type: "string",
-				Ann: turbopuffer.AttributeSchemaConfigAnnParam{
-					DistanceMetric:  turbopuffer.DistanceMetricCosineDistance,
-					LateInteraction: turbopuffer.Bool(true),
-				},
-				Embed: turbopuffer.AttributeEmbedConfigParam{
-					Model:     "model",
-					Attribute: turbopuffer.String("attribute"),
-					Dims:      turbopuffer.Int(0),
-				},
-				Filterable: turbopuffer.Bool(true),
-				FullTextSearch: &turbopuffer.FullTextSearchConfigParam{
-					AsciiFolding:    turbopuffer.Bool(true),
-					B:               turbopuffer.Float(0),
-					CaseSensitive:   turbopuffer.Bool(true),
-					K1:              turbopuffer.Float(0),
-					Language:        turbopuffer.LanguageArabic,
-					MaxTokenLength:  turbopuffer.Int(0),
-					RemoveStopwords: turbopuffer.Bool(true),
-					Stemming:        turbopuffer.Bool(true),
-					Tokenizer:       turbopuffer.TokenizerPreTokenizedArray,
-				},
-				Fuzzy: turbopuffer.Bool(true),
-				Glob:  turbopuffer.Bool(true),
-				Regex: turbopuffer.Bool(true),
-				SparseKnn: turbopuffer.AttributeSchemaConfigSparseKnnParam{
-					DistanceMetric: turbopuffer.SparseDistanceMetricDotProduct,
+				AttributeSchemaConfig: &turbopuffer.AttributeSchemaConfigParam{
+					Type: "string",
+					Ann: turbopuffer.AttributeSchemaConfigAnnParam{
+						DistanceMetric:  turbopuffer.DistanceMetricCosineDistance,
+						LateInteraction: turbopuffer.Bool(true),
+					},
+					Embed: turbopuffer.AttributeEmbedConfigParam{
+						Model:     "model",
+						Attribute: turbopuffer.String("attribute"),
+						Dims:      turbopuffer.Int(0),
+					},
+					Filterable: turbopuffer.Bool(true),
+					FullTextSearch: &turbopuffer.FullTextSearchConfigParam{
+						AsciiFolding:    turbopuffer.Bool(true),
+						B:               turbopuffer.Float(0),
+						CaseSensitive:   turbopuffer.Bool(true),
+						K1:              turbopuffer.Float(0),
+						Language:        turbopuffer.LanguageArabic,
+						MaxTokenLength:  turbopuffer.Int(0),
+						RemoveStopwords: turbopuffer.Bool(true),
+						Stemming:        turbopuffer.Bool(true),
+						Tokenizer:       turbopuffer.TokenizerPreTokenizedArray,
+					},
+					Fuzzy: turbopuffer.Bool(true),
+					Glob:  turbopuffer.Bool(true),
+					Regex: turbopuffer.Bool(true),
+					SparseKnn: turbopuffer.AttributeSchemaConfigSparseKnnParam{
+						DistanceMetric: turbopuffer.SparseDistanceMetricDotProduct,
+					},
 				},
 			},
 		},
@@ -553,16 +555,37 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		DeleteByFilterAllowPartial: turbopuffer.Bool(true),
 		PatchByFilterAllowPartial:  turbopuffer.Bool(true),
 		ReturnAffectedIDs:          turbopuffer.Bool(true),
-		Schema: map[string]turbopuffer.AttributeSchemaConfigParam{
-			"foo": {Ann: turbopuffer.AttributeSchemaConfigAnnParam{DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
-				LateInteraction: turbopuffer.Bool(true),
-			},
-				Embed: turbopuffer.AttributeEmbedConfigParam{
-					Model:     "model",
-					Attribute: turbopuffer.String("attribute"),
-					Dims:      turbopuffer.Int(0),
-				}, Filterable: turbopuffer.Bool(true), FullTextSearch: &turbopuffer.FullTextSearchConfigParam{B: turbopuffer.Float(0), CaseSensitive: turbopuffer.Bool(true), K1: turbopuffer.Float(0), Language: turbopuffer.LanguageArabic, RemoveStopwords: turbopuffer.Bool(true), Stemming: turbopuffer.Bool(true), Tokenizer: turbopuffer.TokenizerPreTokenizedArray}, Fuzzy: turbopuffer.Bool(true), Glob: turbopuffer.Bool(true), Type: turbopuffer.AttributeType("string"), SparseKnn: turbopuffer.AttributeSchemaConfigSparseKnnParam{
-					DistanceMetric: turbopuffer.SparseDistanceMetricDotProduct,
+		Schema: map[string]turbopuffer.AttributeSchemaParam{
+			"foo": {
+				AttributeSchemaConfig: &turbopuffer.AttributeSchemaConfigParam{
+					Type: "string",
+					Ann: turbopuffer.AttributeSchemaConfigAnnParam{
+						DistanceMetric:  turbopuffer.DistanceMetricCosineDistance,
+						LateInteraction: turbopuffer.Bool(true),
+					},
+					Embed: turbopuffer.AttributeEmbedConfigParam{
+						Model:     "model",
+						Attribute: turbopuffer.String("attribute"),
+						Dims:      turbopuffer.Int(0),
+					},
+					Filterable: turbopuffer.Bool(true),
+					FullTextSearch: &turbopuffer.FullTextSearchConfigParam{
+						AsciiFolding:    turbopuffer.Bool(true),
+						B:               turbopuffer.Float(0),
+						CaseSensitive:   turbopuffer.Bool(true),
+						K1:              turbopuffer.Float(0),
+						Language:        turbopuffer.LanguageArabic,
+						MaxTokenLength:  turbopuffer.Int(0),
+						RemoveStopwords: turbopuffer.Bool(true),
+						Stemming:        turbopuffer.Bool(true),
+						Tokenizer:       turbopuffer.TokenizerPreTokenizedArray,
+					},
+					Fuzzy: turbopuffer.Bool(true),
+					Glob:  turbopuffer.Bool(true),
+					Regex: turbopuffer.Bool(true),
+					SparseKnn: turbopuffer.AttributeSchemaConfigSparseKnnParam{
+						DistanceMetric: turbopuffer.SparseDistanceMetricDotProduct,
+					},
 				},
 			},
 		},

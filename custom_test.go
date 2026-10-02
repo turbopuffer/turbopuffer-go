@@ -47,6 +47,10 @@ func TestTurbopufferFullTextSearchSchema(t *testing.T) {
 		schema map[string]turbopuffer.AttributeSchemaConfigParam,
 	) turbopuffer.NamespaceSchemaResponse {
 		subtestName := strings.SplitN(t.Name(), "/", 2)[1]
+		wrapped := make(map[string]turbopuffer.AttributeSchemaParam, len(schema))
+		for name, config := range schema {
+			wrapped[name] = turbopuffer.AttributeSchemaParam{AttributeSchemaConfig: &config}
+		}
 		ns := tctx.client.Namespace(fmt.Sprintf("%s-fts-%s", tctx.prefix, subtestName))
 		_, err := ns.Write(tctx.ctx, turbopuffer.NamespaceWriteParams{
 			UpsertRows: []turbopuffer.RowParam{
@@ -55,7 +59,7 @@ func TestTurbopufferFullTextSearchSchema(t *testing.T) {
 					"test-attr": "test-value",
 				},
 			},
-			Schema: schema,
+			Schema: wrapped,
 		})
 		if err != nil {
 			t.Fatal(err)

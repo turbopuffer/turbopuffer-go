@@ -49,10 +49,10 @@ func main() {
 					"age":    28,
 				},
 			},
-			Schema: map[string]turbopuffer.AttributeSchemaConfigParam{
-				"id":   {Type: turbopuffer.AttributeType("uuid")},
-				"name": {Type: turbopuffer.AttributeType("string"), Filterable: turbopuffer.Bool(true)},
-				"age":  {Type: turbopuffer.AttributeType("uint")},
+			Schema: map[string]turbopuffer.AttributeSchemaParam{
+				"id":   turbopuffer.AttributeSchemaParamAttributeSchemaConfig("uuid"),
+				"name": {AttributeSchemaConfig: &turbopuffer.AttributeSchemaConfigParam{Type: "string", Filterable: turbopuffer.Bool(true)}},
+				"age":  turbopuffer.AttributeSchemaParamAttributeSchemaConfig("uint"),
 			},
 			DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
 		})
