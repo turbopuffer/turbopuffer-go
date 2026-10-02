@@ -14,8 +14,9 @@ Params Types:
 
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AttributeEmbedConfigParam">AttributeEmbedConfigParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AttributeEmbedConfigParam">AttributeEmbedConfigParam</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AttributeSchemaParam">AttributeSchemaParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AttributeSchemaConfigParam">AttributeSchemaConfigParam</a>
-- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AttributeSchemaConfigParam">AttributeSchemaConfigParam</a>
+- <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AttributeSchemaDropParam">AttributeSchemaDropParam</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#AttributeType">AttributeType</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#Bm25ClauseParams">Bm25ClauseParams</a>
 - <a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2">turbopuffer</a>.<a href="https://pkg.go.dev/github.com/turbopuffer/turbopuffer-go/v2#BranchFromNamespaceParams">BranchFromNamespaceParams</a>

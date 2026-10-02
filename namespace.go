@@ -369,6 +369,43 @@ func (r *AttributeEmbedConfigParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+func AttributeSchemaParamAttributeSchemaConfig(type_ AttributeType) AttributeSchemaParam {
+	var variant AttributeSchemaConfigParam
+	variant.Type = type_
+	return AttributeSchemaParam{AttributeSchemaConfig: &variant}
+}
+
+func AttributeSchemaParamAttributeSchemaDrop(drop bool) AttributeSchemaParam {
+	var variant AttributeSchemaDropParam
+	variant.Drop = drop
+	return AttributeSchemaParam{AttributeSchemaDrop: &variant}
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type AttributeSchemaParam struct {
+	AttributeSchemaConfig *AttributeSchemaConfigParam `json:",omitzero,inline"`
+	AttributeSchemaDrop   *AttributeSchemaDropParam   `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u AttributeSchemaParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.AttributeSchemaConfig, u.AttributeSchemaDrop)
+}
+func (u *AttributeSchemaParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *AttributeSchemaParam) asAny() any {
+	if !param.IsOmitted(u.AttributeSchemaConfig) {
+		return u.AttributeSchemaConfig
+	} else if !param.IsOmitted(u.AttributeSchemaDrop) {
+		return u.AttributeSchemaDrop
+	}
+	return nil
+}
+
 // Detailed configuration for an attribute attached to a document.
 type AttributeSchemaConfig struct {
 	// The data type of the attribute. Valid values: string, int, uint, float, uuid,
@@ -553,6 +590,24 @@ func (r AttributeSchemaConfigSparseKnnParam) MarshalJSON() (data []byte, err err
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *AttributeSchemaConfigSparseKnnParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Drops the attribute from the namespace. Cannot be combined with other schema
+// settings.
+//
+// The property Drop is required.
+type AttributeSchemaDropParam struct {
+	// Must be `true`.
+	Drop bool `json:"drop" api:"required"`
+	paramObj
+}
+
+func (r AttributeSchemaDropParam) MarshalJSON() (data []byte, err error) {
+	type shadow AttributeSchemaDropParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *AttributeSchemaDropParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -2828,7 +2883,7 @@ func (r *NamespaceUpdateMetadataParams) UnmarshalJSON(data []byte) error {
 type NamespaceUpdateSchemaParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
 	// The desired schema for the namespace.
-	Schema map[string]AttributeSchemaConfigParam
+	Schema map[string]AttributeSchemaParam
 	paramObj
 }
 
@@ -2875,7 +2930,7 @@ type NamespaceWriteParams struct {
 	PatchCondition any        `json:"patch_condition,omitzero"`
 	PatchRows      []RowParam `json:"patch_rows,omitzero"`
 	// The schema of the attributes attached to the documents.
-	Schema map[string]AttributeSchemaConfigParam `json:"schema,omitzero"`
+	Schema map[string]AttributeSchemaParam `json:"schema,omitzero"`
 	// Configuration for namespace sharding, which partitions a namespace's documents
 	// across multiple internal shards to scale indexing and query throughput beyond a
 	// single machine. Sharding can only be configured on a namespace's inaugural
