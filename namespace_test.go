@@ -537,6 +537,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 			SourceAPIKey:    turbopuffer.String("source_api_key"),
 			SourceRegion:    turbopuffer.String("source_region"),
 		},
+		CreateNamespace:     turbopuffer.Bool(true),
 		DisableBackpressure: turbopuffer.Bool(true),
 		DistanceMetric:      turbopuffer.DistanceMetricCosineDistance,
 		Encryption: turbopuffer.EncryptionParam{
