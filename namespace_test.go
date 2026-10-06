@@ -540,6 +540,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 			SourceAPIKey:    turbopuffer.String("source_api_key"),
 			SourceRegion:    turbopuffer.String("source_region"),
 		},
+		CreateNamespace:            turbopuffer.Bool(true),
 		DeleteByFilter:             map[string]any{},
 		DeleteByFilterAllowPartial: turbopuffer.Bool(true),
 		DeleteCondition:            map[string]any{},
