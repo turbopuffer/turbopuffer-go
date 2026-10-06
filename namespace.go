@@ -2832,6 +2832,12 @@ func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
 
 type NamespaceWriteParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
+	// If `true`, ensures the namespace is created, even if the request writes no
+	// documents. Creating an empty namespace requires the `id` type to be declared in
+	// `schema`. If `false`, a namespace is never created, and a 404 is returned if it
+	// does not exist. If omitted, a namespace is created by the first request that
+	// writes documents.
+	CreateNamespace param.Opt[bool] `json:"create_namespace,omitzero"`
 	// Allow partial completion when filter matches too many documents.
 	DeleteByFilterAllowPartial param.Opt[bool] `json:"delete_by_filter_allow_partial,omitzero"`
 	// Disables write throttling (HTTP 429 responses) during high-volume ingestion.
