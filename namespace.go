@@ -2896,6 +2896,12 @@ func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
 
 type NamespaceWriteParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
+	// If `true`, ensures the namespace is created, even if the request writes no
+	// documents. Creating an empty namespace requires the `id` type to be declared in
+	// `schema`. If `false`, a namespace is never created, and a 404 is returned if it
+	// does not exist. If omitted, a namespace is created by the first request that
+	// writes documents.
+	CreateNamespace param.Opt[bool] `json:"create_namespace,omitzero"`
 	// Allow partial completion when filter matches too many documents.
 	DeleteByFilterAllowPartial param.Opt[bool] `json:"delete_by_filter_allow_partial,omitzero"`
 	// Disables write throttling (HTTP 429 responses) during high-volume ingestion.
@@ -2905,9 +2911,11 @@ type NamespaceWriteParams struct {
 	// If true, return the IDs of affected rows (deleted, patched, upserted) in the
 	// response. For filtered and conditional writes, only IDs for writes that
 	// succeeded will be included.
-	ReturnAffectedIDs   param.Opt[bool]           `json:"return_affected_ids,omitzero"`
+	ReturnAffectedIDs param.Opt[bool] `json:"return_affected_ids,omitzero"`
+	// The namespace to create an instant, copy-on-write clone of.
 	BranchFromNamespace BranchFromNamespaceParams `json:"branch_from_namespace,omitzero"`
-	CopyFromNamespace   CopyFromNamespaceParams   `json:"copy_from_namespace,omitzero"`
+	// The namespace to copy documents from.
+	CopyFromNamespace CopyFromNamespaceParams `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
 	DeleteByFilter any `json:"delete_by_filter,omitzero"`
 	// A condition evaluated against the current value of each document targeted by a
