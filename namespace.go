@@ -1798,6 +1798,13 @@ type QueryPerformance struct {
 	// Request time measured on the server, including time spent waiting for other
 	// queries to complete if the namespace was at its concurrency limit.
 	ServerTotalMs int64 `json:"server_total_ms" api:"required"`
+	// Time spent embedding text, in milliseconds. Only set when using a native
+	// embedding model.
+	EmbeddingMs int64 `json:"embedding_ms"`
+	// The number of tokens embedded. Only set when using a native embedding model.
+	EmbeddingTokens int64 `json:"embedding_tokens"`
+	// The timestamp of the last write operation that the query observed.
+	LastIncludedWriteAt time.Time `json:"last_included_write_at" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ApproxNamespaceSize   respjson.Field
@@ -1806,6 +1813,9 @@ type QueryPerformance struct {
 		ExhaustiveSearchCount respjson.Field
 		QueryExecutionMs      respjson.Field
 		ServerTotalMs         respjson.Field
+		EmbeddingMs           respjson.Field
+		EmbeddingTokens       respjson.Field
+		LastIncludedWriteAt   respjson.Field
 		ExtraFields           map[string]respjson.Field
 		raw                   string
 	} `json:"-"`
@@ -2093,11 +2103,18 @@ func (r *WriteBilling) UnmarshalJSON(data []byte) error {
 type WritePerformance struct {
 	// Request time measured on the server, in milliseconds.
 	ServerTotalMs int64 `json:"server_total_ms" api:"required"`
+	// Time spent embedding text, in milliseconds. Only set when using a native
+	// embedding model.
+	EmbeddingMs int64 `json:"embedding_ms"`
+	// The number of tokens embedded. Only set when using a native embedding model.
+	EmbeddingTokens int64 `json:"embedding_tokens"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ServerTotalMs respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
+		ServerTotalMs   respjson.Field
+		EmbeddingMs     respjson.Field
+		EmbeddingTokens respjson.Field
+		ExtraFields     map[string]respjson.Field
+		raw             string
 	} `json:"-"`
 }
 
@@ -2911,11 +2928,9 @@ type NamespaceWriteParams struct {
 	// If true, return the IDs of affected rows (deleted, patched, upserted) in the
 	// response. For filtered and conditional writes, only IDs for writes that
 	// succeeded will be included.
-	ReturnAffectedIDs param.Opt[bool] `json:"return_affected_ids,omitzero"`
-	// The namespace to create an instant, copy-on-write clone of.
+	ReturnAffectedIDs   param.Opt[bool]           `json:"return_affected_ids,omitzero"`
 	BranchFromNamespace BranchFromNamespaceParams `json:"branch_from_namespace,omitzero"`
-	// The namespace to copy documents from.
-	CopyFromNamespace CopyFromNamespaceParams `json:"copy_from_namespace,omitzero"`
+	CopyFromNamespace   CopyFromNamespaceParams   `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
 	DeleteByFilter any `json:"delete_by_filter,omitzero"`
 	// A condition evaluated against the current value of each document targeted by a
