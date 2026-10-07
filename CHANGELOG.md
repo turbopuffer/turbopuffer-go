@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.8.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.7.0...v2.8.0) (2026-10-07)
+
+
+### Features
+
+* stainless to stlc migration ([2ca99b0](https://github.com/turbopuffer/turbopuffer-go/commit/2ca99b0e0fc507ef71bebdf544d4972f8c2f866f))
+* stlc: qol fixes ([c051d2b](https://github.com/turbopuffer/turbopuffer-go/commit/c051d2bc9024373d7117887d71d0d017e763a702))
+
 ## 2.7.0 (2026-09-18)
 
 Full Changelog: [v2.6.0...v2.7.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.6.0...v2.7.0)
