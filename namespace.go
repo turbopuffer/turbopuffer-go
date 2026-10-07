@@ -1558,8 +1558,7 @@ type NamespaceMetadataIndexIndexUpdating struct {
 	// The number of bytes in the namespace that are in the write-ahead log but have
 	// not yet been indexed.
 	UnindexedBytes int64 `json:"unindexed_bytes" api:"required"`
-	// The number of rows in the write-ahead log that have not yet been indexed. Write
-	// backpressure is applied when this exceeds the unindexed row limit.
+	// The number of rows in the write-ahead log that have not yet been indexed.
 	UnindexedRows int64 `json:"unindexed_rows" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
