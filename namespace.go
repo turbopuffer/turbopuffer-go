@@ -1544,9 +1544,12 @@ type NamespaceMetadataIndex struct {
 	Status string `json:"status"`
 	// This field is from variant [NamespaceMetadataIndexIndexUpdating].
 	UnindexedBytes int64 `json:"unindexed_bytes"`
-	JSON           struct {
+	// This field is from variant [NamespaceMetadataIndexIndexUpdating].
+	UnindexedRows int64 `json:"unindexed_rows"`
+	JSON          struct {
 		Status         respjson.Field
 		UnindexedBytes respjson.Field
+		UnindexedRows  respjson.Field
 		raw            string
 	} `json:"-"`
 }
@@ -1589,10 +1592,13 @@ type NamespaceMetadataIndexIndexUpdating struct {
 	// The number of bytes in the namespace that are in the write-ahead log but have
 	// not yet been indexed.
 	UnindexedBytes int64 `json:"unindexed_bytes" api:"required"`
+	// The number of rows in the write-ahead log that have not yet been indexed.
+	UnindexedRows int64 `json:"unindexed_rows" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Status         respjson.Field
 		UnindexedBytes respjson.Field
+		UnindexedRows  respjson.Field
 		ExtraFields    map[string]respjson.Field
 		raw            string
 	} `json:"-"`
@@ -1798,6 +1804,11 @@ type QueryPerformance struct {
 	// Request time measured on the server, including time spent waiting for other
 	// queries to complete if the namespace was at its concurrency limit.
 	ServerTotalMs int64 `json:"server_total_ms" api:"required"`
+	// Time spent embedding text, in milliseconds. Only set when using a native
+	// embedding model.
+	EmbeddingMs int64 `json:"embedding_ms"`
+	// The number of tokens embedded. Only set when using a native embedding model.
+	EmbeddingTokens int64 `json:"embedding_tokens"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ApproxNamespaceSize   respjson.Field
@@ -1806,6 +1817,8 @@ type QueryPerformance struct {
 		ExhaustiveSearchCount respjson.Field
 		QueryExecutionMs      respjson.Field
 		ServerTotalMs         respjson.Field
+		EmbeddingMs           respjson.Field
+		EmbeddingTokens       respjson.Field
 		ExtraFields           map[string]respjson.Field
 		raw                   string
 	} `json:"-"`
@@ -2093,11 +2106,18 @@ func (r *WriteBilling) UnmarshalJSON(data []byte) error {
 type WritePerformance struct {
 	// Request time measured on the server, in milliseconds.
 	ServerTotalMs int64 `json:"server_total_ms" api:"required"`
+	// Time spent embedding text, in milliseconds. Only set when using a native
+	// embedding model.
+	EmbeddingMs int64 `json:"embedding_ms"`
+	// The number of tokens embedded. Only set when using a native embedding model.
+	EmbeddingTokens int64 `json:"embedding_tokens"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ServerTotalMs respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
+		ServerTotalMs   respjson.Field
+		EmbeddingMs     respjson.Field
+		EmbeddingTokens respjson.Field
+		ExtraFields     map[string]respjson.Field
+		raw             string
 	} `json:"-"`
 }
 
