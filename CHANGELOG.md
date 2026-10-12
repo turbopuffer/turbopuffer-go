@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.9.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.8.0...v2.9.0) (2026-10-08)
+
+
+### Features
+
+* embedding: openapi embedding stats ([3a306a6](https://github.com/turbopuffer/turbopuffer-go/commit/3a306a66f2fa559531aaffd19a199622c7337a26))
+* metadata: expose unindexed_rows in index status ([a94a01f](https://github.com/turbopuffer/turbopuffer-go/commit/a94a01fe8e64395c090276152b066f95b69e803c))
+
+
+### Documentation
+
+* use the v2 module path in go get ([3eb41a7](https://github.com/turbopuffer/turbopuffer-go/commit/3eb41a70bb911b2c19bd6a25886a5d7ce088f8a7))
+* use the v2 module path in go get ([5fe00fe](https://github.com/turbopuffer/turbopuffer-go/commit/5fe00fe0c24d7f7dcf671c491c72585c1c2309d6))
+
 ## [2.8.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.7.0...v2.8.0) (2026-10-07)
 
 
