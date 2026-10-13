@@ -1820,7 +1820,7 @@ type RerankModelParams struct {
 	// The string attribute to score. Must be included in `include_attributes` in every
 	// query.
 	Attribute string `json:"attribute" api:"required"`
-	// The reranking model to use.
+	// Which reranking model to use.
 	Model string `json:"model" api:"required"`
 	// The query text to score each document against.
 	Query string `json:"query" api:"required"`
@@ -2891,9 +2891,11 @@ type NamespaceWriteParams struct {
 	// If true, return the IDs of affected rows (deleted, patched, upserted) in the
 	// response. For filtered and conditional writes, only IDs for writes that
 	// succeeded will be included.
-	ReturnAffectedIDs   param.Opt[bool]           `json:"return_affected_ids,omitzero"`
+	ReturnAffectedIDs param.Opt[bool] `json:"return_affected_ids,omitzero"`
+	// The namespace to create an instant, copy-on-write clone of.
 	BranchFromNamespace BranchFromNamespaceParams `json:"branch_from_namespace,omitzero"`
-	CopyFromNamespace   CopyFromNamespaceParams   `json:"copy_from_namespace,omitzero"`
+	// The namespace to copy documents from.
+	CopyFromNamespace CopyFromNamespaceParams `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
 	DeleteByFilter Filter `json:"delete_by_filter,omitzero"`
 	// A condition evaluated against the current value of each document targeted by a
