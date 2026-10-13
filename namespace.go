@@ -1854,7 +1854,8 @@ type RerankModelParams struct {
 	// The string attribute to score. Must be included in `include_attributes` in every
 	// query.
 	Attribute string `json:"attribute" api:"required"`
-	// The reranking model to use.
+	// The reranking model to use, e.g. `voyage/rerank-3`. See
+	// https://turbopuffer.com/docs/reranking#models for the available models.
 	Model string `json:"model" api:"required"`
 	// The query text to score each document against.
 	Query string `json:"query" api:"required"`
