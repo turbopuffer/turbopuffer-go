@@ -1636,6 +1636,18 @@ type RerankBy interface {
 
 func (v RerankByRrf) sealed_RerankBy()           {}
 func (v RerankByRrfWithParams) sealed_RerankBy() {}
+func (v RerankByModel) sealed_RerankBy()         {}
+
+type RerankByModel struct {
+	value RerankModelParams
+}
+
+func NewRerankByModel(value RerankModelParams) RerankByModel {
+	return RerankByModel{value: value}
+}
+func (v RerankByModel) MarshalJSON() ([]byte, error) {
+	return shimjson.Marshal(v.value)
+}
 
 type RerankByRrf struct {
 }
