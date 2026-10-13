@@ -1813,6 +1813,28 @@ func (r *RerankLimitParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Rerank retrieved candidates with a model.
+//
+// The properties Attribute, Model, Query are required.
+type RerankModelParams struct {
+	// The string attribute to score. Must be included in `include_attributes` in every
+	// query.
+	Attribute string `json:"attribute" api:"required"`
+	// The reranking model to use.
+	Model string `json:"model" api:"required"`
+	// The query text to score each document against.
+	Query string `json:"query" api:"required"`
+	paramObj
+}
+
+func (r RerankModelParams) MarshalJSON() (data []byte, err error) {
+	type shadow RerankModelParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *RerankModelParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // A single document, in a row-based format.
 type Row map[string]any
 type RowParam Row
@@ -2736,6 +2758,8 @@ type NamespaceQueryParams struct {
 	Limit LimitParam `json:"limit,omitzero"`
 	// How to rank the documents in the namespace.
 	RankBy RankBy `json:"rank_by,omitzero"`
+	// Rerank retrieved candidates with a model.
+	RerankBy RerankModelParams `json:"rerank_by,omitzero"`
 	// The encoding to use for vectors in the response.
 	//
 	// Any of "float", "base64".
@@ -2867,11 +2891,9 @@ type NamespaceWriteParams struct {
 	// If true, return the IDs of affected rows (deleted, patched, upserted) in the
 	// response. For filtered and conditional writes, only IDs for writes that
 	// succeeded will be included.
-	ReturnAffectedIDs param.Opt[bool] `json:"return_affected_ids,omitzero"`
-	// The namespace to create an instant, copy-on-write clone of.
+	ReturnAffectedIDs   param.Opt[bool]           `json:"return_affected_ids,omitzero"`
 	BranchFromNamespace BranchFromNamespaceParams `json:"branch_from_namespace,omitzero"`
-	// The namespace to copy documents from.
-	CopyFromNamespace CopyFromNamespaceParams `json:"copy_from_namespace,omitzero"`
+	CopyFromNamespace   CopyFromNamespaceParams   `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
 	DeleteByFilter Filter `json:"delete_by_filter,omitzero"`
 	// A condition evaluated against the current value of each document targeted by a

@@ -318,8 +318,13 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 				Limit:      0,
 			},
 		},
-		Offset:         turbopuffer.Int(0),
-		RankBy:         turbopuffer.NewRankByAnn("vector", []float32{0}),
+		Offset: turbopuffer.Int(0),
+		RankBy: turbopuffer.NewRankByAnn("vector", []float32{0}),
+		RerankBy: turbopuffer.RerankModelParams{
+			Attribute: "attribute",
+			Model:     "model",
+			Query:     "query",
+		},
 		TopK:           turbopuffer.Int(0),
 		VectorEncoding: turbopuffer.VectorEncodingFloat,
 	})
