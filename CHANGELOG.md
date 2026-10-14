@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.1](https://github.com/turbopuffer/turbopuffer-go/compare/v2.9.0...v2.9.1) (2026-10-13)
+
+
+### Chores
+
+* regenerate SDK ([3de21d1](https://github.com/turbopuffer/turbopuffer-go/commit/3de21d1ab51f86109de893393007ad9e4c9d55d2))
+
 ## [2.9.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.8.0...v2.9.0) (2026-10-08)
 
 
