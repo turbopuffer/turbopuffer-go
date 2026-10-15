@@ -1820,7 +1820,7 @@ type RerankModelParams struct {
 	// The string attribute to score. Must be included in `include_attributes` in every
 	// query.
 	Attribute string `json:"attribute" api:"required"`
-	// The reranking model to use.
+	// Which reranking model to use.
 	Model string `json:"model" api:"required"`
 	// The query text to score each document against.
 	Query string `json:"query" api:"required"`
