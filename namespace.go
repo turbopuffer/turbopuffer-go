@@ -628,6 +628,8 @@ func (r *Bm25ClauseParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Configuration for branching from another namespace.
+//
 // The property SourceNamespace is required.
 type BranchFromNamespaceParams struct {
 	// The namespace to create an instant, copy-on-write clone of.
@@ -790,6 +792,7 @@ func (r *CopyFromNamespaceOperation) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The copy is still in progress.
 type CopyFromNamespaceOperationRunning struct {
 	// The time at which the operation started.
 	StartTime time.Time        `json:"start_time" api:"required" format:"date-time"`
@@ -813,10 +816,12 @@ func (r *CopyFromNamespaceOperationRunning) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The copy has finished, successfully or not.
 type CopyFromNamespaceOperationFinished struct {
 	// The time at which the operation finished.
-	FinishTime time.Time                        `json:"finish_time" api:"required" format:"date-time"`
-	Result     CopyFromNamespaceOperationResult `json:"result" api:"required"`
+	FinishTime time.Time `json:"finish_time" api:"required" format:"date-time"`
+	// The result of the copy.
+	Result CopyFromNamespaceOperationResult `json:"result" api:"required"`
 	// The time at which the operation started.
 	StartTime time.Time         `json:"start_time" api:"required" format:"date-time"`
 	Status    constant.Finished `json:"status" default:"finished"`
@@ -872,7 +877,7 @@ func (r *CopyFromNamespaceOperationResult) UnmarshalJSON(data []byte) error {
 }
 
 type CopyFromNamespaceOperationResultSuccess struct {
-	// The response to a successful write request.
+	// The copy succeeded, with the result of its write.
 	Success WriteResult `json:"success" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -889,6 +894,7 @@ func (r *CopyFromNamespaceOperationResultSuccess) UnmarshalJSON(data []byte) err
 }
 
 type CopyFromNamespaceOperationResultError struct {
+	// The copy failed, with its error.
 	Error OperationError `json:"error" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -904,6 +910,8 @@ func (r *CopyFromNamespaceOperationResultError) UnmarshalJSON(data []byte) error
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Configuration for copying documents from another namespace.
+//
 // The property SourceNamespace is required.
 type CopyFromNamespaceParams struct {
 	// The namespace to copy documents from.
@@ -1497,8 +1505,9 @@ type NamespaceMetadata struct {
 	// The timestamp when the namespace was created.
 	CreatedAt time.Time `json:"created_at" api:"required" format:"date-time"`
 	// The encryption configuration for a namespace.
-	Encryption Encryption             `json:"encryption" api:"required"`
-	Index      NamespaceMetadataIndex `json:"index" api:"required"`
+	Encryption Encryption `json:"encryption" api:"required"`
+	// The state of the namespace's index.
+	Index NamespaceMetadataIndex `json:"index" api:"required"`
 	// The schema of the namespace.
 	Schema map[string]AttributeSchemaConfig `json:"schema" api:"required"`
 	// The timestamp when the namespace was last modified by a write operation.
@@ -1571,6 +1580,7 @@ func (r *NamespaceMetadataIndex) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Every document in the namespace is indexed.
 type NamespaceMetadataIndexIndexUpToDate struct {
 	Status constant.UpToDate `json:"status" default:"up-to-date"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -1587,6 +1597,7 @@ func (r *NamespaceMetadataIndexIndexUpToDate) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Some documents are in the write-ahead log and haven't been indexed yet.
 type NamespaceMetadataIndexIndexUpdating struct {
 	Status constant.Updating `json:"status" default:"updating"`
 	// The number of bytes in the namespace that are in the write-ahead log but have
@@ -1684,6 +1695,7 @@ func (r *NamespaceMetadataPatchParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The error of an asynchronous operation that failed.
 type OperationError struct {
 	// The response to an unsuccessful request.
 	Detail OperationErrorDetail `json:"detail" api:"required"`
@@ -1854,7 +1866,7 @@ type RerankModelParams struct {
 	// The string attribute to score. Must be included in `include_attributes` in every
 	// query.
 	Attribute string `json:"attribute" api:"required"`
-	// The reranking model to use.
+	// Which reranking model to use.
 	Model string `json:"model" api:"required"`
 	// The query text to score each document against.
 	Query string `json:"query" api:"required"`
@@ -2149,7 +2161,7 @@ func (r *WritePerformance) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// The response to a successful write request.
+// The copy succeeded, with the result of its write.
 type WriteResult struct {
 	// The billing information for a write request.
 	Billing WriteBilling `json:"billing" api:"required"`
@@ -2350,8 +2362,9 @@ func (r *NamespaceExplainQueryResponse) UnmarshalJSON(data []byte) error {
 // The response to a successful cache warm request.
 type NamespaceHintCacheWarmResponse struct {
 	// The status of the request.
-	Status  constant.Accepted `json:"status" default:"ACCEPTED"`
-	Message string            `json:"message"`
+	Status constant.Accepted `json:"status" default:"ACCEPTED"`
+	// A message describing the result of the request.
+	Message string `json:"message"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Status      respjson.Field
@@ -2372,8 +2385,10 @@ type NamespaceMultiQueryResponse struct {
 	// The billing information for a query.
 	Billing QueryBilling `json:"billing" api:"required"`
 	// The performance information for a query.
-	Performance QueryPerformance                    `json:"performance" api:"required"`
-	Results     []NamespaceMultiQueryResponseResult `json:"results" api:"required"`
+	Performance QueryPerformance `json:"performance" api:"required"`
+	// The results of each subquery, in the same order as `queries`. With `rerank_by`,
+	// a single result combining the subqueries' rows.
+	Results []NamespaceMultiQueryResponseResult `json:"results" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Billing     respjson.Field
@@ -2390,10 +2405,16 @@ func (r *NamespaceMultiQueryResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The result of a query, or of one subquery of a multi-query. With `aggregate_by`,
+// `aggregations` maps each aggregation's label to its value. With `group_by` as
+// well, `aggregation_groups` holds one object per group instead, with its group
+// key and the value of each aggregation.
 type NamespaceMultiQueryResponseResult struct {
 	AggregationGroups []AggregationGroup `json:"aggregation_groups"`
 	Aggregations      map[string]any     `json:"aggregations"`
-	Rows              []Row              `json:"rows"`
+	// The documents that matched the query, ordered by `rank_by`. Only present when
+	// `rank_by` is set.
+	Rows []Row `json:"rows"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		AggregationGroups respjson.Field
@@ -2410,7 +2431,10 @@ func (r *NamespaceMultiQueryResponseResult) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// The result of a query.
+// The result of a query. With `aggregate_by`, `aggregations` maps each
+// aggregation's label to its value. With `group_by` as well, `aggregation_groups`
+// holds one object per group instead, with its group key and the value of each
+// aggregation.
 type NamespaceQueryResponse struct {
 	// The billing information for a query.
 	Billing QueryBilling `json:"billing" api:"required"`
@@ -2418,7 +2442,9 @@ type NamespaceQueryResponse struct {
 	Performance       QueryPerformance   `json:"performance" api:"required"`
 	AggregationGroups []AggregationGroup `json:"aggregation_groups"`
 	Aggregations      map[string]any     `json:"aggregations"`
-	Rows              []Row              `json:"rows"`
+	// The documents that matched the query, ordered by `rank_by`. Only present when
+	// `rank_by` is set.
+	Rows []Row `json:"rows"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Billing           respjson.Field
@@ -2466,6 +2492,10 @@ func (r *NamespaceRecallResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// One of the searches the evaluation ran: its query vector, sampled at random from
+// the namespace's vectors unless `rank_by` is set, and the query's true nearest
+// neighbors, found by exhaustive search. Recall compares these neighbors to the
+// results of the approximate nearest neighbor (ANN) search.
 type NamespaceRecallResponseGroundTruth struct {
 	// The true nearest neighbors with their distances and vectors.
 	NearestNeighbors []Row `json:"nearest_neighbors" api:"required"`
@@ -2488,6 +2518,7 @@ func (r *NamespaceRecallResponseGroundTruth) UnmarshalJSON(data []byte) error {
 
 type NamespaceSchemaResponse map[string]AttributeSchemaConfig
 
+// The response to a successful request to start a copy.
 type NamespaceStartCopyFromResponse struct {
 	// The token identifying the copy operation.
 	Token string `json:"token" api:"required"`
@@ -2972,7 +3003,7 @@ type NamespaceWriteParams struct {
 	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
 	// The encryption configuration for a namespace.
 	Encryption EncryptionParam `json:"encryption,omitzero"`
-	// The patch and filter specifying which documents to patch.
+	// Sets the attributes in `patch` on every document that matches `filters`.
 	PatchByFilter NamespaceWriteParamsPatchByFilter `json:"patch_by_filter,omitzero"`
 	// A list of documents in columnar format. Each key is a column name, mapped to an
 	// array of values for that column.
@@ -3006,7 +3037,7 @@ func (r *NamespaceWriteParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// The patch and filter specifying which documents to patch.
+// Sets the attributes in `patch` on every document that matches `filters`.
 //
 // The properties Filters, Patch are required.
 type NamespaceWriteParamsPatchByFilter struct {
