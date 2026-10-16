@@ -265,7 +265,7 @@ func TestSampleRateFromResponse(t *testing.T) {
 }
 
 func TestSampling(t *testing.T) {
-	result := &observer.RequestResult{Timings: &observer.Timings{AttemptStart: time.Now()}}
+	result := &observer.RequestResult{Timings: &observer.Timings{AttemptBegin: time.Now()}}
 	finish := func(b *buffer) {
 		(&requestScope{buffer: b, info: observer.RequestInfo{Method: "POST", URL: queryURL}}).Finish(result)
 	}
@@ -305,19 +305,19 @@ func TestDurations(t *testing.T) {
 	}
 
 	newConnection := &observer.Timings{
-		AttemptStart:     at(0),
-		SerializeStart:   at(0),
+		AttemptBegin:     at(0),
+		SerializeBegin:   at(0),
 		SerializeEnd:     at(20),
 		RequestReady:     at(50),
-		ConnectStart:     at(150),
+		ConnectBegin:     at(150),
 		ConnectEnd:       at(400),
-		SendStart:        at(410),
+		SendBegin:        at(410),
 		SendEnd:          at(500),
 		ResponseHeaders:  at(900),
 		BodyEnd:          at(950),
-		DeserializeStart: at(960),
+		DeserializeBegin: at(960),
 		DeserializeEnd:   at(990),
-		Extra:            map[string]time.Time{"compress_start": at(60), "compress_end": at(100)},
+		Extra:            map[string]time.Time{"compress_begin": at(60), "compress_end": at(100)},
 	}
 	want := map[string]any{
 		"total_us": 1000.0, "serialize_us": 20.0, "compress_us": 40.0, "pool_us": 50.0, "connect_us": 250.0,
@@ -327,7 +327,7 @@ func TestDurations(t *testing.T) {
 		t.Errorf("expected %v, got %v", want, got)
 	}
 
-	reused := &observer.Timings{AttemptStart: at(0), RequestReady: at(100), SendStart: at(130), SendEnd: at(160), ResponseHeaders: at(300)}
+	reused := &observer.Timings{AttemptBegin: at(0), RequestReady: at(100), SendBegin: at(130), SendEnd: at(160), ResponseHeaders: at(300)}
 	got := durations(reused, 400)
 	if _, ok := got["connect_us"]; ok || got["pool_us"] != 30.0 {
 		t.Errorf("expected a pool wait of 30us without connecting, got %v", got)
@@ -340,19 +340,19 @@ func TestDurations(t *testing.T) {
 	}
 
 	// Equal compress marks mean the body wasn't compressed.
-	reused.Extra = map[string]time.Time{"compress_start": at(110), "compress_end": at(110)}
+	reused.Extra = map[string]time.Time{"compress_begin": at(110), "compress_end": at(110)}
 	if got := durations(reused, 400); got["compress_us"] != nil || got["pool_us"] != 20.0 {
 		t.Errorf("expected no compression and a pool wait of 20us, got %v", got)
 	}
 
 	// Durations are floored to whole microseconds.
-	partial := &observer.Timings{AttemptStart: at(0), DeserializeStart: at(0), DeserializeEnd: at(0).Add(999 * time.Nanosecond)}
+	partial := &observer.Timings{AttemptBegin: at(0), DeserializeBegin: at(0), DeserializeEnd: at(0).Add(999 * time.Nanosecond)}
 	if got := durations(partial, 1); !reflect.DeepEqual(got, map[string]any{"total_us": 1.0, "deserialize_us": 0.0}) {
 		t.Errorf("expected whole microseconds, got %v", got)
 	}
 
 	// Untraced requests, e.g. through a custom HTTP client.
-	if got := durations(&observer.Timings{AttemptStart: at(0)}, 400); !reflect.DeepEqual(got, map[string]any{"total_us": 400.0}) {
+	if got := durations(&observer.Timings{AttemptBegin: at(0)}, 400); !reflect.DeepEqual(got, map[string]any{"total_us": 400.0}) {
 		t.Errorf("expected only a total, got %v", got)
 	}
 }
@@ -397,8 +397,8 @@ func TestNewRecord(t *testing.T) {
 		Response: &http.Response{StatusCode: 503},
 		Parsed:   &res,
 		Timings: &observer.Timings{
-			AttemptStart:     start,
-			DeserializeStart: start.Add(time.Millisecond),
+			AttemptBegin:     start,
+			DeserializeBegin: start.Add(time.Millisecond),
 			DeserializeEnd:   start.Add(1234567 * time.Nanosecond),
 			Reused:           &reused,
 		},

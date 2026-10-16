@@ -145,42 +145,42 @@ func errorName(kind observer.ErrorKind) string {
 // setDurations fills in the duration of each phase of an attempt ending at end. Phases that
 // weren't observed are left out.
 func (r *record) setDurations(t *observer.Timings, end time.Time) {
-	if t.AttemptStart.IsZero() {
+	if t.AttemptBegin.IsZero() {
 		return
 	}
-	r.TotalUs = micros(end.Sub(t.AttemptStart))
+	r.TotalUs = micros(end.Sub(t.AttemptBegin))
 
-	if !t.SerializeStart.IsZero() && !t.SerializeEnd.IsZero() {
-		r.SerializeUs = micros(t.SerializeEnd.Sub(t.SerializeStart))
+	if !t.SerializeBegin.IsZero() && !t.SerializeEnd.IsZero() {
+		r.SerializeUs = micros(t.SerializeEnd.Sub(t.SerializeBegin))
 	}
 
 	// Set by middleware that compresses request bodies. Zero means the body wasn't compressed.
-	compressStart, compressEnd := t.Extra["compress_start"], t.Extra["compress_end"]
-	if !compressStart.IsZero() && !compressEnd.IsZero() {
-		if d := compressEnd.Sub(compressStart); d != 0 {
+	compressBegin, compressEnd := t.Extra["compress_begin"], t.Extra["compress_end"]
+	if !compressBegin.IsZero() && !compressEnd.IsZero() {
+		if d := compressEnd.Sub(compressBegin); d != 0 {
 			r.CompressUs = micros(d)
 		}
 	}
 
 	// Waiting for a free connection, until connecting a new one or sending on a reused one.
-	poolStart := t.RequestReady
+	poolBegin := t.RequestReady
 	if !compressEnd.IsZero() {
-		poolStart = compressEnd
+		poolBegin = compressEnd
 	}
-	connectionReady := t.SendStart
-	if !t.ConnectStart.IsZero() {
-		connectionReady = t.ConnectStart
+	connectionReady := t.SendBegin
+	if !t.ConnectBegin.IsZero() {
+		connectionReady = t.ConnectBegin
 	}
-	if !poolStart.IsZero() && !connectionReady.IsZero() {
-		r.PoolUs = micros(max(connectionReady.Sub(poolStart), 0))
-	}
-
-	if !t.ConnectStart.IsZero() && !t.ConnectEnd.IsZero() {
-		r.ConnectUs = micros(t.ConnectEnd.Sub(t.ConnectStart))
+	if !poolBegin.IsZero() && !connectionReady.IsZero() {
+		r.PoolUs = micros(max(connectionReady.Sub(poolBegin), 0))
 	}
 
-	if !t.SendStart.IsZero() && !t.SendEnd.IsZero() {
-		r.SendUs = micros(t.SendEnd.Sub(t.SendStart))
+	if !t.ConnectBegin.IsZero() && !t.ConnectEnd.IsZero() {
+		r.ConnectUs = micros(t.ConnectEnd.Sub(t.ConnectBegin))
+	}
+
+	if !t.SendBegin.IsZero() && !t.SendEnd.IsZero() {
+		r.SendUs = micros(t.SendEnd.Sub(t.SendBegin))
 	}
 
 	// Covers the network round trip and the server. Sending can finish after the response arrives.
@@ -192,8 +192,8 @@ func (r *record) setDurations(t *observer.Timings, end time.Time) {
 		r.BodyReadUs = micros(t.BodyEnd.Sub(t.ResponseHeaders))
 	}
 
-	if !t.DeserializeStart.IsZero() && !t.DeserializeEnd.IsZero() {
-		r.DeserializeUs = micros(t.DeserializeEnd.Sub(t.DeserializeStart))
+	if !t.DeserializeBegin.IsZero() && !t.DeserializeEnd.IsZero() {
+		r.DeserializeUs = micros(t.DeserializeEnd.Sub(t.DeserializeBegin))
 	}
 }
 

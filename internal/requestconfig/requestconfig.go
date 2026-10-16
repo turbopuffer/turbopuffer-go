@@ -172,7 +172,7 @@ func NewRequestConfig(ctx context.Context, method string, u string, body any, ds
 		reader = buf
 	}
 	if reader != nil {
-		prep.serializeStart, prep.serializeEnd = prep.start, time.Now()
+		prep.serializeBegin, prep.serializeEnd = prep.start, time.Now()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, method, u, nil)
@@ -602,7 +602,7 @@ func (cfg *RequestConfig) Execute() (err error) {
 		return fmt.Errorf("error reading response body: %w", err)
 	}
 	obs.bodyRead()
-	obs.decodeStart()
+	obs.decodeBegin()
 
 	// If we are not json, return plaintext
 	contentType := res.Header.Get("content-type")

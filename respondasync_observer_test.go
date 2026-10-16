@@ -111,7 +111,7 @@ func TestRespondAsyncObservedPolls(t *testing.T) {
 		t.Errorf("unexpected write result %+v", write.result)
 	}
 	timings := write.result.Timings
-	if timings.BodyEnd.IsZero() || timings.BodyEnd.After(polls[0].result.Timings.AttemptStart) {
+	if timings.BodyEnd.IsZero() || timings.BodyEnd.After(polls[0].result.Timings.AttemptBegin) {
 		t.Error("expected the write's body to be read before the first poll")
 	}
 	if timings.DeserializeEnd.Before(polls[1].result.Timings.DeserializeEnd) {

@@ -96,28 +96,28 @@ const (
 // them use the monotonic clock. A mark stays zero when its phase didn't happen or couldn't be
 // observed. Phases may overlap.
 type Timings struct {
-	// AttemptStart is when the attempt began, before the request was built.
-	AttemptStart time.Time
-	// SerializeStart and SerializeEnd bound encoding the request body, which happens once before
+	// AttemptBegin is when the attempt began, before the request was built.
+	AttemptBegin time.Time
+	// SerializeBegin and SerializeEnd bound encoding the request body, which happens once before
 	// the first attempt.
-	SerializeStart time.Time
+	SerializeBegin time.Time
 	SerializeEnd   time.Time
 	// RequestReady is when the request was built and handed to the HTTP client.
 	RequestReady time.Time
-	// ConnectStart and ConnectEnd bound opening a new connection: DNS, TCP and TLS. They're zero
+	// ConnectBegin and ConnectEnd bound opening a new connection: DNS, TCP and TLS. They're zero
 	// when an existing connection was used.
-	ConnectStart time.Time
+	ConnectBegin time.Time
 	ConnectEnd   time.Time
-	// SendStart and SendEnd bound writing the request headers and body.
-	SendStart time.Time
+	// SendBegin and SendEnd bound writing the request headers and body.
+	SendBegin time.Time
 	SendEnd   time.Time
 	// ResponseHeaders is when the first byte of the response arrived.
 	ResponseHeaders time.Time
 	// BodyEnd is when the response body was fully read. Only on the final attempt.
 	BodyEnd time.Time
-	// DeserializeStart and DeserializeEnd bound decoding the response body. Only on the final
+	// DeserializeBegin and DeserializeEnd bound decoding the response body. Only on the final
 	// attempt.
-	DeserializeStart time.Time
+	DeserializeBegin time.Time
 	DeserializeEnd   time.Time
 	// Reused is whether the attempt used an existing connection, or nil when unknown.
 	Reused *bool

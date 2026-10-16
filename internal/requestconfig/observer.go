@@ -26,7 +26,7 @@ import (
 type requestPrep struct {
 	url            string
 	start          time.Time
-	serializeStart time.Time
+	serializeBegin time.Time
 	serializeEnd   time.Time
 }
 
@@ -55,10 +55,10 @@ func startObservation(cfg *RequestConfig) *observation {
 	o := &observation{cfg: cfg, scope: scope, current: &attemptState{}}
 	t := &o.current.timings
 	if cfg.prep.start.IsZero() {
-		t.AttemptStart = time.Now()
+		t.AttemptBegin = time.Now()
 	} else {
-		t.AttemptStart = cfg.prep.start
-		t.SerializeStart = cfg.prep.serializeStart
+		t.AttemptBegin = cfg.prep.start
+		t.SerializeBegin = cfg.prep.serializeBegin
 		t.SerializeEnd = cfg.prep.serializeEnd
 	}
 	return o
@@ -90,7 +90,7 @@ func (o *observation) startAttempt(ctx context.Context, attempt int) context.Con
 	if attempt > 0 {
 		o.attempt = attempt
 		o.current = &attemptState{}
-		o.current.timings.AttemptStart = time.Now()
+		o.current.timings.AttemptBegin = time.Now()
 	}
 	return observer.WithTimings(ctx, &o.current.timings)
 }
@@ -155,9 +155,9 @@ func (o *observation) bodyRead() {
 	}
 }
 
-func (o *observation) decodeStart() {
+func (o *observation) decodeBegin() {
 	if o != nil {
-		o.current.timings.DeserializeStart = time.Now()
+		o.current.timings.DeserializeBegin = time.Now()
 	}
 }
 
@@ -169,10 +169,10 @@ func (o *observation) finish(err error) {
 	a.finalize()
 	t := &a.timings
 	// A response whose body the caller reads itself doesn't finish.
-	if err == nil && t.DeserializeStart.IsZero() {
+	if err == nil && t.DeserializeBegin.IsZero() {
 		return
 	}
-	if !t.DeserializeStart.IsZero() {
+	if !t.DeserializeBegin.IsZero() {
 		t.DeserializeEnd = time.Now()
 	}
 	result := &observer.RequestResult{
@@ -187,7 +187,7 @@ func (o *observation) finish(err error) {
 		result.Parsed = o.cfg.ResponseBodyInto
 	case errors.As(err, &apiErr):
 		// An error response, which Response describes.
-	case !t.DeserializeStart.IsZero():
+	case !t.DeserializeBegin.IsZero():
 		// The body couldn't be decoded.
 		result.ErrorKind = observer.ErrorKindOther
 	default:
@@ -225,9 +225,9 @@ type attemptState struct {
 func (a *attemptState) clientTrace() *httptrace.ClientTrace {
 	return &httptrace.ClientTrace{
 		GetConn:              func(string) { a.getConn() },
-		DNSStart:             func(httptrace.DNSStartInfo) { a.connectStart() },
-		ConnectStart:         func(string, string) { a.connectStart() },
-		TLSHandshakeStart:    func() { a.connectStart() },
+		DNSStart:             func(httptrace.DNSStartInfo) { a.connectBegin() },
+		ConnectStart:         func(string, string) { a.connectBegin() },
+		TLSHandshakeStart:    func() { a.connectBegin() },
 		ConnectDone:          func(_, _ string, err error) { a.connectDone(err) },
 		TLSHandshakeDone:     func(_ tls.ConnectionState, err error) { a.connectDone(err) },
 		GotConn:              a.gotConn,
@@ -256,13 +256,13 @@ func (a *attemptState) finalize() {
 func (a *attemptState) getConn() {
 	a.update(func(t *observer.Timings) {
 		a.traced, a.dialing, a.connected = true, false, false
-		t.ConnectStart, t.ConnectEnd = time.Time{}, time.Time{}
-		t.SendStart, t.SendEnd, t.ResponseHeaders = time.Time{}, time.Time{}, time.Time{}
+		t.ConnectBegin, t.ConnectEnd = time.Time{}, time.Time{}
+		t.SendBegin, t.SendEnd, t.ResponseHeaders = time.Time{}, time.Time{}, time.Time{}
 		t.Reused = nil
 	})
 }
 
-func (a *attemptState) connectStart() {
+func (a *attemptState) connectBegin() {
 	now := time.Now()
 	a.update(func(t *observer.Timings) {
 		// A dial can continue after the attempt got another connection.
@@ -270,8 +270,8 @@ func (a *attemptState) connectStart() {
 			return
 		}
 		a.dialing = true
-		if t.ConnectStart.IsZero() {
-			t.ConnectStart = now
+		if t.ConnectBegin.IsZero() {
+			t.ConnectBegin = now
 		}
 	})
 }
@@ -292,11 +292,11 @@ func (a *attemptState) gotConn(info httptrace.GotConnInfo) {
 		existing := info.Reused || info.WasIdle
 		t.Reused = &existing
 		if existing {
-			t.ConnectStart, t.ConnectEnd = time.Time{}, time.Time{}
-		} else if !t.ConnectStart.IsZero() && t.ConnectEnd.IsZero() {
+			t.ConnectBegin, t.ConnectEnd = time.Time{}, time.Time{}
+		} else if !t.ConnectBegin.IsZero() && t.ConnectEnd.IsZero() {
 			t.ConnectEnd = now
 		}
-		t.SendStart = now
+		t.SendBegin = now
 	})
 }
 

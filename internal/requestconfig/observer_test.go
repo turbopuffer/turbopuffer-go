@@ -157,20 +157,20 @@ func TestRequestObserver(t *testing.T) {
 		t.Error("expected the mark added by middleware")
 	}
 	checkOrdered(t,
-		mark{"AttemptStart", timings.AttemptStart},
-		mark{"SerializeStart", timings.SerializeStart},
+		mark{"AttemptBegin", timings.AttemptBegin},
+		mark{"SerializeBegin", timings.SerializeBegin},
 		mark{"SerializeEnd", timings.SerializeEnd},
 		mark{"RequestReady", timings.RequestReady},
-		mark{"ConnectStart", timings.ConnectStart},
+		mark{"ConnectBegin", timings.ConnectBegin},
 		mark{"ConnectEnd", timings.ConnectEnd},
-		mark{"SendStart", timings.SendStart},
+		mark{"SendBegin", timings.SendBegin},
 		mark{"ResponseHeaders", timings.ResponseHeaders},
 		mark{"BodyEnd", timings.BodyEnd},
-		mark{"DeserializeStart", timings.DeserializeStart},
+		mark{"DeserializeBegin", timings.DeserializeBegin},
 		mark{"DeserializeEnd", timings.DeserializeEnd},
 	)
 	// Sending can finish after the response arrives.
-	checkOrdered(t, mark{"SendStart", timings.SendStart}, mark{"SendEnd", timings.SendEnd})
+	checkOrdered(t, mark{"SendBegin", timings.SendBegin}, mark{"SendEnd", timings.SendEnd})
 }
 
 func TestRequestObserverReplacedResponse(t *testing.T) {
@@ -213,7 +213,7 @@ func TestRequestObserverReplacedResponse(t *testing.T) {
 	}
 	checkOrdered(t,
 		mark{"BodyEnd", timings.BodyEnd},
-		mark{"DeserializeStart", timings.DeserializeStart},
+		mark{"DeserializeBegin", timings.DeserializeBegin},
 		mark{"DeserializeEnd", timings.DeserializeEnd},
 	)
 
@@ -263,23 +263,23 @@ func TestRequestObserverRetries(t *testing.T) {
 	if first.Response == nil || first.Response.StatusCode != http.StatusInternalServerError || first.ReachedServer == nil || !*first.ReachedServer {
 		t.Errorf("unexpected first attempt result: %+v", first)
 	}
-	if first.Timings.Reused == nil || *first.Timings.Reused || first.Timings.ConnectStart.IsZero() {
+	if first.Timings.Reused == nil || *first.Timings.Reused || first.Timings.ConnectBegin.IsZero() {
 		t.Error("expected the first attempt to open a connection")
 	}
 	if second.Timings.Reused == nil || !*second.Timings.Reused {
 		t.Error("expected the second attempt to reuse the connection")
 	}
-	if !second.Timings.ConnectStart.IsZero() || !second.Timings.ConnectEnd.IsZero() {
+	if !second.Timings.ConnectBegin.IsZero() || !second.Timings.ConnectEnd.IsZero() {
 		t.Error("expected no connect timings on a reused connection")
 	}
-	if !second.Timings.SerializeStart.IsZero() {
+	if !second.Timings.SerializeBegin.IsZero() {
 		t.Error("expected serialize timings only on the first attempt")
 	}
 	checkOrdered(t,
 		mark{"first ResponseHeaders", first.Timings.ResponseHeaders},
-		mark{"second AttemptStart", second.Timings.AttemptStart},
+		mark{"second AttemptBegin", second.Timings.AttemptBegin},
 		mark{"second RequestReady", second.Timings.RequestReady},
-		mark{"second SendStart", second.Timings.SendStart},
+		mark{"second SendBegin", second.Timings.SendBegin},
 		mark{"second ResponseHeaders", second.Timings.ResponseHeaders},
 	)
 
@@ -365,7 +365,7 @@ func TestRequestObserverErrorResponse(t *testing.T) {
 	if errors.As(err, &apiErr) && result.ErrorKind != "" {
 		t.Errorf("expected an API error to have no kind, got %q", result.ErrorKind)
 	}
-	if result.Timings.BodyEnd.IsZero() || !result.Timings.DeserializeStart.IsZero() {
+	if result.Timings.BodyEnd.IsZero() || !result.Timings.DeserializeBegin.IsZero() {
 		t.Error("expected the error body to be read but not decoded")
 	}
 }
