@@ -449,6 +449,9 @@ func TestScopeBatchLifecycle(t *testing.T) {
 			b := newBuffer()
 			addRecord(b, 200)
 			scope := newScope(b, observer.RequestInfo{Method: "POST", URL: queryURL})
+			if got := len(b.entries); got != 1 {
+				t.Fatalf("expected records to stay buffered until the first attempt, got %d", got)
+			}
 
 			first, _ := http.NewRequest(http.MethodPost, queryURL, nil)
 			scope.AttemptBegin(0, first)

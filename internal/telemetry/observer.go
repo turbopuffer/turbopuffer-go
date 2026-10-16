@@ -60,10 +60,14 @@ type requestScope struct {
 }
 
 func newScope(b *buffer, info observer.RequestInfo) *requestScope {
-	return &requestScope{buffer: b, info: info, batch: b.take()}
+	return &requestScope{buffer: b, info: info}
 }
 
-func (s *requestScope) AttemptBegin(_ int, req *http.Request) {
+func (s *requestScope) AttemptBegin(attempt int, req *http.Request) {
+	// Taken only once a request is about to be sent, so one that fails before then can't lose it.
+	if attempt == 0 {
+		s.batch = s.buffer.take()
+	}
 	if s.batch != nil {
 		req.Header.Set(Header, s.batch.header)
 	}
