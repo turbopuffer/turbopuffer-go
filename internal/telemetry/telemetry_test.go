@@ -424,7 +424,7 @@ func TestErrorName(t *testing.T) {
 		observer.ErrorKindWriteTimeout:   "timeout",
 		observer.ErrorKindConnectError:   "connect",
 		observer.ErrorKindReadError:      "connect",
-		observer.ErrorKindOther:          "connect",
+		observer.ErrorKindOther:          "other",
 	} {
 		if got := errorName(kind); got != want {
 			t.Errorf("errorName(%q): expected %q, got %q", kind, want, got)

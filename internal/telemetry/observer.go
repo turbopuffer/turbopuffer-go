@@ -126,13 +126,15 @@ func newRecord(info observer.RequestInfo, result *observer.RequestResult, rate f
 	return rec
 }
 
-// errorName is the error reported for a request that failed without a response, or empty.
+// errorName is the error reported for a failed request, or empty.
 func errorName(kind observer.ErrorKind) string {
 	switch {
 	case kind == "":
 		return ""
 	case kind == observer.ErrorKindCanceled:
 		return "canceled"
+	case kind == observer.ErrorKindOther:
+		return "other"
 	case strings.HasSuffix(string(kind), "timeout"):
 		return "timeout"
 	default:

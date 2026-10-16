@@ -286,6 +286,23 @@ func TestTelemetryFailuresAreRecorded(t *testing.T) {
 	checkFailures(t, tr.records(t, 3), [2]any{400.0, nil})
 }
 
+func TestTelemetryParseFailureIsRecorded(t *testing.T) {
+	tr := &telemetryTransport{respond: func(n int, req *http.Request) (*http.Response, error) {
+		if n == 0 {
+			return makeResponse(http.StatusOK, "not json", nil), nil
+		}
+		return makeResponse(http.StatusOK, queryOK, nil), nil
+	}}
+	ns := namespaceOf(newTelemetryClient(t, tr, option.WithTelemetry(true)), "my-ns")
+
+	if err := query(t, ns); err == nil {
+		t.Fatal("expected an error")
+	}
+	mustQuery(t, ns)
+
+	checkFailures(t, tr.records(t, 1), [2]any{200.0, "other"})
+}
+
 func TestTelemetryCanceledRequestIsRecorded(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	tr := &telemetryTransport{respond: func(n int, req *http.Request) (*http.Response, error) {
