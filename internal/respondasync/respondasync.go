@@ -21,6 +21,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/observer"
 	"github.com/turbopuffer/turbopuffer-go/v2/internal/requestconfig"
 	"github.com/turbopuffer/turbopuffer-go/v2/option"
 )
@@ -66,6 +67,10 @@ func (m *middleware) maybePoll(origReq *http.Request, res *http.Response) (*http
 	if res.Body != nil {
 		_, _ = io.Copy(io.Discard, res.Body)
 		_ = res.Body.Close()
+	}
+	// The final response replaces this one, so its body is done being read here.
+	if timings := observer.ContextTimings(origReq.Context()); timings != nil {
+		timings.BodyEnd = time.Now()
 	}
 
 	location, err := extractLocation(res, origReq.URL)
@@ -123,13 +128,11 @@ func respondAsyncApplied(res *http.Response) bool {
 }
 
 func (m *middleware) pollOnce(ctx context.Context, location string) ([]byte, error) {
-	var res *http.Response
-	opts := append(slices.Clone(m.clientOpts), option.WithResponseBodyInto(&res))
-	if err := requestconfig.ExecuteNewRequest(ctx, http.MethodGet, location, nil, nil, opts...); err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-	return io.ReadAll(res.Body)
+	// Read into a byte slice rather than taking the raw response, so the poll finishes like any
+	// other request when it's observed.
+	var body []byte
+	err := requestconfig.ExecuteNewRequest(ctx, http.MethodGet, location, nil, &body, m.clientOpts...)
+	return body, err
 }
 
 type pollBody struct {
