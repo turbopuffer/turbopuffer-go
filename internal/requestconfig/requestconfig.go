@@ -22,6 +22,7 @@ import (
 	"github.com/turbopuffer/turbopuffer-go/v2/internal/apierror"
 	"github.com/turbopuffer/turbopuffer-go/v2/internal/apiform"
 	"github.com/turbopuffer/turbopuffer-go/v2/internal/apiquery"
+	"github.com/turbopuffer/turbopuffer-go/v2/internal/observer"
 	"github.com/turbopuffer/turbopuffer-go/v2/packages/param"
 )
 
@@ -105,6 +106,7 @@ func SubstituteServerVariables(templateURL *url.URL, cfg *RequestConfig) (*url.U
 }
 
 func NewRequestConfig(ctx context.Context, method string, u string, body any, dst any, opts ...RequestOption) (*RequestConfig, error) {
+	prep := requestPrep{url: u, start: time.Now()}
 	var reader io.Reader
 
 	contentType := "application/json"
@@ -167,6 +169,9 @@ func NewRequestConfig(ctx context.Context, method string, u string, body any, ds
 		}
 		reader = buf
 	}
+	if reader != nil {
+		prep.serializeBegin, prep.serializeEnd = prep.start, time.Now()
+	}
 
 	req, err := http.NewRequestWithContext(ctx, method, u, nil)
 	if err != nil {
@@ -194,6 +199,7 @@ func NewRequestConfig(ctx context.Context, method string, u string, body any, ds
 		Body:       reader,
 	}
 	cfg.ResponseBodyInto = dst
+	cfg.prep = prep
 	err = cfg.Apply(opts...)
 	if err != nil {
 		return nil, err
@@ -267,6 +273,9 @@ type RequestConfig struct {
 	// given address
 	ResponseInto **http.Response
 	Body         io.Reader
+	// RequestObserver observes the request, such as to record its timings.
+	RequestObserver observer.RequestObserver
+	prep            requestPrep
 }
 
 // middleware is exactly the same type as the Middleware type found in the [option] package,
@@ -418,6 +427,11 @@ func retryDelay(res *http.Response, retryCount int) time.Duration {
 }
 
 func (cfg *RequestConfig) Execute() (err error) {
+	obs := startObservation(cfg)
+	if obs != nil {
+		defer func() { obs.finish(err) }()
+	}
+
 	if cfg.BaseURL == nil {
 		if cfg.DefaultBaseURL != nil {
 			cfg.BaseURL = cfg.DefaultBaseURL
@@ -458,6 +472,7 @@ func (cfg *RequestConfig) Execute() (err error) {
 	if cfg.CustomHTTPDoer != nil {
 		handler = cfg.CustomHTTPDoer.Do
 	}
+	handler = obs.traced(handler)
 	for i := len(cfg.Middlewares) - 1; i >= 0; i -= 1 {
 		handler = applyMiddleware(cfg.Middlewares[i], handler)
 	}
@@ -468,7 +483,7 @@ func (cfg *RequestConfig) Execute() (err error) {
 	var res *http.Response
 	var cancel context.CancelFunc
 	for retryCount := 0; retryCount <= cfg.MaxRetries; retryCount += 1 {
-		ctx := cfg.Request.Context()
+		ctx := obs.startAttempt(cfg.Request.Context(), retryCount)
 		if cfg.RequestTimeout != time.Duration(0) && isBeforeContextDeadline(time.Now().Add(cfg.RequestTimeout), ctx) {
 			ctx, cancel = context.WithTimeout(ctx, cfg.RequestTimeout)
 			defer func() {
@@ -484,7 +499,9 @@ func (cfg *RequestConfig) Execute() (err error) {
 			req.Header.Set("X-Stainless-Retry-Count", strconv.Itoa(retryCount))
 		}
 
+		obs.attemptBegin(req)
 		res, err = handler(req)
+		obs.attemptEnd(res, err)
 		if ctx != nil && ctx.Err() != nil {
 			return ctx.Err()
 		}
@@ -539,6 +556,7 @@ func (cfg *RequestConfig) Execute() (err error) {
 		if err != nil {
 			return err
 		}
+		obs.bodyRead()
 
 		// If there is an APIError, re-populate the response body so that debugging
 		// utilities can conveniently dump the response without issue.
@@ -570,6 +588,8 @@ func (cfg *RequestConfig) Execute() (err error) {
 	if err != nil {
 		return fmt.Errorf("error reading response body: %w", err)
 	}
+	obs.bodyRead()
+	obs.decodeBegin()
 
 	// If we are not json, return plaintext
 	contentType := res.Header.Get("content-type")
@@ -632,6 +652,8 @@ func (cfg *RequestConfig) Clone(ctx context.Context) *RequestConfig {
 		BaseURL:          cfg.BaseURL,
 		HTTPClient:       cfg.HTTPClient,
 		Middlewares:      cfg.Middlewares,
+		RequestObserver:  cfg.RequestObserver,
+		prep:             requestPrep{url: cfg.prep.url},
 		APIKey:           cfg.APIKey,
 		Region:           cfg.Region,
 		DefaultNamespace: cfg.DefaultNamespace,
