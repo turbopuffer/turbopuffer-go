@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.10.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.9.1...v2.10.0) (2026-10-20)
+
+
+### Features
+
+* Listen via request observer and send client telemetry ([50239fb](https://github.com/turbopuffer/turbopuffer-go/commit/50239fba3d3c4fc18931a2f420a5e93d583c4ae9))
+* OpenAPI: Add missing descriptions to prettify docblocks in output SDKs ([1e6037c](https://github.com/turbopuffer/turbopuffer-go/commit/1e6037ca60deaa1ab580bb8c75d05e27354556bd))
+
 ## [2.9.1](https://github.com/turbopuffer/turbopuffer-go/compare/v2.9.0...v2.9.1) (2026-10-13)
 
 
