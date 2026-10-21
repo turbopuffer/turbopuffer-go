@@ -4,9 +4,15 @@
 // records to a later request in the X-turbopuffer-Client-Telemetry header. The server controls how
 // many requests are recorded by advertising a sample rate in the
 // X-turbopuffer-Client-Telemetry-Sample-Rate response header.
+//
+// Each recorded request is sent with an X-Request-Id that its record repeats, so the server can
+// show the client's timings in the same trace as its own.
 package telemetry
 
 import (
+	cryptorand "crypto/rand"
+	"encoding/base32"
+	"encoding/binary"
 	"encoding/json"
 	"log/slog"
 	"math"
@@ -31,13 +37,27 @@ const (
 	version = 1
 
 	// Keeps the header well under the 8 KB per-line limit of common proxies.
-	maxRecordsPerHeader = 20
+	maxRecordsPerHeader = 16
 	maxBufferedRecords  = 1000
+
+	// requestIDAlphabet is sorted by ASCII value, so that encoded IDs sort like their bytes.
+	requestIDAlphabet = "234567abcdefghijklmnopqrstuvwxyz"
+	// requestIDBytes is the length of a request ID before it's encoded. The first
+	// requestIDRandomBytes are random, and the rest hold the time it was generated.
+	requestIDBytes = 18
+	// RequestIDHeader is the request header that carries the IDs of recorded requests.
+	RequestIDHeader = "X-Request-Id"
+	// requestIDPrefix is the prefix of generated request IDs.
+	requestIDPrefix = "tpreq_"
+	// requestIDRandomBytes is the number of random bytes at the start of a request ID.
+	requestIDRandomBytes = 12
 )
 
 var (
 	namespacePattern = regexp.MustCompile(`^(/v\d+/namespaces/)[^/?]+`)
 	operationPattern = regexp.MustCompile(`(/operations/)[^/?]+`)
+	// requestIDEncoding is base32 in RFC 4648's bit order, without padding.
+	requestIDEncoding = base32.NewEncoding(requestIDAlphabet).WithPadding(base32.NoPadding)
 )
 
 // Indirection so tests can control sampling.
@@ -70,13 +90,39 @@ func routeTemplate(method, rawURL string) string {
 	return strings.ToUpper(method) + " " + path
 }
 
+// encodeRequestID returns the ID of a request from its random bytes and the time they were
+// generated.
+func encodeRequestID(randomBytes [requestIDRandomBytes]byte, now time.Time) string {
+	var b [requestIDBytes]byte
+	copy(b[:], randomBytes[:])
+	millis := binary.BigEndian.AppendUint64(nil, uint64(now.UnixMilli()))
+	for i, m := range millis[2:] {
+		b[requestIDRandomBytes+i] = m ^ randomBytes[i]
+	}
+	return requestIDPrefix + requestIDEncoding.EncodeToString(b[:])
+}
+
+// newRequestID generates the ID of a request that will be recorded, or returns "" if the system's
+// random source fails. Its format is private to turbopuffer, which only links IDs in the format it
+// expects: 12 random bytes, then the 48-bit millisecond time they were generated XORed with the
+// first 6 random bytes, in base32 after a prefix.
+func newRequestID(now time.Time) string {
+	var randomBytes [requestIDRandomBytes]byte
+	if _, err := cryptorand.Read(randomBytes[:]); err != nil {
+		return ""
+	}
+	return encodeRequestID(randomBytes, now)
+}
+
 // record is the telemetry of one request. Durations are in microseconds, and are nil when their
-// phase wasn't observed.
+// phase wasn't observed. RequestID is the X-Request-Id the request was sent with, when the client
+// generated it.
 type record struct {
 	Route         string  `json:"route"`
 	Status        int     `json:"status"`
 	Error         string  `json:"error,omitempty"`
 	Retries       int     `json:"retries,omitempty"`
+	RequestID     string  `json:"request_id,omitempty"`
 	SampleRate    float64 `json:"sample_rate,omitempty"`
 	TotalUs       *int64  `json:"total_us,omitempty"`
 	SerializeUs   *int64  `json:"serialize_us,omitempty"`

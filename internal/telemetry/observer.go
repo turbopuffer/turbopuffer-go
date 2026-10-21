@@ -57,19 +57,37 @@ type requestScope struct {
 	info   observer.RequestInfo
 	// Kept for later attempts until one of them may have reached the server.
 	batch *batch
+	// Sent with every attempt, so retries share the request's trace.
+	requestID string
+	// The rate the request is recorded at, or 0 if it isn't recorded.
+	sampleRate float64
 }
 
 func newScope(b *buffer, info observer.RequestInfo) *requestScope {
-	return &requestScope{buffer: b, info: info}
+	s := &requestScope{buffer: b, info: info}
+	// Sampled up front, so that only requests whose records the server will get are sent with
+	// request IDs.
+	if rate, ok := b.sample(); ok {
+		s.requestID = newRequestID(time.Now())
+		s.sampleRate = rate
+	}
+	return s
 }
 
 func (s *requestScope) AttemptBegin(attempt int, req *http.Request) {
 	// Taken only once a request is about to be sent, so one that fails before then can't lose it.
 	if attempt == 0 {
 		s.batch = s.buffer.take()
+		// An ID set by the caller is theirs to use, so the request keeps it and isn't linked.
+		if len(req.Header.Values(RequestIDHeader)) > 0 {
+			s.requestID = ""
+		}
 	}
 	if s.batch != nil {
 		req.Header.Set(Header, s.batch.header)
+	}
+	if s.requestID != "" {
+		req.Header.Set(RequestIDHeader, s.requestID)
 	}
 }
 
@@ -88,11 +106,13 @@ func (s *requestScope) Finish(result *observer.RequestResult) {
 		s.buffer.restore(s.batch)
 		s.batch = nil
 	}
-	rate, ok := s.buffer.sample()
-	if !ok {
+	// A rate of zero asks clients to stop recording, even requests that were already sampled.
+	if s.sampleRate == 0 || s.buffer.rate() <= 0 {
 		return
 	}
-	s.buffer.add(newRecord(s.info, result, rate))
+	rec := newRecord(s.info, result, s.sampleRate)
+	rec.RequestID = s.requestID
+	s.buffer.add(rec)
 }
 
 func newRecord(info observer.RequestInfo, result *observer.RequestResult, rate float64) record {

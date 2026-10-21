@@ -10,6 +10,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"regexp"
+	"slices"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -43,11 +45,14 @@ var queryOK = `{
 
 type telemetryRecord = map[string]any
 
-// telemetryTransport responds with respond and keeps the telemetry header of each request it
-// sees, or "" for a request without one.
+var requestIDPattern = regexp.MustCompile(`^tpreq_[2-7a-z]{29}$`)
+
+// telemetryTransport responds with respond and keeps the telemetry header and request ID of each
+// request it sees, or "" for a request without one.
 type telemetryTransport struct {
 	mu      sync.Mutex
 	headers []string
+	ids     []string
 	respond func(n int, req *http.Request) (*http.Response, error)
 }
 
@@ -55,8 +60,16 @@ func (tr *telemetryTransport) RoundTrip(req *http.Request) (*http.Response, erro
 	tr.mu.Lock()
 	n := len(tr.headers)
 	tr.headers = append(tr.headers, req.Header.Get(telemetry.Header))
+	tr.ids = append(tr.ids, req.Header.Get(telemetry.RequestIDHeader))
 	tr.mu.Unlock()
 	return tr.respond(n, req)
+}
+
+// requestIDs returns the request ID each request was sent with, or "" for a request without one.
+func (tr *telemetryTransport) requestIDs() []string {
+	tr.mu.Lock()
+	defer tr.mu.Unlock()
+	return slices.Clone(tr.ids)
 }
 
 // records returns the records the nth request carried, or nil if it carried none.
@@ -203,6 +216,9 @@ func TestTelemetryEnabling(t *testing.T) {
 			if got := tr.records(t, 1) != nil; got != tc.enabled {
 				t.Errorf("expected telemetry enabled %t, got %t", tc.enabled, got)
 			}
+			if got := tr.requestIDs()[0] != ""; got != tc.enabled {
+				t.Errorf("expected a request ID sent %t, got %t", tc.enabled, got)
+			}
 		})
 	}
 }
@@ -215,7 +231,7 @@ func TestTelemetryDisabledPerRequest(t *testing.T) {
 	mustQuery(t, ns, option.WithTelemetry(false))
 	mustQuery(t, ns)
 
-	if tr.records(t, 1) != nil {
+	if tr.records(t, 1) != nil || tr.requestIDs()[1] != "" {
 		t.Error("expected the request with telemetry disabled to carry nothing")
 	}
 	if records := tr.records(t, 2); len(records) != 1 {
@@ -377,6 +393,74 @@ func TestTelemetryServerSampleRateOfZeroStopsRecording(t *testing.T) {
 	if records := tr.allRecords(t); records != nil {
 		t.Errorf("expected nothing to be recorded, got %v", records)
 	}
+	// Unrecorded requests have no request IDs to link.
+	if ids := tr.requestIDs(); ids[1] != "" || ids[2] != "" {
+		t.Errorf("expected no request IDs after the first request, got %q", ids)
+	}
+}
+
+func TestTelemetryRequestIDsRideOnRequestsAndRecords(t *testing.T) {
+	tr := &telemetryTransport{respond: respondWith(http.StatusOK, queryOK, nil)}
+	ns := namespaceOf(newTelemetryClient(t, tr, option.WithTelemetry(true)), "my-ns")
+
+	mustQuery(t, ns)
+	mustQuery(t, ns)
+
+	ids := tr.requestIDs()
+	if !requestIDPattern.MatchString(ids[0]) || !requestIDPattern.MatchString(ids[1]) || ids[0] == ids[1] {
+		t.Errorf("expected two different request IDs, got %q", ids)
+	}
+	if records := tr.records(t, 1); len(records) != 1 || records[0]["request_id"] != ids[0] {
+		t.Errorf("expected the record to repeat request ID %s, got %v", ids[0], records)
+	}
+}
+
+func TestTelemetryRetriesKeepRequestIDs(t *testing.T) {
+	tr := &telemetryTransport{respond: func(n int, req *http.Request) (*http.Response, error) {
+		if n == 0 {
+			return makeResponse(http.StatusServiceUnavailable, `{}`, http.Header{"Retry-After-Ms": {"0"}}), nil
+		}
+		return makeResponse(http.StatusOK, queryOK, nil), nil
+	}}
+	ns := namespaceOf(newTelemetryClient(t, tr, option.WithTelemetry(true)), "my-ns")
+
+	mustQuery(t, ns)
+	mustQuery(t, ns)
+
+	ids := tr.requestIDs()
+	if ids[0] == "" || ids[1] != ids[0] || ids[2] == ids[0] {
+		t.Errorf("expected the retry to keep the request's ID, got %q", ids)
+	}
+	if records := tr.records(t, 2); len(records) != 1 || records[0]["request_id"] != ids[0] || records[0]["retries"] != 1.0 {
+		t.Errorf("expected a record with request ID %s and 1 retry, got %v", ids[0], records)
+	}
+}
+
+func TestTelemetryKeepsRequestIDsSetByCallers(t *testing.T) {
+	header := option.WithHeader("X-Request-Id", "my-request")
+	for _, tc := range []struct {
+		name                    string
+		clientOpts, requestOpts []option.RequestOption
+	}{
+		{"default header", []option.RequestOption{header}, nil},
+		{"request header", nil, []option.RequestOption{header}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			tr := &telemetryTransport{respond: respondWith(http.StatusOK, queryOK, nil)}
+			opts := append([]option.RequestOption{option.WithTelemetry(true)}, tc.clientOpts...)
+			ns := namespaceOf(newTelemetryClient(t, tr, opts...), "my-ns")
+
+			mustQuery(t, ns, tc.requestOpts...)
+			mustQuery(t, ns)
+
+			if id := tr.requestIDs()[0]; id != "my-request" {
+				t.Errorf("expected the caller's request ID, got %q", id)
+			}
+			if records := tr.records(t, 1); len(records) != 1 || records[0]["request_id"] != nil {
+				t.Errorf("expected a record without a request ID, got %v", records)
+			}
+		})
+	}
 }
 
 func TestTelemetryConcurrentRequests(t *testing.T) {
@@ -475,6 +559,12 @@ func TestTelemetryRespondAsync(t *testing.T) {
 	}
 	if write["total_us"].(float64) < pollTotal {
 		t.Errorf("expected the write's total to span its polls, got %v", write)
+	}
+	// The write and each of its polls are sent with an ID of their own, which their records repeat.
+	ids := tr.requestIDs()
+	if ids[0] == ids[1] || ids[1] == ids[2] ||
+		write["request_id"] != ids[0] || polls[0]["request_id"] != ids[1] || polls[1]["request_id"] != ids[2] {
+		t.Errorf("expected records to repeat their own request IDs %q, got %v", ids, records)
 	}
 }
 
