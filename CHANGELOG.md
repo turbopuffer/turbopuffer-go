@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.11.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.10.0...v2.11.0) (2026-10-22)
+
+
+### Features
+
+* Send client-generated request IDs ([#150](https://github.com/turbopuffer/turbopuffer-go/issues/150)) ([eaa93d3](https://github.com/turbopuffer/turbopuffer-go/commit/eaa93d3df24857b10be0bac12076ca6ce155e14b))
+
 ## [2.10.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.9.1...v2.10.0) (2026-10-20)
 
 
