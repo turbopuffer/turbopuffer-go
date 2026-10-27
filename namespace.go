@@ -2618,6 +2618,10 @@ func (r *NamespaceExplainQueryParams) UnmarshalJSON(data []byte) error {
 
 // The consistency level for a query.
 type NamespaceExplainQueryParamsConsistency struct {
+	// How long an eventually consistent query may reuse the node's cached view of the
+	// namespace before refreshing it from object storage. Only valid with
+	// `level: eventual`. Defaults to 60.
+	MaxStalenessSeconds param.Opt[int64] `json:"max_staleness_seconds,omitzero"`
 	// The query's consistency level.
 	//
 	// Any of "strong", "eventual".
@@ -2728,6 +2732,10 @@ func (r *NamespaceMultiQueryParamsQuery) UnmarshalJSON(data []byte) error {
 
 // The consistency level for a query.
 type NamespaceMultiQueryParamsConsistency struct {
+	// How long an eventually consistent query may reuse the node's cached view of the
+	// namespace before refreshing it from object storage. Only valid with
+	// `level: eventual`. Defaults to 60.
+	MaxStalenessSeconds param.Opt[int64] `json:"max_staleness_seconds,omitzero"`
 	// The query's consistency level.
 	//
 	// Any of "strong", "eventual".
@@ -2808,6 +2816,10 @@ func (r *NamespaceQueryParams) UnmarshalJSON(data []byte) error {
 
 // The consistency level for a query.
 type NamespaceQueryParamsConsistency struct {
+	// How long an eventually consistent query may reuse the node's cached view of the
+	// namespace before refreshing it from object storage. Only valid with
+	// `level: eventual`. Defaults to 60.
+	MaxStalenessSeconds param.Opt[int64] `json:"max_staleness_seconds,omitzero"`
 	// The query's consistency level.
 	//
 	// Any of "strong", "eventual".

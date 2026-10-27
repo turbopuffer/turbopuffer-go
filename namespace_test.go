@@ -118,7 +118,8 @@ func TestNamespaceExplainQueryWithOptionalParams(t *testing.T) {
 			"foo": turbopuffer.NewExprHighlight("bar"),
 		},
 		Consistency: turbopuffer.NamespaceExplainQueryParamsConsistency{
-			Level: "strong",
+			Level:               "strong",
+			MaxStalenessSeconds: turbopuffer.Int(1),
 		},
 		DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 		ExcludeAttributes: []string{"string"},
@@ -235,7 +236,8 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 			TopK:   turbopuffer.Int(0),
 		}},
 		Consistency: turbopuffer.NamespaceMultiQueryParamsConsistency{
-			Level: "strong",
+			Level:               "strong",
+			MaxStalenessSeconds: turbopuffer.Int(1),
 		},
 		Limit: turbopuffer.RerankLimitParam{
 			Total: 0,
@@ -303,7 +305,8 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 			"foo": turbopuffer.NewExprHighlight("bar"),
 		},
 		Consistency: turbopuffer.NamespaceQueryParamsConsistency{
-			Level: "strong",
+			Level:               "strong",
+			MaxStalenessSeconds: turbopuffer.Int(1),
 		},
 		DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 		ExcludeAttributes: []string{"string"},
