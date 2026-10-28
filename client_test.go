@@ -4,9 +4,12 @@ package turbopuffer_test
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"reflect"
+	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -20,8 +23,16 @@ type closureTransport struct {
 	fn func(req *http.Request) (*http.Response, error)
 }
 
+type closureDoer struct {
+	fn func(req *http.Request) (*http.Response, error)
+}
+
 func (t *closureTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	return t.fn(req)
+}
+
+func (d *closureDoer) Do(req *http.Request) (*http.Response, error) {
+	return d.fn(req)
 }
 
 func TestUserAgentHeader(t *testing.T) {
@@ -393,5 +404,65 @@ func TestNamespaceConcurrentRace(t *testing.T) {
 				t.Fatalf("iteration %d: Namespace(%q).ID() = %q; concurrent append aliased the backing array", i, ns, got)
 			}
 		}
+	}
+}
+
+func TestPaginationPreservesCustomHTTPDoer(t *testing.T) {
+	fallbackErr := errors.New("fallback http client used")
+	fallbackCalls := 0
+	fallbackClient := &http.Client{
+		Transport: &closureTransport{
+			fn: func(req *http.Request) (*http.Response, error) {
+				fallbackCalls++
+				return nil, fallbackErr
+			},
+		},
+	}
+
+	customDoerCalls := 0
+	customDoer := &closureDoer{
+		fn: func(req *http.Request) (*http.Response, error) {
+			customDoerCalls++
+			body := `{"namespaces":[{"id":"ns-first"}],"next_cursor":"cursor-1"}`
+			if req.URL.Query().Get("cursor") == "cursor-1" {
+				body = `{"namespaces":[{"id":"ns-second"}],"next_cursor":""}`
+			}
+			return &http.Response{
+				StatusCode: http.StatusOK,
+				Header: http.Header{
+					"Content-Type": {"application/json"},
+				},
+				Body: io.NopCloser(strings.NewReader(body)),
+			}, nil
+		},
+	}
+
+	client := turbopuffer.NewClient(
+		option.WithBaseURL("https://tpuf.example.com"),
+		option.WithAPIKey("tpuf_A1..."),
+		option.WithHTTPClient(fallbackClient),
+		option.WithHTTPClient(customDoer),
+	)
+
+	page, err := client.Namespaces(context.Background(), turbopuffer.NamespacesParams{})
+	if err != nil {
+		t.Fatalf("expected first page request to succeed via custom doer, got: %v", err)
+	}
+	if len(page.Namespaces) != 1 || page.Namespaces[0].ID != "ns-first" {
+		t.Fatalf("unexpected first page payload: %+v", page.Namespaces)
+	}
+
+	nextPage, err := page.GetNextPage()
+	if err != nil {
+		t.Fatalf("expected next page request to keep using custom doer, got: %v", err)
+	}
+	if nextPage == nil || len(nextPage.Namespaces) != 1 || nextPage.Namespaces[0].ID != "ns-second" {
+		t.Fatalf("unexpected next page payload: %+v", nextPage)
+	}
+	if customDoerCalls != 2 {
+		t.Fatalf("expected custom doer to handle both page requests, got %d calls", customDoerCalls)
+	}
+	if fallbackCalls != 0 {
+		t.Fatalf("expected fallback http client to be unused, got %d calls", fallbackCalls)
 	}
 }
