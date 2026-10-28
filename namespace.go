@@ -946,10 +946,13 @@ type Encryption struct {
 	// This field is from variant [EncryptionCustomerManaged].
 	KeyName string `json:"key_name"`
 	Mode    string `json:"mode"`
-	JSON    struct {
-		KeyName respjson.Field
-		Mode    respjson.Field
-		raw     string
+	// This field is from variant [EncryptionCustomerManaged].
+	EncryptionContext map[string]string `json:"encryption_context"`
+	JSON              struct {
+		KeyName           respjson.Field
+		Mode              respjson.Field
+		EncryptionContext respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -985,12 +988,17 @@ type EncryptionCustomerManaged struct {
 	// fully-qualified resource name of the key. For AWS, the ARN of the key.
 	KeyName string                   `json:"key_name" api:"required"`
 	Mode    constant.CustomerManaged `json:"mode" default:"customer-managed"`
+	// The AWS KMS encryption context to send with every request that uses the key.
+	// Only supported on AWS, and must be enabled for your organization. Keys may not
+	// start with `tpuf:` or `aws:`.
+	EncryptionContext map[string]string `json:"encryption_context"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		KeyName     respjson.Field
-		Mode        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		KeyName           respjson.Field
+		Mode              respjson.Field
+		EncryptionContext respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -1057,6 +1065,14 @@ func (u EncryptionParam) GetKeyName() *string {
 }
 
 // Returns a pointer to the underlying variant's property, if present.
+func (u EncryptionParam) GetEncryptionContext() map[string]string {
+	if vt := u.CustomerManaged; vt != nil {
+		return vt.EncryptionContext
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
 func (u EncryptionParam) GetMode() *string {
 	if vt := u.CustomerManaged; vt != nil {
 		return (*string)(&vt.Mode)
@@ -1073,6 +1089,10 @@ type EncryptionCustomerManagedParam struct {
 	// The identifier of the CMEK key to use for encryption. For GCP, the
 	// fully-qualified resource name of the key. For AWS, the ARN of the key.
 	KeyName string `json:"key_name" api:"required"`
+	// The AWS KMS encryption context to send with every request that uses the key.
+	// Only supported on AWS, and must be enabled for your organization. Keys may not
+	// start with `tpuf:` or `aws:`.
+	EncryptionContext map[string]string `json:"encryption_context,omitzero"`
 	// This field can be elided, and will marshal its zero value as "customer-managed".
 	Mode constant.CustomerManaged `json:"mode" default:"customer-managed"`
 	paramObj
