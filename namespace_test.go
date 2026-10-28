@@ -58,6 +58,9 @@ func TestNamespaceCopyFromWithOptionalParams(t *testing.T) {
 		DestEncryption: turbopuffer.EncryptionParam{
 			CustomerManaged: &turbopuffer.EncryptionCustomerManagedParam{
 				KeyName: "key_name",
+				EncryptionContext: map[string]string{
+					"foo": "string",
+				},
 			},
 		},
 		SourceAPIKey: turbopuffer.String("source_api_key"),
@@ -119,8 +122,7 @@ func TestNamespaceExplainQueryWithOptionalParams(t *testing.T) {
 			"foo": "bar",
 		},
 		Consistency: turbopuffer.NamespaceExplainQueryParamsConsistency{
-			Level:               "strong",
-			MaxStalenessSeconds: turbopuffer.Int(1),
+			Strong: &turbopuffer.NamespaceExplainQueryParamsConsistencyStrong{},
 		},
 		DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 		ExcludeAttributes: []string{"string"},
@@ -241,8 +243,7 @@ func TestNamespaceMultiQueryWithOptionalParams(t *testing.T) {
 			TopK:   turbopuffer.Int(0),
 		}},
 		Consistency: turbopuffer.NamespaceMultiQueryParamsConsistency{
-			Level:               "strong",
-			MaxStalenessSeconds: turbopuffer.Int(1),
+			Strong: &turbopuffer.NamespaceMultiQueryParamsConsistencyStrong{},
 		},
 		Limit: turbopuffer.RerankLimitParam{
 			Total: 0,
@@ -311,8 +312,7 @@ func TestNamespaceQueryWithOptionalParams(t *testing.T) {
 			"foo": "bar",
 		},
 		Consistency: turbopuffer.NamespaceQueryParamsConsistency{
-			Level:               "strong",
-			MaxStalenessSeconds: turbopuffer.Int(1),
+			Strong: &turbopuffer.NamespaceQueryParamsConsistencyStrong{},
 		},
 		DistanceMetric:    turbopuffer.DistanceMetricCosineDistance,
 		ExcludeAttributes: []string{"string"},
@@ -421,6 +421,9 @@ func TestNamespaceStartCopyFromWithOptionalParams(t *testing.T) {
 		DestEncryption: turbopuffer.EncryptionParam{
 			CustomerManaged: &turbopuffer.EncryptionCustomerManagedParam{
 				KeyName: "key_name",
+				EncryptionContext: map[string]string{
+					"foo": "string",
+				},
 			},
 		},
 		SourceAPIKey: turbopuffer.String("source_api_key"),
@@ -560,6 +563,9 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		Encryption: turbopuffer.EncryptionParam{
 			CustomerManaged: &turbopuffer.EncryptionCustomerManagedParam{
 				KeyName: "key_name",
+				EncryptionContext: map[string]string{
+					"foo": "string",
+				},
 			},
 		},
 		PatchByFilter: turbopuffer.NamespaceWriteParamsPatchByFilter{
