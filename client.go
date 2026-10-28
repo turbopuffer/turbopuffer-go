@@ -4,14 +4,12 @@ package turbopuffer
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"os"
 	"slices"
 	"strings"
 	"sync/atomic"
 
-	"github.com/turbopuffer/turbopuffer-go/v2/internal"
 	"github.com/turbopuffer/turbopuffer-go/v2/internal/requestconfig"
 	"github.com/turbopuffer/turbopuffer-go/v2/internal/respondasync"
 	"github.com/turbopuffer/turbopuffer-go/v2/internal/telemetry"
@@ -72,34 +70,6 @@ func NewClient(opts ...option.RequestOption) (r Client) {
 	}
 
 	return
-}
-
-// Represents a turbopuffer namespace.
-type Namespace struct {
-	NamespaceService
-}
-
-// Namespace creates a new namespace resource.
-func (r *Client) Namespace(namespace string) Namespace {
-	if len(r.Options) != cap(r.Options) {
-		// If the options slice is not at its capacity, past versions of the Go
-		// SDK would fail to create a copy below.
-		r.shareCount.Add(1)
-	}
-	sendShareCount := requestconfig.RequestOptionFunc(func(c *requestconfig.RequestConfig) error {
-		// Embed the share count in the User-Agent header to help determine
-		// impact of past bug.
-		shareCount := r.shareCount.Load()
-		userAgent := fmt.Sprintf("Turbopuffer/Go %s (share-count=%d)", internal.PackageVersion, shareCount)
-		c.Request.Header.Set("User-Agent", userAgent)
-		return nil
-	})
-	// IMPORTANT: must append to a copy of r.Options. slices.Clip forces this
-	// with only a single heap allocation. (Most other patterns for this result
-	// in a clone operation and then a resize operation.)
-	opts := slices.Clip(r.Options)
-	opts = append(opts, option.WithDefaultNamespace(namespace), sendShareCount)
-	return Namespace{NamespaceService: newNamespaceService(opts...)}
 }
 
 // Execute makes a request with the given context, method, URL, request params,
