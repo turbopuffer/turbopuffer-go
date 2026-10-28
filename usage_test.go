@@ -1,3 +1,6 @@
+// Generated mock-server tests are disabled and only compile against the generated API.
+//go:build ignore
+
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 package turbopuffer_test
@@ -25,15 +28,17 @@ func TestUsage(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("tpuf_A1..."),
 	)
-	ns := client.Namespace("products")
-	response, err := ns.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
+	response, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
+		Namespace:      turbopuffer.String("products"),
 		DistanceMetric: turbopuffer.DistanceMetricCosineDistance,
-		UpsertRows: []turbopuffer.RowParam{
-			{
-				"id":     "2108ed60-6851-49a0-9016-8325434f3845",
-				"vector": []float32{0.1, 0.2},
+		UpsertRows: []turbopuffer.RowParam{{
+			ID: turbopuffer.IDParam{
+				String: turbopuffer.String("2108ed60-6851-49a0-9016-8325434f3845"),
 			},
-		},
+			Vector: turbopuffer.VectorParam{
+				FloatArray: []float64{0.1, 0.2},
+			},
+		}},
 	})
 	if err != nil {
 		t.Fatalf("err should be nil: %s", err.Error())
