@@ -2935,9 +2935,9 @@ type NamespaceWriteParams struct {
 	// response. For filtered and conditional writes, only IDs for writes that
 	// succeeded will be included.
 	ReturnAffectedIDs param.Opt[bool] `json:"return_affected_ids,omitzero"`
-	// Configuration for branching from another namespace.
+	// The namespace to create an instant, copy-on-write clone of.
 	BranchFromNamespace BranchFromNamespaceParams `json:"branch_from_namespace,omitzero"`
-	// Configuration for copying documents from another namespace.
+	// The namespace to copy documents from.
 	CopyFromNamespace CopyFromNamespaceParams `json:"copy_from_namespace,omitzero"`
 	// The filter specifying which documents to delete.
 	DeleteByFilter Filter `json:"delete_by_filter,omitzero"`
