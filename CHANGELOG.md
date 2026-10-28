@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.11.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.10.0...v2.11.0) (2026-10-28)
+
+
+### Features
+
+* openapi: add encryption_context to customer-managed encryption ([ccca173](https://github.com/turbopuffer/turbopuffer-go/commit/ccca173d65845ed80aed70fe4dd7c6ba52fa24a1))
+* Send client-generated request IDs ([#150](https://github.com/turbopuffer/turbopuffer-go/issues/150)) ([eaa93d3](https://github.com/turbopuffer/turbopuffer-go/commit/eaa93d3df24857b10be0bac12076ca6ce155e14b))
+* spec: split query consistency into strong and eventual variants ([9603945](https://github.com/turbopuffer/turbopuffer-go/commit/9603945a71c05eab95594b27f72add8356194b34))
+* tpuf-engine: add max_staleness_seconds to eventual consistency ([b33ad83](https://github.com/turbopuffer/turbopuffer-go/commit/b33ad83069cbbf87ef7abbe7b4741d4828b4f2eb))
+
+
+### Chores
+
+* keep custom code out of spec-driven generated files ([#153](https://github.com/turbopuffer/turbopuffer-go/issues/153)) ([aa54731](https://github.com/turbopuffer/turbopuffer-go/commit/aa547319518dada38e8c7fbfd8c5732095fe28c7))
+
 ## [2.10.0](https://github.com/turbopuffer/turbopuffer-go/compare/v2.9.1...v2.10.0) (2026-10-20)
 
 
