@@ -58,6 +58,9 @@ func TestNamespaceCopyFromWithOptionalParams(t *testing.T) {
 		DestEncryption: turbopuffer.EncryptionParam{
 			CustomerManaged: &turbopuffer.EncryptionCustomerManagedParam{
 				KeyName: "key_name",
+				EncryptionContext: map[string]string{
+					"foo": "string",
+				},
 			},
 		},
 		SourceAPIKey: turbopuffer.String("source_api_key"),
@@ -418,6 +421,9 @@ func TestNamespaceStartCopyFromWithOptionalParams(t *testing.T) {
 		DestEncryption: turbopuffer.EncryptionParam{
 			CustomerManaged: &turbopuffer.EncryptionCustomerManagedParam{
 				KeyName: "key_name",
+				EncryptionContext: map[string]string{
+					"foo": "string",
+				},
 			},
 		},
 		SourceAPIKey: turbopuffer.String("source_api_key"),
@@ -557,6 +563,9 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 		Encryption: turbopuffer.EncryptionParam{
 			CustomerManaged: &turbopuffer.EncryptionCustomerManagedParam{
 				KeyName: "key_name",
+				EncryptionContext: map[string]string{
+					"foo": "string",
+				},
 			},
 		},
 		PatchByFilter: turbopuffer.NamespaceWriteParamsPatchByFilter{
