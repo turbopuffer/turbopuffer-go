@@ -35,7 +35,7 @@ Or to pin the version:
 <!-- x-release-please-start-version -->
 
 ```sh
-go get -u 'github.com/turbopuffer/turbopuffer-go/v2@v2.10.0'
+go get -u 'github.com/turbopuffer/turbopuffer-go/v2@v2.11.0'
 ```
 
 <!-- x-release-please-end -->
