@@ -40,7 +40,7 @@ func getNormalizedOS() string {
 		return "Android"
 	case "darwin":
 		return "MacOS"
-	case "window":
+	case "windows":
 		return "Windows"
 	case "freebsd":
 		return "FreeBSD"
@@ -663,6 +663,8 @@ func (cfg *RequestConfig) Clone(ctx context.Context) *RequestConfig {
 		Context:          ctx,
 		Request:          req,
 		BaseURL:          cfg.BaseURL,
+		DefaultBaseURL:   cfg.DefaultBaseURL,
+		CustomHTTPDoer:   cfg.CustomHTTPDoer,
 		HTTPClient:       cfg.HTTPClient,
 		Middlewares:      cfg.Middlewares,
 		RequestObserver:  cfg.RequestObserver,
