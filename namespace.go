@@ -2608,31 +2608,100 @@ func (r *NamespaceExplainQueryParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// The consistency level for a query.
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
 type NamespaceExplainQueryParamsConsistency struct {
-	// How long an eventually consistent query may reuse the node's cached view of the
-	// namespace before refreshing it from object storage. Only valid with
-	// `level: eventual`. Defaults to 60.
-	MaxStalenessSeconds param.Opt[int64] `json:"max_staleness_seconds,omitzero"`
-	// The query's consistency level.
-	//
-	// Any of "strong", "eventual".
-	Level string `json:"level,omitzero"`
-	paramObj
+	Strong   *NamespaceExplainQueryParamsConsistencyStrong   `json:",omitzero,inline"`
+	Eventual *NamespaceExplainQueryParamsConsistencyEventual `json:",omitzero,inline"`
+	paramUnion
 }
 
-func (r NamespaceExplainQueryParamsConsistency) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceExplainQueryParamsConsistency
-	return param.MarshalObject(r, (*shadow)(&r))
+func (u NamespaceExplainQueryParamsConsistency) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.Strong, u.Eventual)
 }
-func (r *NamespaceExplainQueryParamsConsistency) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
+func (u *NamespaceExplainQueryParamsConsistency) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *NamespaceExplainQueryParamsConsistency) asAny() any {
+	if !param.IsOmitted(u.Strong) {
+		return u.Strong
+	} else if !param.IsOmitted(u.Eventual) {
+		return u.Eventual
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u NamespaceExplainQueryParamsConsistency) GetMaxStalenessSeconds() *int64 {
+	if vt := u.Eventual; vt != nil && vt.MaxStalenessSeconds.Valid() {
+		return &vt.MaxStalenessSeconds.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u NamespaceExplainQueryParamsConsistency) GetLevel() *string {
+	if vt := u.Strong; vt != nil {
+		return (*string)(&vt.Level)
+	} else if vt := u.Eventual; vt != nil {
+		return (*string)(&vt.Level)
+	}
+	return nil
 }
 
 func init() {
-	apijson.RegisterFieldValidator[NamespaceExplainQueryParamsConsistency](
-		"level", "strong", "eventual",
+	apijson.RegisterUnion[NamespaceExplainQueryParamsConsistency](
+		"level",
+		apijson.Discriminator[NamespaceExplainQueryParamsConsistencyStrong]("strong"),
+		apijson.Discriminator[NamespaceExplainQueryParamsConsistencyEventual]("eventual"),
 	)
+}
+
+func NewNamespaceExplainQueryParamsConsistencyStrong() NamespaceExplainQueryParamsConsistencyStrong {
+	return NamespaceExplainQueryParamsConsistencyStrong{
+		Level: "strong",
+	}
+}
+
+// Strong consistency. Requires a round-trip to object storage to fetch the latest
+// writes.
+//
+// This struct has a constant value, construct it with
+// [NewNamespaceExplainQueryParamsConsistencyStrong].
+type NamespaceExplainQueryParamsConsistencyStrong struct {
+	Level constant.Strong `json:"level" default:"strong"`
+	paramObj
+}
+
+func (r NamespaceExplainQueryParamsConsistencyStrong) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceExplainQueryParamsConsistencyStrong
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceExplainQueryParamsConsistencyStrong) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Eventual consistency. Does not require a round-trip to object storage, but may
+// not see the latest writes.
+//
+// The property Level is required.
+type NamespaceExplainQueryParamsConsistencyEventual struct {
+	// How long the query may reuse the node's cached view of the namespace before
+	// refreshing it from object storage. Defaults to 60.
+	MaxStalenessSeconds param.Opt[int64] `json:"max_staleness_seconds,omitzero"`
+	// This field can be elided, and will marshal its zero value as "eventual".
+	Level constant.Eventual `json:"level" default:"eventual"`
+	paramObj
+}
+
+func (r NamespaceExplainQueryParamsConsistencyEventual) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceExplainQueryParamsConsistencyEventual
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceExplainQueryParamsConsistencyEventual) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
 }
 
 type NamespaceHintCacheWarmParams struct {
@@ -2716,31 +2785,100 @@ func (r *NamespaceMultiQueryParamsQuery) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// The consistency level for a query.
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
 type NamespaceMultiQueryParamsConsistency struct {
-	// How long an eventually consistent query may reuse the node's cached view of the
-	// namespace before refreshing it from object storage. Only valid with
-	// `level: eventual`. Defaults to 60.
-	MaxStalenessSeconds param.Opt[int64] `json:"max_staleness_seconds,omitzero"`
-	// The query's consistency level.
-	//
-	// Any of "strong", "eventual".
-	Level string `json:"level,omitzero"`
-	paramObj
+	Strong   *NamespaceMultiQueryParamsConsistencyStrong   `json:",omitzero,inline"`
+	Eventual *NamespaceMultiQueryParamsConsistencyEventual `json:",omitzero,inline"`
+	paramUnion
 }
 
-func (r NamespaceMultiQueryParamsConsistency) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceMultiQueryParamsConsistency
-	return param.MarshalObject(r, (*shadow)(&r))
+func (u NamespaceMultiQueryParamsConsistency) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.Strong, u.Eventual)
 }
-func (r *NamespaceMultiQueryParamsConsistency) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
+func (u *NamespaceMultiQueryParamsConsistency) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *NamespaceMultiQueryParamsConsistency) asAny() any {
+	if !param.IsOmitted(u.Strong) {
+		return u.Strong
+	} else if !param.IsOmitted(u.Eventual) {
+		return u.Eventual
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u NamespaceMultiQueryParamsConsistency) GetMaxStalenessSeconds() *int64 {
+	if vt := u.Eventual; vt != nil && vt.MaxStalenessSeconds.Valid() {
+		return &vt.MaxStalenessSeconds.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u NamespaceMultiQueryParamsConsistency) GetLevel() *string {
+	if vt := u.Strong; vt != nil {
+		return (*string)(&vt.Level)
+	} else if vt := u.Eventual; vt != nil {
+		return (*string)(&vt.Level)
+	}
+	return nil
 }
 
 func init() {
-	apijson.RegisterFieldValidator[NamespaceMultiQueryParamsConsistency](
-		"level", "strong", "eventual",
+	apijson.RegisterUnion[NamespaceMultiQueryParamsConsistency](
+		"level",
+		apijson.Discriminator[NamespaceMultiQueryParamsConsistencyStrong]("strong"),
+		apijson.Discriminator[NamespaceMultiQueryParamsConsistencyEventual]("eventual"),
 	)
+}
+
+func NewNamespaceMultiQueryParamsConsistencyStrong() NamespaceMultiQueryParamsConsistencyStrong {
+	return NamespaceMultiQueryParamsConsistencyStrong{
+		Level: "strong",
+	}
+}
+
+// Strong consistency. Requires a round-trip to object storage to fetch the latest
+// writes.
+//
+// This struct has a constant value, construct it with
+// [NewNamespaceMultiQueryParamsConsistencyStrong].
+type NamespaceMultiQueryParamsConsistencyStrong struct {
+	Level constant.Strong `json:"level" default:"strong"`
+	paramObj
+}
+
+func (r NamespaceMultiQueryParamsConsistencyStrong) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceMultiQueryParamsConsistencyStrong
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceMultiQueryParamsConsistencyStrong) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Eventual consistency. Does not require a round-trip to object storage, but may
+// not see the latest writes.
+//
+// The property Level is required.
+type NamespaceMultiQueryParamsConsistencyEventual struct {
+	// How long the query may reuse the node's cached view of the namespace before
+	// refreshing it from object storage. Defaults to 60.
+	MaxStalenessSeconds param.Opt[int64] `json:"max_staleness_seconds,omitzero"`
+	// This field can be elided, and will marshal its zero value as "eventual".
+	Level constant.Eventual `json:"level" default:"eventual"`
+	paramObj
+}
+
+func (r NamespaceMultiQueryParamsConsistencyEventual) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceMultiQueryParamsConsistencyEventual
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceMultiQueryParamsConsistencyEventual) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
 }
 
 type NamespacePollCopyFromParams struct {
@@ -2800,31 +2938,100 @@ func (r *NamespaceQueryParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// The consistency level for a query.
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
 type NamespaceQueryParamsConsistency struct {
-	// How long an eventually consistent query may reuse the node's cached view of the
-	// namespace before refreshing it from object storage. Only valid with
-	// `level: eventual`. Defaults to 60.
-	MaxStalenessSeconds param.Opt[int64] `json:"max_staleness_seconds,omitzero"`
-	// The query's consistency level.
-	//
-	// Any of "strong", "eventual".
-	Level string `json:"level,omitzero"`
-	paramObj
+	Strong   *NamespaceQueryParamsConsistencyStrong   `json:",omitzero,inline"`
+	Eventual *NamespaceQueryParamsConsistencyEventual `json:",omitzero,inline"`
+	paramUnion
 }
 
-func (r NamespaceQueryParamsConsistency) MarshalJSON() (data []byte, err error) {
-	type shadow NamespaceQueryParamsConsistency
-	return param.MarshalObject(r, (*shadow)(&r))
+func (u NamespaceQueryParamsConsistency) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.Strong, u.Eventual)
 }
-func (r *NamespaceQueryParamsConsistency) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
+func (u *NamespaceQueryParamsConsistency) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *NamespaceQueryParamsConsistency) asAny() any {
+	if !param.IsOmitted(u.Strong) {
+		return u.Strong
+	} else if !param.IsOmitted(u.Eventual) {
+		return u.Eventual
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u NamespaceQueryParamsConsistency) GetMaxStalenessSeconds() *int64 {
+	if vt := u.Eventual; vt != nil && vt.MaxStalenessSeconds.Valid() {
+		return &vt.MaxStalenessSeconds.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u NamespaceQueryParamsConsistency) GetLevel() *string {
+	if vt := u.Strong; vt != nil {
+		return (*string)(&vt.Level)
+	} else if vt := u.Eventual; vt != nil {
+		return (*string)(&vt.Level)
+	}
+	return nil
 }
 
 func init() {
-	apijson.RegisterFieldValidator[NamespaceQueryParamsConsistency](
-		"level", "strong", "eventual",
+	apijson.RegisterUnion[NamespaceQueryParamsConsistency](
+		"level",
+		apijson.Discriminator[NamespaceQueryParamsConsistencyStrong]("strong"),
+		apijson.Discriminator[NamespaceQueryParamsConsistencyEventual]("eventual"),
 	)
+}
+
+func NewNamespaceQueryParamsConsistencyStrong() NamespaceQueryParamsConsistencyStrong {
+	return NamespaceQueryParamsConsistencyStrong{
+		Level: "strong",
+	}
+}
+
+// Strong consistency. Requires a round-trip to object storage to fetch the latest
+// writes.
+//
+// This struct has a constant value, construct it with
+// [NewNamespaceQueryParamsConsistencyStrong].
+type NamespaceQueryParamsConsistencyStrong struct {
+	Level constant.Strong `json:"level" default:"strong"`
+	paramObj
+}
+
+func (r NamespaceQueryParamsConsistencyStrong) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceQueryParamsConsistencyStrong
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceQueryParamsConsistencyStrong) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Eventual consistency. Does not require a round-trip to object storage, but may
+// not see the latest writes.
+//
+// The property Level is required.
+type NamespaceQueryParamsConsistencyEventual struct {
+	// How long the query may reuse the node's cached view of the namespace before
+	// refreshing it from object storage. Defaults to 60.
+	MaxStalenessSeconds param.Opt[int64] `json:"max_staleness_seconds,omitzero"`
+	// This field can be elided, and will marshal its zero value as "eventual".
+	Level constant.Eventual `json:"level" default:"eventual"`
+	paramObj
+}
+
+func (r NamespaceQueryParamsConsistencyEventual) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceQueryParamsConsistencyEventual
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceQueryParamsConsistencyEventual) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
 }
 
 type NamespaceRecallParams struct {
