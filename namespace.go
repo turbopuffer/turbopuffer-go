@@ -40,14 +40,6 @@ func newNamespaceService(opts ...option.RequestOption) (r NamespaceService) {
 	return
 }
 
-func (r *NamespaceService) ID() string {
-	requestConfig, err := requestconfig.NewRequestConfig(context.Background(), "GET", "/", nil, nil, r.Options...)
-	if err != nil {
-		panic(fmt.Errorf("failed to create request config: %w", err))
-	}
-	return *requestConfig.DefaultNamespace
-}
-
 // Creates an instant, copy-on-write clone of a namespace.
 func (r *NamespaceService) BranchFrom(ctx context.Context, params NamespaceBranchFromParams, opts ...option.RequestOption) (res *NamespaceBranchFromResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -1185,6 +1177,10 @@ type FullTextSearchConfigParam struct {
 	CaseSensitive param.Opt[bool] `json:"case_sensitive,omitzero"`
 	// The `k1` term saturation parameter for BM25. Defaults to `1.2`.
 	K1 param.Opt[float64] `json:"k1,omitzero"`
+	// Maximum length of a token in bytes. Tokens larger than this value during
+	// tokenization will be filtered out. Has to be between `1` and `254` (inclusive).
+	// Defaults to `39`.
+	MaxTokenLength param.Opt[int64] `json:"max_token_length,omitzero"`
 	// Removes common words from the text based on language. Defaults to `true` (i.e.
 	// remove common words).
 	RemoveStopwords param.Opt[bool] `json:"remove_stopwords,omitzero"`
@@ -1197,10 +1193,6 @@ type FullTextSearchConfigParam struct {
 	// "greek", "hungarian", "italian", "norwegian", "portuguese", "romanian",
 	// "russian", "spanish", "swedish", "tamil", "turkish".
 	Language Language `json:"language,omitzero"`
-	// Maximum length of a token in bytes. Tokens larger than this value during
-	// tokenization will be filtered out. Has to be between `1` and `254` (inclusive).
-	// Defaults to `39`.
-	MaxTokenLength param.Opt[int64] `json:"max_token_length,omitzero"`
 	// The tokenizer to use for full-text search on an attribute. Defaults to
 	// `word_v4`.
 	//
@@ -2643,12 +2635,6 @@ func init() {
 	)
 }
 
-func init() {
-	apijson.RegisterFieldValidator[NamespaceQueryParamsConsistency](
-		"level", "strong", "eventual",
-	)
-}
-
 type NamespaceHintCacheWarmParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
 	paramObj
@@ -2833,6 +2819,12 @@ func (r NamespaceQueryParamsConsistency) MarshalJSON() (data []byte, err error) 
 }
 func (r *NamespaceQueryParamsConsistency) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[NamespaceQueryParamsConsistency](
+		"level", "strong", "eventual",
+	)
 }
 
 type NamespaceRecallParams struct {
