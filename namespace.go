@@ -1490,6 +1490,8 @@ type NamespaceMetadata struct {
 	Schema map[string]AttributeSchemaConfig `json:"schema" api:"required"`
 	// The timestamp when the namespace was last modified by a write operation.
 	UpdatedAt time.Time `json:"updated_at" api:"required" format:"date-time"`
+	// The attribute the namespace is arranged by. Omitted when not set.
+	ArrangeBy string `json:"arrange_by"`
 	// Configuration for namespace pinning, along with the current status of the pinned
 	// namespace.
 	Pinning NamespaceMetadataPinning `json:"pinning"`
@@ -1509,6 +1511,7 @@ type NamespaceMetadata struct {
 		Index              respjson.Field
 		Schema             respjson.Field
 		UpdatedAt          respjson.Field
+		ArrangeBy          respjson.Field
 		Pinning            respjson.Field
 		ReadOnly           respjson.Field
 		Sharding           respjson.Field
@@ -3138,6 +3141,12 @@ func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
 
 type NamespaceWriteParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
+	// Experimental. Stores documents in ranges of this attribute, ordered by it, so
+	// queries filtering on a narrow range of it or ordered by it skip the rest.
+	// Documents should be written in roughly ascending order of it. Must have type
+	// `int`, `uint`, `datetime` or `string`, and can only be set on a namespace's
+	// inaugural write.
+	ArrangeBy param.Opt[string] `json:"arrange_by,omitzero"`
 	// If `true`, ensures the namespace is created, even if the request writes no
 	// documents. Creating an empty namespace requires the `id` type to be declared in
 	// `schema`. If `false`, a namespace is never created, and a 404 is returned if it
