@@ -1490,8 +1490,9 @@ type NamespaceMetadata struct {
 	Schema map[string]AttributeSchemaConfig `json:"schema" api:"required"`
 	// The timestamp when the namespace was last modified by a write operation.
 	UpdatedAt time.Time `json:"updated_at" api:"required" format:"date-time"`
-	// The attribute the namespace is arranged by. Omitted when not set.
-	ArrangeBy string `json:"arrange_by"`
+	// Experimental. How a namespace stores its documents. Can only be set on a
+	// namespace's inaugural write, and cannot be changed later.
+	Layout NamespaceMetadataLayout `json:"layout"`
 	// Configuration for namespace pinning, along with the current status of the pinned
 	// namespace.
 	Pinning NamespaceMetadataPinning `json:"pinning"`
@@ -1511,7 +1512,7 @@ type NamespaceMetadata struct {
 		Index              respjson.Field
 		Schema             respjson.Field
 		UpdatedAt          respjson.Field
-		ArrangeBy          respjson.Field
+		Layout             respjson.Field
 		Pinning            respjson.Field
 		ReadOnly           respjson.Field
 		Sharding           respjson.Field
@@ -1599,6 +1600,28 @@ type NamespaceMetadataIndexIndexUpdating struct {
 // Returns the unmodified JSON received from the API
 func (r NamespaceMetadataIndexIndexUpdating) RawJSON() string { return r.JSON.raw }
 func (r *NamespaceMetadataIndexIndexUpdating) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Experimental. How a namespace stores its documents. Can only be set on a
+// namespace's inaugural write, and cannot be changed later.
+type NamespaceMetadataLayout struct {
+	// Stores documents in ranges of this attribute, ordered by it, so queries
+	// filtering on a narrow range of it or ordered by it skip the rest. Documents
+	// should be written in roughly ascending order of it. Must have type `int`,
+	// `uint`, `datetime` or `string`.
+	ArrangeBy string `json:"arrange_by"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ArrangeBy   respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r NamespaceMetadataLayout) RawJSON() string { return r.JSON.raw }
+func (r *NamespaceMetadataLayout) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -3141,12 +3164,6 @@ func (r *NamespaceUpdateSchemaParams) UnmarshalJSON(data []byte) error {
 
 type NamespaceWriteParams struct {
 	Namespace param.Opt[string] `path:"namespace,omitzero" api:"required" json:"-"`
-	// Experimental. Stores documents in ranges of this attribute, ordered by it, so
-	// queries filtering on a narrow range of it or ordered by it skip the rest.
-	// Documents should be written in roughly ascending order of it. Must have type
-	// `int`, `uint`, `datetime` or `string`, and can only be set on a namespace's
-	// inaugural write.
-	ArrangeBy param.Opt[string] `json:"arrange_by,omitzero"`
 	// If `true`, ensures the namespace is created, even if the request writes no
 	// documents. Creating an empty namespace requires the `id` type to be declared in
 	// `schema`. If `false`, a namespace is never created, and a 404 is returned if it
@@ -3179,6 +3196,9 @@ type NamespaceWriteParams struct {
 	DistanceMetric DistanceMetric `json:"distance_metric,omitzero"`
 	// The encryption configuration for a namespace.
 	Encryption EncryptionParam `json:"encryption,omitzero"`
+	// Experimental. How a namespace stores its documents. Can only be set on a
+	// namespace's inaugural write, and cannot be changed later.
+	Layout NamespaceWriteParamsLayout `json:"layout,omitzero"`
 	// Sets the attributes in `patch` on every document that matches `filters`.
 	PatchByFilter NamespaceWriteParamsPatchByFilter `json:"patch_by_filter,omitzero"`
 	// A list of documents in columnar format. Each key is a column name, mapped to an
@@ -3210,6 +3230,25 @@ func (r NamespaceWriteParams) MarshalJSON() (data []byte, err error) {
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *NamespaceWriteParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Experimental. How a namespace stores its documents. Can only be set on a
+// namespace's inaugural write, and cannot be changed later.
+type NamespaceWriteParamsLayout struct {
+	// Stores documents in ranges of this attribute, ordered by it, so queries
+	// filtering on a narrow range of it or ordered by it skip the rest. Documents
+	// should be written in roughly ascending order of it. Must have type `int`,
+	// `uint`, `datetime` or `string`.
+	ArrangeBy param.Opt[string] `json:"arrange_by,omitzero"`
+	paramObj
+}
+
+func (r NamespaceWriteParamsLayout) MarshalJSON() (data []byte, err error) {
+	type shadow NamespaceWriteParamsLayout
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *NamespaceWriteParamsLayout) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 

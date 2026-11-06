@@ -546,7 +546,6 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 	)
 	_, err := client.Namespaces.Write(context.TODO(), turbopuffer.NamespaceWriteParams{
 		Namespace: turbopuffer.String("namespace"),
-		ArrangeBy: turbopuffer.String("arrange_by"),
 		BranchFromNamespace: turbopuffer.BranchFromNamespaceParams{
 			SourceNamespace: "source_namespace",
 		},
@@ -571,6 +570,9 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 					"foo": "string",
 				},
 			},
+		},
+		Layout: turbopuffer.NamespaceWriteParamsLayout{
+			ArrangeBy: turbopuffer.String("arrange_by"),
 		},
 		PatchByFilter: turbopuffer.NamespaceWriteParamsPatchByFilter{
 			Filters: map[string]any{},
