@@ -572,7 +572,7 @@ func TestNamespaceWriteWithOptionalParams(t *testing.T) {
 			},
 		},
 		Layout: turbopuffer.NamespaceWriteParamsLayout{
-			ArrangeBy: turbopuffer.String("arrange_by"),
+			RankBy: []any{map[string]any{}},
 		},
 		PatchByFilter: turbopuffer.NamespaceWriteParamsPatchByFilter{
 			Filters: map[string]any{},

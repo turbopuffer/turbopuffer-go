@@ -1606,14 +1606,15 @@ func (r *NamespaceMetadataIndexIndexUpdating) UnmarshalJSON(data []byte) error {
 // Experimental. How a namespace stores its documents. A change applies to
 // documents indexed after it.
 type NamespaceMetadataLayout struct {
-	// Stores documents in ranges of this attribute, ordered by it, so queries
-	// filtering on a narrow range of it or ordered by it skip the rest. Documents
+	// Stores documents in ranges of an attribute, in ascending order, so queries
+	// filtering on a narrow range of it or ranking by it skip the rest. Documents
 	// should be written in roughly ascending order of it. Must have type `int`,
-	// `uint`, `datetime` or `string`. `id` resets the namespace to the default layout.
-	ArrangeBy string `json:"arrange_by"`
+	// `uint`, `datetime` or `string`. `["id", "asc"]` resets the namespace to the
+	// default layout.
+	RankBy []any `json:"rank_by"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ArrangeBy   respjson.Field
+		RankBy      respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -3236,11 +3237,12 @@ func (r *NamespaceWriteParams) UnmarshalJSON(data []byte) error {
 // Experimental. How a namespace stores its documents. A change applies to
 // documents indexed after it.
 type NamespaceWriteParamsLayout struct {
-	// Stores documents in ranges of this attribute, ordered by it, so queries
-	// filtering on a narrow range of it or ordered by it skip the rest. Documents
+	// Stores documents in ranges of an attribute, in ascending order, so queries
+	// filtering on a narrow range of it or ranking by it skip the rest. Documents
 	// should be written in roughly ascending order of it. Must have type `int`,
-	// `uint`, `datetime` or `string`. `id` resets the namespace to the default layout.
-	ArrangeBy param.Opt[string] `json:"arrange_by,omitzero"`
+	// `uint`, `datetime` or `string`. `["id", "asc"]` resets the namespace to the
+	// default layout.
+	RankBy []any `json:"rank_by,omitzero"`
 	paramObj
 }
 
